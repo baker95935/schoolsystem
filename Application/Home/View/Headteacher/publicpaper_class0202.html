@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>我的主页</title>
+
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--<link rel="stylesheet" type="text/css" href="http://cdn.gbtags.com/twitter-bootstrap/3.2.0/css/bootstrap.min.css"/>-->
+
+	<script src="__PUBLIC__/jquery/jquery.min.js"></script>
+	<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
+
+
+ <style type="text/css">
+	input[type="checkbox"]:checked+label {color: #345ee5;}
+	input[type="checkbox"] {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+}
+	input[type="checkbox"]+label{margin-left: 35px;color:#7b7a7a;font-family:Segoe, Segoe UI, DejaVu Sans, Trebuchet MS, Verdana," sans-serif";font-weight:lighter;}
+	
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row title_class">
+			<div class="col-xs-2"><a href="{:U('publishpaper0201',array('userid'=>$userid,'username'=>$username,'realname'=>$realname))}"><img src="__PUBLIC__/img/reg_back.png"  class="title_left_img"></a></div>
+			<div class="col-xs-8  title_font_middle " >{$realname}老师</div>
+			<div class="col-xs-2 " ><div class="a_white"><a href="javascript:void(0)" onclick="location.reload()">重置</a></div></div>		
+		</div>	
+		<div class="row teacher_puclicpaper_class">
+		<div class="col-xs-1"></div>
+		<div class="col-xs-10 teacher_class_msg">
+		<div class="row">
+		<img class="img-responsive center-block teacher_publicpaper_img_icon" src="__PUBLIC__/img/paper_icon_img.png" >
+		</div>
+		<div class="row h4" style="text-align:center;">
+			<span>{$paper_name}</span>
+			<hr style="width: 80%;">
+			<div style="width: 100%; text-align: left;padding-left: 12%">
+			<p class="h5">
+			 <label >班级</label>
+				<volist name="myclass" id="myclassid" >
+					<input id="{$m++}" type="hidden">
+					<input type="checkbox" name="options" id="option{$m}" value="{$myclassid.classid}"><label for="option{$m}"> {$myclassid.classname}
+				</label>
+				</volist>
+			<hr style="width: 80%;">
+			</p>
+			
+			
+			<p class="h5">
+			<label >群组</label>
+				
+				<volist name="groupid" id="mygroupid">
+					<input type="checkbox" name="group" id="group{$mygroupid}" value="{$mygroupid}"><label for="group{$mygroupid}">G{$mygroupid}</label>
+				</volist>
+			<hr style="width: 80%;">
+			</p>
+
+			</div>
+			
+			<p class="h5">
+			<label >发布对象</label>
+			<input type="checkbox" name="object" checked='checked' id="object1" value="0"><label for="object1">学生</label>
+			<input type="checkbox" name="object" id="object2" value="1"><label for="object2">家长</label>
+			<hr style="width: 80%;">
+			</p>
+			
+
+		</div>
+		<div class="row">
+			<div class="col-xs-6">
+				<div  class="teacher_public_bottom_button" style="background-color:#48a0dc;margin-left: 27%;"><a onclick="uploadsub()" href="javascript:void(0)">确认发布</a></div>
+			</div>
+			<div class="col-xs-6">
+				<div  class="teacher_public_bottom_button" style="background-color:#ed7161;margin-left:3%;"><a href="{:U('home',array('userid'=>$userid,'username'=>$username,'realname'=>$realname))}">取消发布</a></div>
+			</div>
+		</div>
+			
+		</div>
+		<div class="col-xs-1"></div>
+		</div>		
+		
+	</div>
+<input id="testid" type="hidden" value="{$testid}">
+<input id="userid" type="hidden" value="{$userid}">
+<input id="username" type="hidden" value="{$username}">
+<input id="realname" type="hidden" value="{$realname}">
+
+
+</body>
+<script>
+
+	$(function(){
+		haveclassgroup();
+	})
+
+
+	function uploadsub(){
+
+		var classarray = '';
+		$('input:checkbox[name=options]:checked').each(function(k){
+			if(k == 0){
+				classarray = $(this).val();
+			}else{
+				classarray += ','+$(this).val();
+			}
+		})
+
+
+		var grouparray = '';
+		$('input:checkbox[name=group]:checked').each(function(k){
+			if(k == 0){
+				grouparray = $(this).val();
+			}else{
+				grouparray += ','+$(this).val();
+			}
+		})
+
+		var objectarray = '';
+		$('input:checkbox[name=object]:checked').each(function(k){
+			if(k == 0){
+				objectarray = $(this).val();
+			}else{
+				objectarray += ','+$(this).val();
+			}
+		})
+
+
+		var testid=$('#testid').val();
+		var userid=$('#userid').val();
+
+
+		$.ajax({
+			url: "{:U('headteacher/publicpapersql')}",
+			type: 'POST',
+			async:false,
+			data: {testid:testid,userid:userid,classarray:classarray,grouparray:grouparray,objectarray:objectarray},
+			dataType: 'json',
+			success: function (re) {
+				window.location.href ="/index.php/Home/headteacher/publishpaper0201/userid/"+userid+"/username/"+$('#username').val()+"/realname/"+$('#realname').val()+".html";
+			}
+		})
+
+	}
+//  已有班级和群组信息
+	function haveclassgroup(){
+		var testid=$('#testid').val();
+      
+     // alert(testid);
+      
+     // return;
+		$.ajax({
+			url:"{:U('phpclassgroup')}",
+			data:{testid:testid},
+			datatype:'json',
+			type:'post',
+			success:function(re){
+				var classgroup=eval("("+re+")");
+              
+              var kind=classgroup['kind'];
+             if(kind==1)
+             {
+				var classarr = classgroup['classid_arr'].split(',');
+				for(var i in classarr){
+					$("input[name='options']").each(function() {
+						var this_val = $(this).val();
+						if(this_val==classarr[i])
+						{
+							$(this).prop("checked", true);
+						}
+					});
+				}
+				var grouparr = classgroup['groupid_arr'].split(',');
+				for(var j in grouparr){
+					$("input[name='group']").each(function() {
+						var this_val = $(this).val();
+
+
+						if(this_val==100 && grouparr=='1,2,3')
+						{
+							$(this).prop("checked", true);
+						}
+
+						if(this_val==grouparr[j])
+						{
+							$(this).prop("checked", true);
+						}
+					});
+				}
+			}
+            }
+		})
+	}
+
+	// 绑定预览函数
+	$("input[name='group']").bind("click",function(){
+
+		var msg=$(this).prop("checked");
+
+		var myval=$(this).val();
+
+		if(myval==100)
+		{
+			if(msg==true)
+			{
+				$("input[name='group']").prop("checked", true);
+			}
+			else
+			{
+				$("input[name='group']").removeAttr('checked',false);
+			}
+		}
+		else
+		{
+			$('#group100').removeAttr('checked');
+		}
+
+
+	});
+
+
+</script>
+</html>

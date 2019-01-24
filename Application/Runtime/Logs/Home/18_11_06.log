@@ -1,0 +1,474 @@
+[ 2018-11-06T15:41:17+08:00 ] ::1 /index.php/Home/Testpanel/erase_del05/filesernum/0
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000014s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000360s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000482s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000543s ]
+NOTIC: [8] Use of undefined constant filesernum - assumed 'filesernum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1459 行.
+SQL: SHOW COLUMNS FROM `test_public_data` [ RunTime:0.0009s ]
+SQL: SHOW COLUMNS FROM `img_cuted_data` [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `paper_msg_data` [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `questiontypes` [ RunTime:0.0006s ]
+NOTIC: [8] Use of undefined constant filesernum - assumed 'filesernum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1469 行.
+NOTIC: [8] Use of undefined constant kind - assumed 'kind' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1470 行.
+SQL: SELECT * FROM `test_public_data` WHERE `filesernum` = '0' AND `kind` = 'test' ORDER BY `in_ser` asc  [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `test_public_data` WHERE `filesernum` = '0' AND `kind` = 'test' LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `paper_msg_data` WHERE `filesernum` = '0' LIMIT 1   [ RunTime:0.0004s ]
+ERR: 1064:You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+ [ SQL语句 ] : SELECT * FROM `questiontypes` WHERE ( subjectid= ) 
+ERR: 1064:You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+ [ SQL语句 ] : SELECT * FROM `questiontypes` WHERE ( subjectid= ) 
+
+[ 2018-11-06T15:41:17+08:00 ] ::1 /index.php/Home/Testpanel/erase_del05/filesernum/0
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000026s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000591s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000881s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000988s ]
+NOTIC: [8] Use of undefined constant filesernum - assumed 'filesernum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1459 行.
+SQL: SHOW COLUMNS FROM `test_public_data` [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `img_cuted_data` [ RunTime:0.0009s ]
+SQL: SHOW COLUMNS FROM `paper_msg_data` [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `questiontypes` [ RunTime:0.0005s ]
+NOTIC: [8] Use of undefined constant filesernum - assumed 'filesernum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1469 行.
+NOTIC: [8] Use of undefined constant kind - assumed 'kind' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1470 行.
+SQL: SELECT * FROM `test_public_data` WHERE `filesernum` = '0' AND `kind` = 'test' ORDER BY `in_ser` asc  [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `test_public_data` WHERE `filesernum` = '0' AND `kind` = 'test' LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT * FROM `paper_msg_data` WHERE `filesernum` = '0' LIMIT 1   [ RunTime:0.0010s ]
+ERR: 1064:You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+ [ SQL语句 ] : SELECT * FROM `questiontypes` WHERE ( subjectid= ) 
+ERR: 1064:You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+ [ SQL语句 ] : SELECT * FROM `questiontypes` WHERE ( subjectid= ) 
+
+[ 2018-11-06T15:41:31+08:00 ] ::1 /index.php/Home/Testpanel/erase_del05/filesernum/0
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000014s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000368s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000488s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000550s ]
+NOTIC: [8] Use of undefined constant filesernum - assumed 'filesernum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1459 行.
+SQL: SHOW COLUMNS FROM `test_public_data` [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `img_cuted_data` [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `paper_msg_data` [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `questiontypes` [ RunTime:0.0005s ]
+NOTIC: [8] Use of undefined constant filesernum - assumed 'filesernum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1469 行.
+NOTIC: [8] Use of undefined constant kind - assumed 'kind' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1470 行.
+SQL: SELECT * FROM `test_public_data` WHERE `filesernum` = '0' AND `kind` = 'test' ORDER BY `in_ser` asc  [ RunTime:0.0005s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `test_public_data` WHERE `filesernum` = '0' AND `kind` = 'test' LIMIT 1   [ RunTime:0.0004s ]
+SQL: SELECT * FROM `paper_msg_data` WHERE `filesernum` = '0' LIMIT 1   [ RunTime:0.0004s ]
+ERR: 1064:You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+ [ SQL语句 ] : SELECT * FROM `questiontypes` WHERE ( subjectid= ) 
+ERR: 1064:You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+ [ SQL语句 ] : SELECT * FROM `questiontypes` WHERE ( subjectid= ) 
+
+[ 2018-11-06T15:42:39+08:00 ] ::1 /index.php/Home/Testpanel/erase_del05/filesernum/a100201811614585.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000014s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000357s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000612s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000687s ]
+NOTIC: [8] Use of undefined constant filesernum - assumed 'filesernum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1459 行.
+SQL: SHOW COLUMNS FROM `test_public_data` [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `img_cuted_data` [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `paper_msg_data` [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `questiontypes` [ RunTime:0.0007s ]
+NOTIC: [8] Use of undefined constant filesernum - assumed 'filesernum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1469 行.
+NOTIC: [8] Use of undefined constant kind - assumed 'kind' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1470 行.
+SQL: SELECT * FROM `test_public_data` WHERE `filesernum` = 'a100201811614585' AND `kind` = 'test' ORDER BY `in_ser` asc  [ RunTime:0.0006s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `test_public_data` WHERE `filesernum` = 'a100201811614585' AND `kind` = 'test' LIMIT 1   [ RunTime:0.0004s ]
+SQL: SELECT * FROM `paper_msg_data` WHERE `filesernum` = 'a100201811614585' LIMIT 1   [ RunTime:0.0004s ]
+SQL: SELECT * FROM `questiontypes` WHERE `subjectid` = 2  [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant srcid - assumed 'srcid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1489 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=1668 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1490 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1490 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1491 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1491 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1492 行.
+NOTIC: [8] Use of undefined constant imgx - assumed 'imgx' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1493 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1493 行.
+NOTIC: [8] Use of undefined constant pic1 - assumed 'pic1' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1496 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic2 - assumed 'pic2' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1497 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic3 - assumed 'pic3' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1498 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic4 - assumed 'pic4' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1499 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic1src - assumed 'pic1src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1501 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1501 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1502 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic1x - assumed 'pic1x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1503 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1503 行.
+NOTIC: [8] Use of undefined constant pic2src - assumed 'pic2src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1505 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1505 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1506 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic2x - assumed 'pic2x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1507 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1507 行.
+NOTIC: [8] Use of undefined constant pic3src - assumed 'pic3src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1510 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1510 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1511 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic3x - assumed 'pic3x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1512 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1512 行.
+NOTIC: [8] Use of undefined constant pic4src - assumed 'pic4src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1515 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1515 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1516 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic4x - assumed 'pic4x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1517 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1517 行.
+NOTIC: [8] Use of undefined constant myid - assumed 'myid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1518 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1518 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1519 行.
+NOTIC: [8] Use of undefined constant srcid - assumed 'srcid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1519 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1520 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1520 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1521 行.
+NOTIC: [8] Use of undefined constant img_x - assumed 'img_x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1521 行.
+NOTIC: [8] Use of undefined constant y - assumed 'y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1522 行.
+NOTIC: [8] Use of undefined constant img_y - assumed 'img_y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1522 行.
+NOTIC: [8] Use of undefined constant width - assumed 'width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1523 行.
+NOTIC: [8] Use of undefined constant img_width - assumed 'img_width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1523 行.
+NOTIC: [8] Use of undefined constant height - assumed 'height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1524 行.
+NOTIC: [8] Use of undefined constant img_height - assumed 'img_height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1524 行.
+NOTIC: [8] Use of undefined constant questionnum - assumed 'questionnum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1525 行.
+NOTIC: [8] Use of undefined constant questionnum - assumed 'questionnum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1525 行.
+NOTIC: [8] Use of undefined constant typeid - assumed 'typeid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1526 行.
+SQL: SELECT * FROM `questiontypes` WHERE ( id=20 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant typesmsg - assumed 'typesmsg' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1538 行.
+NOTIC: [8] Use of undefined constant typesmsg - assumed 'typesmsg' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1538 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1544 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1544 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1546 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1547 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1548 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1549 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1549 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1555 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=1673 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1556 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1556 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1557 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1557 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1558 行.
+NOTIC: [8] Use of undefined constant img_x - assumed 'img_x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1558 行.
+NOTIC: [8] Use of undefined constant y - assumed 'y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1559 行.
+NOTIC: [8] Use of undefined constant img_y - assumed 'img_y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1559 行.
+NOTIC: [8] Use of undefined constant width - assumed 'width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1560 行.
+NOTIC: [8] Use of undefined constant img_width - assumed 'img_width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1560 行.
+NOTIC: [8] Use of undefined constant height - assumed 'height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1561 行.
+NOTIC: [8] Use of undefined constant img_height - assumed 'img_height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1561 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Undefined index: questiontype /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1566 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1568 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1572 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1572 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1573 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1575 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1576 行.
+NOTIC: [8] Use of undefined constant srcid - assumed 'srcid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1489 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=1669 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1490 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1490 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1491 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1491 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1492 行.
+NOTIC: [8] Use of undefined constant imgx - assumed 'imgx' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1493 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1493 行.
+NOTIC: [8] Use of undefined constant pic1 - assumed 'pic1' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1496 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic2 - assumed 'pic2' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1497 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic3 - assumed 'pic3' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1498 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0004s ]
+NOTIC: [8] Use of undefined constant pic4 - assumed 'pic4' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1499 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic1src - assumed 'pic1src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1501 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1501 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1502 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic1x - assumed 'pic1x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1503 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1503 行.
+NOTIC: [8] Use of undefined constant pic2src - assumed 'pic2src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1505 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1505 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1506 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic2x - assumed 'pic2x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1507 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1507 行.
+NOTIC: [8] Use of undefined constant pic3src - assumed 'pic3src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1510 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1510 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1511 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic3x - assumed 'pic3x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1512 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1512 行.
+NOTIC: [8] Use of undefined constant pic4src - assumed 'pic4src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1515 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1515 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1516 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic4x - assumed 'pic4x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1517 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1517 行.
+NOTIC: [8] Use of undefined constant myid - assumed 'myid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1518 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1518 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1519 行.
+NOTIC: [8] Use of undefined constant srcid - assumed 'srcid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1519 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1520 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1520 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1521 行.
+NOTIC: [8] Use of undefined constant img_x - assumed 'img_x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1521 行.
+NOTIC: [8] Use of undefined constant y - assumed 'y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1522 行.
+NOTIC: [8] Use of undefined constant img_y - assumed 'img_y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1522 行.
+NOTIC: [8] Use of undefined constant width - assumed 'width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1523 行.
+NOTIC: [8] Use of undefined constant img_width - assumed 'img_width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1523 行.
+NOTIC: [8] Use of undefined constant height - assumed 'height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1524 行.
+NOTIC: [8] Use of undefined constant img_height - assumed 'img_height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1524 行.
+NOTIC: [8] Use of undefined constant questionnum - assumed 'questionnum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1525 行.
+NOTIC: [8] Use of undefined constant questionnum - assumed 'questionnum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1525 行.
+NOTIC: [8] Use of undefined constant typeid - assumed 'typeid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1526 行.
+SQL: SELECT * FROM `questiontypes` WHERE ( id=20 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant typesmsg - assumed 'typesmsg' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1538 行.
+NOTIC: [8] Use of undefined constant typesmsg - assumed 'typesmsg' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1538 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1544 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1544 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1546 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1547 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1548 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1549 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1549 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1555 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=1674 ) LIMIT 1   [ RunTime:0.0004s ]
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1556 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1556 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1557 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1557 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1558 行.
+NOTIC: [8] Use of undefined constant img_x - assumed 'img_x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1558 行.
+NOTIC: [8] Use of undefined constant y - assumed 'y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1559 行.
+NOTIC: [8] Use of undefined constant img_y - assumed 'img_y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1559 行.
+NOTIC: [8] Use of undefined constant width - assumed 'width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1560 行.
+NOTIC: [8] Use of undefined constant img_width - assumed 'img_width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1560 行.
+NOTIC: [8] Use of undefined constant height - assumed 'height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1561 行.
+NOTIC: [8] Use of undefined constant img_height - assumed 'img_height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1561 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Undefined index: questiontype /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1566 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1568 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1572 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1572 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1573 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1575 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1576 行.
+NOTIC: [8] Use of undefined constant srcid - assumed 'srcid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1489 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=1670 ) LIMIT 1   [ RunTime:0.0004s ]
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1490 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1490 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1491 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1491 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1492 行.
+NOTIC: [8] Use of undefined constant imgx - assumed 'imgx' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1493 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1493 行.
+NOTIC: [8] Use of undefined constant pic1 - assumed 'pic1' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1496 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic2 - assumed 'pic2' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1497 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0004s ]
+NOTIC: [8] Use of undefined constant pic3 - assumed 'pic3' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1498 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0005s ]
+NOTIC: [8] Use of undefined constant pic4 - assumed 'pic4' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1499 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic1src - assumed 'pic1src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1501 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1501 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1502 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic1x - assumed 'pic1x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1503 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1503 行.
+NOTIC: [8] Use of undefined constant pic2src - assumed 'pic2src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1505 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1505 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1506 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic2x - assumed 'pic2x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1507 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1507 行.
+NOTIC: [8] Use of undefined constant pic3src - assumed 'pic3src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1510 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1510 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1511 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic3x - assumed 'pic3x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1512 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1512 行.
+NOTIC: [8] Use of undefined constant pic4src - assumed 'pic4src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1515 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1515 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1516 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic4x - assumed 'pic4x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1517 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1517 行.
+NOTIC: [8] Use of undefined constant myid - assumed 'myid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1518 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1518 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1519 行.
+NOTIC: [8] Use of undefined constant srcid - assumed 'srcid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1519 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1520 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1520 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1521 行.
+NOTIC: [8] Use of undefined constant img_x - assumed 'img_x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1521 行.
+NOTIC: [8] Use of undefined constant y - assumed 'y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1522 行.
+NOTIC: [8] Use of undefined constant img_y - assumed 'img_y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1522 行.
+NOTIC: [8] Use of undefined constant width - assumed 'width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1523 行.
+NOTIC: [8] Use of undefined constant img_width - assumed 'img_width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1523 行.
+NOTIC: [8] Use of undefined constant height - assumed 'height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1524 行.
+NOTIC: [8] Use of undefined constant img_height - assumed 'img_height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1524 行.
+NOTIC: [8] Use of undefined constant questionnum - assumed 'questionnum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1525 行.
+NOTIC: [8] Use of undefined constant questionnum - assumed 'questionnum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1525 行.
+NOTIC: [8] Use of undefined constant typeid - assumed 'typeid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1526 行.
+SQL: SELECT * FROM `questiontypes` WHERE ( id=20 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant typesmsg - assumed 'typesmsg' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1538 行.
+NOTIC: [8] Use of undefined constant typesmsg - assumed 'typesmsg' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1538 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1544 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1544 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1546 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1547 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1548 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1549 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1549 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1555 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=1675 ) LIMIT 1   [ RunTime:0.0004s ]
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1556 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1556 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1557 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1557 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1558 行.
+NOTIC: [8] Use of undefined constant img_x - assumed 'img_x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1558 行.
+NOTIC: [8] Use of undefined constant y - assumed 'y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1559 行.
+NOTIC: [8] Use of undefined constant img_y - assumed 'img_y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1559 行.
+NOTIC: [8] Use of undefined constant width - assumed 'width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1560 行.
+NOTIC: [8] Use of undefined constant img_width - assumed 'img_width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1560 行.
+NOTIC: [8] Use of undefined constant height - assumed 'height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1561 行.
+NOTIC: [8] Use of undefined constant img_height - assumed 'img_height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1561 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Undefined index: questiontype /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1566 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1568 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1572 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1572 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1573 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1575 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1576 行.
+NOTIC: [8] Use of undefined constant srcid - assumed 'srcid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1489 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=1671 ) LIMIT 1   [ RunTime:0.0004s ]
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1490 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1490 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1491 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1491 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1492 行.
+NOTIC: [8] Use of undefined constant imgx - assumed 'imgx' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1493 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1493 行.
+NOTIC: [8] Use of undefined constant pic1 - assumed 'pic1' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1496 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic2 - assumed 'pic2' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1497 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic3 - assumed 'pic3' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1498 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic4 - assumed 'pic4' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1499 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic1src - assumed 'pic1src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1501 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1501 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1502 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic1x - assumed 'pic1x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1503 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1503 行.
+NOTIC: [8] Use of undefined constant pic2src - assumed 'pic2src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1505 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1505 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1506 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic2x - assumed 'pic2x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1507 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1507 行.
+NOTIC: [8] Use of undefined constant pic3src - assumed 'pic3src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1510 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1510 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1511 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic3x - assumed 'pic3x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1512 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1512 行.
+NOTIC: [8] Use of undefined constant pic4src - assumed 'pic4src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1515 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1515 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1516 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic4x - assumed 'pic4x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1517 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1517 行.
+NOTIC: [8] Use of undefined constant myid - assumed 'myid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1518 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1518 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1519 行.
+NOTIC: [8] Use of undefined constant srcid - assumed 'srcid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1519 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1520 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1520 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1521 行.
+NOTIC: [8] Use of undefined constant img_x - assumed 'img_x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1521 行.
+NOTIC: [8] Use of undefined constant y - assumed 'y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1522 行.
+NOTIC: [8] Use of undefined constant img_y - assumed 'img_y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1522 行.
+NOTIC: [8] Use of undefined constant width - assumed 'width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1523 行.
+NOTIC: [8] Use of undefined constant img_width - assumed 'img_width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1523 行.
+NOTIC: [8] Use of undefined constant height - assumed 'height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1524 行.
+NOTIC: [8] Use of undefined constant img_height - assumed 'img_height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1524 行.
+NOTIC: [8] Use of undefined constant questionnum - assumed 'questionnum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1525 行.
+NOTIC: [8] Use of undefined constant questionnum - assumed 'questionnum' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1525 行.
+NOTIC: [8] Use of undefined constant typeid - assumed 'typeid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1526 行.
+SQL: SELECT * FROM `questiontypes` WHERE ( id=20 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant typesmsg - assumed 'typesmsg' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1538 行.
+NOTIC: [8] Use of undefined constant typesmsg - assumed 'typesmsg' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1538 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1544 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1544 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1546 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1547 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1548 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1549 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1549 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1555 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=1676 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1556 行.
+NOTIC: [8] Use of undefined constant answerid - assumed 'answerid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1556 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1557 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1557 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1558 行.
+NOTIC: [8] Use of undefined constant img_x - assumed 'img_x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1558 行.
+NOTIC: [8] Use of undefined constant y - assumed 'y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1559 行.
+NOTIC: [8] Use of undefined constant img_y - assumed 'img_y' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1559 行.
+NOTIC: [8] Use of undefined constant width - assumed 'width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1560 行.
+NOTIC: [8] Use of undefined constant img_width - assumed 'img_width' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1560 行.
+NOTIC: [8] Use of undefined constant height - assumed 'height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1561 行.
+NOTIC: [8] Use of undefined constant img_height - assumed 'img_height' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1561 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Undefined index: questiontype /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1564 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1566 行.
+NOTIC: [8] Use of undefined constant questiontype - assumed 'questiontype' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1568 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1572 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1572 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1573 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1575 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1576 行.
+NOTIC: [8] Use of undefined constant srcid - assumed 'srcid' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1489 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=1672 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1490 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1490 行.
+NOTIC: [8] Use of undefined constant title - assumed 'title' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1491 行.
+NOTIC: [8] Use of undefined constant inputval - assumed 'inputval' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1491 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1492 行.
+NOTIC: [8] Use of undefined constant imgx - assumed 'imgx' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1493 行.
+NOTIC: [8] Use of undefined constant x - assumed 'x' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1493 行.
+NOTIC: [8] Use of undefined constant pic1 - assumed 'pic1' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1496 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic2 - assumed 'pic2' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1497 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic3 - assumed 'pic3' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1498 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic4 - assumed 'pic4' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1499 行.
+SQL: SELECT * FROM `img_cuted_data` WHERE ( id=0 ) LIMIT 1   [ RunTime:0.0003s ]
+NOTIC: [8] Use of undefined constant pic1src - assumed 'pic1src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1501 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1501 行.
+NOTIC: [8] Use of undefined constant src - assumed 'src' /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Controller/TestpanelController.class.php 第 1502 行.
+NOTIC: [2] getimagesize(): Filename cannot be empty /Users/fangzheng/Documents/myproject/phpfile/test/Application/Home/Common/function.php 第 1737 行.
+NOTIC: [8] Use of undefined constant pic1x 

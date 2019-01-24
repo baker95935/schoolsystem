@@ -1,0 +1,142 @@
+<?php if (!defined('THINK_PATH')) exit();?><!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>考试信息</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/Public/css/main.css"/>
+	<link rel="stylesheet" type="text/css" href="/Public/css/stu.css"/>
+	<script src="/Public/jquery/jquery.min.js"></script>
+	<link href="/Public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="/Public/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/Public/js/public.js"></script>
+
+	<script language="javascript">
+		function work1(target) {
+			//e.preventDefault();
+			$("#dropdownMenu1").text($(target).text());
+		}
+
+		function work2(target) {
+			//e.preventDefault();
+			$("#dropdownMenu2").text($(target).text());
+		}
+
+		function work3(target) {
+			//e.preventDefault();
+			$("#dropdownMenu3").text($(target).text());
+		}
+	</script>
+</head>
+<body class="background_color">
+	<div class="container" style="height: 100%;">
+		<div class="row title_class">
+			<div class="col-xs-2"><a href="<?php echo U('home',array('userid'=>$userid,'username'=>$username,'realname'=>$realname));?>"><img src="/Public/img/reg_back.png" class="title_left_img"></a></div>
+			<div class="col-xs-8  title_font_middle " >个人管理<?php echo ($class_name); ?></div>
+			<div class="col-xs-2"><a href="<?php echo U('managelist0202',array('userid'=>$userid,'username'=>$username,'realname'=>$realname));?>" style="color: white;font-size: 15px;display: block;margin-top: 1px;"></a></div>
+		</div>
+		<div class="row parent_nav">
+		<div class="col-xs-6"  style="text-align: center;padding-top: 6px;">
+			<span>用户名：<?php echo ($username); ?></span>
+		</div>
+		<div class="col-xs-6" style="text-align: center;padding-top: 6px;">
+				<span>班级：<?php echo ($classname); ?></span>
+		</div>
+
+		</div>
+		<div class="row">
+			<div id="contentdiv" class="col-xs-12" style="height: 600px;overflow-y: auto;">
+				<ol id="list1" style="list-style-type:none;font-size: 15px;margin-left: -30px;padding-top: 10px;">
+					<li>
+						<input id="realname" type="text" placeholder="我的名字" class="student_msg_input" value="<?php echo ($realname); ?>">
+						<hr>
+					</li>
+					<li>
+						<input id="oldpwd" type="password" placeholder="原始密码" class="student_msg_input">
+						<hr>
+					</li>
+					<li>
+						<input id="newpwd"  type="password" placeholder="新密码" class="student_msg_input">
+						<hr>
+					</li>
+					<li>
+						<input id="newpwdtwo" type="password" placeholder="再次密码" class="student_msg_input">
+						<hr>
+					</li>
+					<li>
+						<input id="<?php echo ($userid); ?>" type="button" value="提交" onclick="pwdsub(this.id)" class="student_msg_input">
+					</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+
+
+	<input id="userid" type="hidden" value="<?php echo ($userid); ?>">
+	<input id="pagelength" type="hidden" value="10">
+	<input id="testidarr" type="hidden" value="">
+	<input id="questionsum" type="hidden" value="0">
+
+</body>
+
+<script>
+	$(function(){
+		var pagelength=$('#pagelength').val();
+		var userid=$('#userid').val();
+	});
+
+
+	function pwdsub(id)
+	{
+		var oldpwd=$('#oldpwd').val();
+		var newpwd=$('#newpwd').val();
+		var newpwdtwo=$('#newpwdtwo').val();
+		var realname=$('#realname').val();
+
+		if(newpwd=='' || newpwdtwo=='')
+		{
+			alert('新密码不能为空！！');
+			return;
+		}
+
+		if(newpwd!=newpwdtwo)
+		{
+			alert('新密码两次要一致！！');
+			return;
+		}
+
+
+
+
+		$.ajax({
+			url:"<?php echo U('phppwdsub');?>",
+			data:{userid:id,oldpwd:oldpwd,newpwd:newpwd,realname:realname},
+			datatype:'json',
+			type:'post',
+			async : false,
+			success:function(re){
+
+				$('#newpwd').val('');
+				$('#newpwdtwo').val('');
+				$('#oldpwd').val('');
+				if(re==0)
+				{
+					alert('您输入的原始密码错误');
+				}
+
+				if(re==1)
+				{
+					alert('修改密码成功！！');
+				}
+
+
+
+
+
+			}
+		})
+	}
+
+</script>
+</html>

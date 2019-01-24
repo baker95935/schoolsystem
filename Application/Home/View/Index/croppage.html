@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title></title>
+
+        <link rel="stylesheet" type="text/css" href="http://cdn.gbtags.com/twitter-bootstrap/3.2.0/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
+        <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+        <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+
+
+
+
+        <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+
+        <link href="__PUBLIC__/sitelogo/sitelogo.css" rel="stylesheet">
+
+        <script src="__PUBLIC__/sitelogo/sitelogo.js"></script>
+
+    </head>
+    <body>
+
+        <div class="container" id="crop-avatar">
+
+            <!-- Current avatar -->
+            <div style="text-align:center;color:red;margin:50px 0">提示：点击头像上传</div>
+            <div class="avatar-view" title="更换头像">
+                <img src="/static/img/picture.jpg" alt="头像"/>
+            </div>
+
+            <!-- Cropping modal -->
+            <div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form class="avatar-form" action="{:U('crop')}" enctype="multipart/form-data" method="post">
+                            <div class="modal-header">
+                                <button class="close" data-dismiss="modal" type="button">&times;</button>
+                                <h4 class="modal-title" id="avatar-modal-label">更换头像</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="avatar-body">
+
+                                    <!-- Upload image and data -->
+                                    <div class="avatar-upload">
+                                        <input class="avatar-src" name="avatar_src" type="hidden"/>
+                                        <input class="avatar-data" name="avatar_data" type="hidden"/>
+                                        <label for="avatarInput">头像上传</label>
+                                        <input class="avatar-input" id="avatarInput" name="avatar_file" type="file"/>
+                                    </div>
+
+                                    <!-- Crop and preview -->
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <div class="avatar-wrapper"></div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="avatar-preview preview-lg"></div>
+                                            <div class="avatar-preview preview-md"></div>
+                                            <div class="avatar-preview preview-sm"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row avatar-btns">
+                                        <div class="col-md-9">
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" data-method="rotate" data-option="-90" type="button" title="旋转-90°">向左旋转</button>
+                                                <button class="btn btn-primary" data-method="rotate" data-option="-15" type="button">-15°</button>
+                                                <button class="btn btn-primary" data-method="rotate" data-option="-30" type="button">-30°</button>
+                                                <button class="btn btn-primary" data-method="rotate" data-option="-45" type="button">-45°</button>
+                                            </div>
+                                            <div class="btn-group">
+                                                <button class="btn btn-primary" data-method="rotate" data-option="90" type="button" title="旋转90°">向右旋转</button>
+                                                <button class="btn btn-primary" data-method="rotate" data-option="15" type="button">15°</button>
+                                                <button class="btn btn-primary" data-method="rotate" data-option="30" type="button">30°</button>
+                                                <button class="btn btn-primary" data-method="rotate" data-option="45" type="button">45°</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button class="btn btn-primary btn-block avatar-save" type="submit">保存修改</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- /.modal -->
+
+            <!-- Loading state -->
+            <div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
+        </div>
+
+    </body>
+</html>

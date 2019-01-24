@@ -1,0 +1,18 @@
+[ 2018-12-11T11:02:11+08:00 ] 46.21.151.107 /index.php?s=index/think%5CApp/invokefunction&function=var_dump&vars[0]=xoqjxoasdjjcjxzcaksdkadsas&vars[1]=xxxxxx
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000012s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000292s ]
+ERR: 无法加载模块:Index
+
+[ 2018-12-11T12:08:56+08:00 ] 103.43.18.7 /index.php?s=index/think%07pp/invokefunction&function=call_user_func_array&vars[0]=as
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000235s ]
+ERR: 无法加载模块:Index
+
+[ 2018-12-11T20:07:49+08:00 ] 103.43.18.7 /index.php?s=index/%09hink%5CRequest/input&filter=phpinfo&data=1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000242s ]
+ERR: 无法加载模块:Index
+

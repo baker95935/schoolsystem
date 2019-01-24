@@ -1,0 +1,549 @@
+<?php if (!defined('THINK_PATH')) exit();?><!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>知识点辅导</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="/Public/css/main.css"/>
+	<link rel="stylesheet" type="text/css" href="/Public/css/stu.css"/>
+	<script src="/Public/jquery/jquery.min.js"></script>
+	<link href="/Public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="/Public/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/Public/js/public.js"></script>
+
+	<script language="javascript">
+		function work1(target) {
+			//e.preventDefault();
+			$("#dropdownMenu1").text($(target).text());
+		}
+
+		function work2(target) {
+			//e.preventDefault();
+			$("#dropdownMenu2").text($(target).text());
+		}
+
+		function work3(target) {
+			//e.preventDefault();
+			$("#dropdownMenu3").text($(target).text());
+		}
+	</script>
+</head>
+<body class="background_color">
+
+
+<div  data-toggle="modal" data-target="#myModal" style="position: absolute;z-index:100;width: 80px;height:80px;background-color: #1b6d85;border-radius: 40px;top:70%;left: 70%;color: #ffffff;font-size: 16px;padding-top: 28px;text-align: center;"><span onclick="addtestname()">添加</span><span id="notesum" style="margin-left: 2px;"></span></div>
+
+ </div>
+	<div class="container" style="height: 100%;">
+		<div class="row title_class">
+			<div class="col-xs-2"><a href="<?php echo U('stu_keylist0401',array('userid'=>$userid,'username'=>$username,'realname'=>$realname));?>"><img src="/Public/img/reg_back.png" class="title_left_img"></a></div>
+			<div class="col-xs-8  title_font_middle " id="keynoteid" ><?php echo ($keynotemsg); ?></div>
+			<div class="col-xs-2"><a href="#" style="color: white;font-size: 15px;display: block;margin-top: 1px;">全部</a></div>
+		</div>
+		<div class="row parent_nav">
+		<div class="col-xs-3" >
+
+			<select class="blackselect" style="padding-left: -10px;">
+              <option value ="0">全部</option>
+              <?php if(is_array($subjectdata)): $i = 0; $__LIST__ = $subjectdata;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$subjectdata): $mod = ($i % 2 );++$i;?><option value ="<?php echo ($subjectdata["id"]); ?>"><?php echo ($subjectdata["typesmsg"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+			</select>
+
+		</div>
+		<div class="col-xs-2" style="margin-top:6px;" onclick="textchange('pre')">
+			Pre
+		</div>
+			<div class="col-xs-5"  style="margin-top:6px;">
+              <b><span id="paper_id" name="<?php echo ($testid); ?>"><?php echo ($paper_name); ?></span></b>
+			</div>
+
+			<div class="col-xs-2"  style="margin-top:6px;" onclick="textchange('next')">
+				Next
+			</div>
+		</div>
+		<div class="row">
+			<div id="contentdiv" class="col-xs-12" style="height: 600px;overflow-y: auto;">
+					<div class="row">
+                      <div class="col-xs-4"><span id="bank_id" bankortest="test" onclick="changesub('button')">题库</span></div>
+						<div class="col-xs-4"><span >习题</span><span id="testnum" style="margin-left: 20px;">0</span></div>
+						<div class="col-xs-4"><span style="margin-left: 60px;"></span></div>
+					</div>
+						
+                  
+                  
+		<div id="test_div" class="row" style="padding-left: 0px;padding-right: 0px;height: 570px;overflow-y: auto;background-color:#FFFFFF;margin-top:10px;">
+			<ol id="list1" style="padding-right: 0%;padding-left: 0%;list-style-type:none;border: 0px;" class="parent_ol">
+				<?php if(is_array($testdata)): $i = 0; $__LIST__ = $testdata;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$testid): $mod = ($i % 2 );++$i;?><li style="border: 0px;margin-top: 5px;">
+						<table style="border: 1px;">
+							<tr>
+								<td style="padding-left: 15px;vertical-align: top;"><span style="margin-top: 0px;"><?php echo ($testid["newtitle"]); ?></span></td>
+								<td><img id="img<?php echo ++$m;?>" name="<?php echo ($testid["id"]); ?>" typeid="<?php echo ($testid["typeid"]); ?>" mytest='0' onclick="chooseimgsub(this.id)" style="width: 100%"   src="<?php echo ($testid["src"]); ?>"></td>
+							</tr>
+							<tr>
+								<td style="padding-left: 15px;vertical-align: top;"></td><td style="padding-right: 0px;text-align: center;"><img id="imga<?php echo ($m); ?>" src="<?php echo ($testid["pic1"]); ?>" style="width: 15%;"><img id="imgb<?php echo ($m); ?>" src="<?php echo ($testid["pic2"]); ?>" style="width: 15%;"><img id="imgc<?php echo ($m); ?>" src="<?php echo ($testid["pic3"]); ?>" style="width: 15%;"><img id="imgd<?php echo ($m); ?>" src="<?php echo ($testid["pic4"]); ?>" style="width: 15%;"></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td style="text-align: center">
+									<span style="font-size: 10px;"><?php echo ($testid["picnote"]); ?></span>
+								</td>
+							</tr>
+						</table>
+					</li><?php endforeach; endif; else: echo "" ;endif; ?>
+					</ol>
+			<input type="hidden" id="sum" value="<?php echo ($m); ?>">
+        </div>
+			<div id="bank_div" style="padding-left: 4px;padding-top: 20px;width: 100%;white-space: nowrap;display:none;">
+                              <?php if(is_array($key_paper_msg)): $i = 0; $__LIST__ = $key_paper_msg;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$key_paper_msg_id): $mod = ($i % 2 );++$i;?><span><?php echo ++$n;?>.</span><span  style="margin-left: 20px;"><?php echo ($key_paper_msg_id["paper_name"]); ?></span>
+								  <span style="margin-left: 20px;"><?php echo ($key_paper_msg_id["questionsum"]); ?></span>
+								  <a onclick="changesub(this.id)" id="<?php echo ($key_paper_msg_id["id"]); ?>" style="margin-left: 20px;">选择</a><br>
+								  <span style="margin-left: 10px;">知识点：<?php echo ($key_paper_msg_id["keynote_msg"]); ?></span>
+								  <hr ><?php endforeach; endif; else: echo "" ;endif; ?>
+				</div>
+
+					<div style="padding-left: 4px;padding-top: 4px;width: 100%;white-space: nowrap;display:none">
+							<span>1.</span><img style="width: 95%;margin-top: 10px;" src="/uploads/temp/123.jpg"><br>
+							<span>2.</span><img style="width: 95%;margin-top: 10px;" src="/uploads/temp/123.jpg"><br>
+							<span>3.</span><img style="width: 95%;margin-top: 10px;" src="/uploads/temp/123.jpg"><br>
+							<span>4.</span><img style="width: 95%;margin-top: 10px;" src="/uploads/temp/123.jpg"><br>
+							<span>5.</span><img style="width: 95%;margin-top: 10px;" src="/uploads/temp/123.jpg"><br>
+							<span>6.</span><img style="width: 95%;margin-top: 10px;" src="/uploads/temp/123.jpg"><br>
+							<span>7.</span><img style="width: 95%;margin-top: 10px;" src="/uploads/temp/123.jpg"><br>
+							<span>8.</span><img style="width: 95%;margin-top: 10px;" src="/uploads/temp/123.jpg"><br>
+							<span>9.</span><img style="width: 95%;margin-top: 10px;" src="/uploads/temp/123.jpg"><br>
+							<span>10.</span><img style="width: 95%;margin-top: 10px;" src="/uploads/temp/123.jpg"><br>
+						<hr >
+					</div>
+			</div>
+		</div>
+	</div>
+  
+   <!-- 模态框（Modal） -->
+
+
+ <div class="modal fade" id="myModal" style="margin-top: 120px;" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	 <div class="modal-dialog">
+		 <div class="modal-content">
+			 <div class="modal-header">
+				 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					 &times;
+				 </button>
+				 <h4 class="modal-title" id="myModalLabel">
+					 生存新的个人试卷
+				 </h4>
+			 </div>
+			 <div class="modal-body">
+				 <input id="paper_name" type="text" style="border: 0px;" placeholder="请输入您要生存试卷名称！！">
+			 </div>
+			 <div class="modal-footer">
+				 <button type="button" class="btn btn-primary" onclick="datasubmit()">
+					 存储试卷
+				 </button>
+			 </div>
+		 </div>
+	 </div>
+</div>
+
+	<input id="userid" type="hidden" value="<?php echo ($userid); ?>">
+    <input id="username" type="hidden" value="<?php echo ($username); ?>">
+  	<input id="realname" type="hidden" value="<?php echo ($realname); ?>">
+	<input id="pagelength" type="hidden" value="10">
+	<input id="testid" type="hidden" value="<?php echo ($test_id); ?>">
+  	<input id="questionid" type="hidden" value="">
+	<input id="questionsum" type="hidden" value="0">
+    <input id="testid_arr" maxnum="<?php echo ($maxnum); ?>" type="hidden" value="<?php echo ($testid_arr); ?>">
+    <input id="nownum" type="hidden" value='0'>
+    <input id="typeid" type="hidden" value="">
+    <input id="keynote_id" type="hidden" value="<?php echo ($keynote_id); ?>">
+  	<input id="keynotemsg" type="hidden" value="<?php echo ($keynotemsg); ?>">
+  
+
+</body>
+
+<script>
+	$(function(){
+		var nowpage=1;
+		var pagelength=$('#pagelength').val();
+		var userid=$('#userid').val();
+		//managetestdata(userid,nowpage,pagelength);
+	});
+  
+  function changesub(id)
+  {
+    var bankortest=$('#bank_id').attr('bankortest');
+    if(id=='button')
+    {
+     if(bankortest=='test')
+     {
+       $('#test_div').css('display','none');
+       $('#bank_div').css('display','');
+       $('#bank_id').attr('bankortest','bank');
+       $('#bank_id').text('习题');
+     }
+     else
+     {
+       $('#test_div').css('display','');
+       $('#bank_div').css('display','none');
+       $('#bank_id').attr('bankortest','test');
+       $('#bank_id').text('题库');
+     }
+    }else
+    {
+         if(bankortest=='test')
+     {
+       $('#test_div').css('display','none');
+       $('#bank_div').css('display','');
+       $('#bank_id').attr('bankortest','bank');
+       $('#bank_id').text('习题');
+     }
+     else
+     {
+       $('#test_div').css('display','');
+       $('#bank_div').css('display','none');
+       $('#bank_id').attr('bankortest','test');
+       $('#bank_id').text('题库');
+     }
+      testdetail(id);
+      $('#testid').val(id);
+      testnum(id);
+      
+       
+    }
+  }
+  
+  function testnum(testid)
+  {
+        var testid_arr=$('#testid_arr').val();
+        var test_arr=testid_arr.split(",");	
+        var num= $.inArray(testid, test_arr);
+        $('#nownum').val(num);
+    
+       //alert(num);
+    
+  }
+  //选择图片事件
+  function chooseimgsub(id)
+  {
+    var mytest=$('#'+id).attr('mytest');
+    var testid=$('#'+id).attr('name');
+    var typeid=$('#'+id).attr('typeid');
+    
+   // alert(testid);
+    
+    if(mytest=='0')
+    {
+      $('#'+id).css('border-bottom','1px dashed blue');
+      $('#'+id).attr('mytest','1');
+      checktestidsub(1,testid,typeid);
+
+
+    }
+    else
+    {
+      $('#'+id).css('border-bottom','0px dashed blue');
+      $('#'+id).attr('mytest','0');
+      checktestidsub(0,testid,typeid);
+
+
+    }
+    
+    
+  }
+  
+  function checktestidsub(kind,testid,typeid)
+  { 
+    var oldquestionid=$('#questionid').val();
+    var oldtypeid=$('#typeid').val();
+    var num=$('#testnum').text();
+     var keynotemsg=$('#keynotemsg').val();
+    
+    
+     var mydate = new Date();
+     var thisyear=mydate.getYear(); //获取当前年份(2位)
+     var thismonth=mydate.getMonth()*1+1; //获取当前月份(0-11,0代表1月)
+     var thisdate=mydate.getDate(); //获取当前日(1-31)
+    
+    
+    if(kind==1)
+    {
+      if(num==0)
+      {
+        $('#questionid').val(testid);
+        $('#testnum').text(1);
+        $('#typeid').val(typeid);
+      }
+      else
+      {
+        oldquestionid=oldquestionid+','+testid;
+        $('#questionid').val(oldquestionid);
+        
+        oldtypeid=oldtypeid+','+typeid;
+        $('#typeid').val(oldtypeid);
+        num=num*1+1;
+        $('#testnum').text(num);
+ 
+      }
+    }
+    
+    if(kind==0)
+    {    
+      var oldquestionid_arr=oldquestionid.split(','); 
+      var oldtypeid_arr=oldtypeid.split(',');
+      
+      oldtypeid_arr.splice(jQuery.inArray(testid,oldquestionid_arr),1); 
+      oldquestionid_arr.splice(jQuery.inArray(testid,oldquestionid_arr),1); 
+      $('#questionid').val(oldquestionid_arr);
+      $('#typeid').val(oldtypeid_arr);
+      num=num-1;
+      $('#testnum').text(num);
+    }
+    
+    
+      if(num!=0)
+      {
+         var titlemsg=keynotemsg+''+thisyear+''+thismonth+''+thisdate+'-'+num;
+      }else
+      {
+        var titlemsg='';
+      }
+    
+    $('#paper_name').val(titlemsg);
+    
+    
+  
+  }
+  
+  function uploadtestid()
+  {
+      var oldquestionid=$('#questionid').val();
+      var oldquestionid_arr=oldquestionid.split(',');
+      var num=$('#testnum').text();  
+      var questionid='';
+    
+     for(var i=0;i<num;i++)
+     {
+        questionid=oldquestionid_arr[i];
+        $("img[name="+questionid+"]").attr('mytest','1');
+        $("img[name="+questionid+"]").css('border-bottom','1px dashed blue');
+     }
+    
+
+
+  }
+  
+	function nextpage(){
+		var nowpage=$('#nowpage').text();
+		var maxnum=$('#pagenum').text();
+		var userid=$('#userid').val();
+		var pagelength=$('#pagelength').val();
+
+		nowpage=nowpage*1+1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+
+		$("tr[name='testlisttr']").remove();
+		$('#nowpage').text(nowpage);
+		managetestdata(userid,nowpage,pagelength);
+		selectele();
+
+
+	}
+	function managetestdata(userid,nowpage,pagelength)
+	{
+		$.ajax({
+			url:"<?php echo U('phptestmsg0201');?>",
+			data:{userid:userid,nowpage:nowpage,pagelength:pagelength},
+			datatype:'json',
+			type:'post',
+			success:function(re){
+				var testlist=eval("("+re+")");
+				var addhtmlmsg = '';
+				var beginhtml = $('#list1').html();
+				var mylength = testlist['length'];
+
+				var testid = '';
+				var classid=testlist['classid'];
+				var pagenum=testlist['pagenum'];
+				var papername;
+				$('#pagenum').text(pagenum);
+				var j;
+				for (var i = 0; i < mylength; i++) {
+					j=i+1;
+					testid=testlist[i]['testid'];
+					papername=testlist[i]['num']+'. '+testlist[i]['paper_name']+'（'+testlist[i]['person_sum']+'/'+testlist[i]['classnum']+'）';
+					var ahtml='/index.php/Home/HeadTeacher/managepaperdetail0202/testid/'+testid+'/classid/'+classid+'.html';
+					addhtmlmsg=addhtmlmsg+'<li><div style="padding-left: 20px;padding-top: 4px;width: 330px;overflow-x:scroll;white-space: nowrap;"><a style="color: #000000;" href="'+ahtml+'">'+papername+'</a><br><a style="margin-left: 20px;color: #000000;">'+testlist[i]['publish_time']+'</a><a style="margin-left: 15px;color: #000000;">Edit：'+testlist[i]['lastreadtime']+'</a></div></li><hr style="margin-top: 14px; margin-bottom: 10px;">';
+					$('#list1').html(beginhtml + addhtmlmsg);
+				}
+			}
+		})
+	}
+	function selectsub() {
+		var mytestarr='';
+		var ctsumarr='';
+		var ctsum=0;
+		$("input[name='testid']").each(function(){
+			if($(this).prop("checked")==true)
+			{
+
+				mytestarr=mytestarr+','+$(this).val();
+				ctsum=ctsum+$(this).attr('ctsum')*1;
+			}
+		});
+
+		mytestarr=mytestarr.substr(1);
+
+		$('#notesum').text('('+ctsum+')');
+		$('#testidarr').val(mytestarr);
+		$('#questionsum').val(ctsum);
+
+	}
+	function datasubmit(){
+		var userid=$('#userid').val();
+		var questionid=$('#questionid').val();
+		var paper_name=$('#paper_name').val();
+        var num=$('#testnum').text();
+        var typeidarr=$('#typeid').val();
+        var keynote_id=$('#keynote_id').val();
+
+
+
+		if(paper_name=='')
+		{
+			alert('请输入试卷名称！！');
+			return;
+		}
+
+		if(num==0)
+		{
+			alert('请选择习题！！');
+          return;
+		}
+
+		$.ajax({
+			url:"<?php echo U('phpkeystumytestdata');?>",
+			data:{userid:userid,questionid:questionid,typeidarr:typeidarr,questionsum:num,paper_name:paper_name,keynote_id:keynote_id},
+			datatype:'json',
+			type:'post',
+			success:function(re){
+				window.location.href ="/index.php/Home/Student/stu_keytestlist0403/userid/"+$('#userid').val()+"/username/"+$('#username').val()+"/realname/"+$('#realname').val()+".html";
+			}
+		});
+
+
+	}
+	function selectele(){
+		var txt=','+$('#testidarr').val()+',';
+		var parttxt;
+		$("input[name='testid']").each(function(){
+			parttxt=','+$(this).val()+',';
+			if(hasstring(parttxt,txt))
+			{
+				$(this).attr("checked",true);
+			}
+		});
+	}
+  
+  function textchange(kind)
+  {
+    var testid_arr=$('#testid_arr').val();
+    var test_arr=testid_arr.split(",");	
+    var nownum=$('#nownum').val();
+    var nowtest=test_arr[2];
+    var maxnum=$('#testid_arr').attr('maxnum');
+    var testid=$('#testid').val();
+
+    
+    if(kind=='pre')
+    {
+     if(nownum==0)
+     {
+       alert('已经是第一题！！');
+     }
+      else
+      {
+        nownum=nownum*1-1;
+        $('#nownum').val(nownum);
+        testid=test_arr[nownum];
+      }
+    }
+    
+    if(kind=='next')
+    {
+         if(nownum==maxnum)
+     {
+       alert('已经是最后一题！！');
+     }
+      else
+      {
+        nownum=nownum*1+1;
+        $('#nownum').val(nownum);
+        testid=test_arr[nownum];
+      }
+    }
+    
+    $('#testid').val(testid);
+    testdetail(testid);
+    
+    
+  }
+  
+  function testdetail(testid)
+  {
+    
+     var testid=testid;
+    		$.ajax({
+			url:"<?php echo U('phpkeynotetest0402');?>",
+			data:{testid:testid},
+			datatype:'json',
+			type:'post',
+			success:function(re){
+              var testlist=eval("("+re+")");
+              var count=testlist['count']; 
+              var inhtml='';
+              var newtitle='';
+              var testhtml='';
+              var imghtml='';
+              var imgnote='';
+             for(var i=0;i<count;i++)
+              {
+                testhtml='<tr><td style="padding-left: 15px;vertical-align: top;"><span style="margin-top: 0px;">'+testlist[i]['newtitle']+'</span></td>'+
+				             '<td><img id="img'+i+'" name="'+testlist[i]['id']+'" typeid="'+testlist[i]['typeid']+'" mytest="0" onclick="chooseimgsub(this.id)" style="width: 100%"   src="'+testlist[i]['src']+'"></td></tr>';
+              
+                imghtml='<tr><td style="padding-left: 15px;vertical-align: top;"></td><td style="padding-right: 0px;text-align: center;">'+
+                      '<img id="imga<?php echo ($m); ?>" src="'+testlist[i]['pic1']+'" style="width: 15%;">'+
+                      '<img id="imgb<?php echo ($m); ?>" src="'+testlist[i]['pic2']+'" style="width: 15%;">'+
+                      '<img id="imgc<?php echo ($m); ?>" src="'+testlist[i]['pic3']+'" style="width: 15%;">'+
+                      '<img id="imgd<?php echo ($m); ?>" src="'+testlist[i]['pic4']+'" style="width: 15%;">'+
+                      '</td></tr>';
+                imgnote='<tr><td></td><td style="text-align: center"><span style="font-size: 10px;">'+testlist[i]['picnote']+'</span></td></tr>';
+                
+                inhtml=inhtml+'<li style="border: 0px;margin-top: 5px;"><table style="border: 1px;">'+testhtml+imghtml+imgnote+'</table></li>';
+              }
+
+              $('#list1').html(inhtml);
+              uploadtestid();
+			}
+		});
+
+  }
+  
+  function addtestname()
+  {
+    var myDate = new Date();
+//获取当前年
+	var year=myDate.getFullYear();
+//获取当前月
+	var month=myDate.getMonth()+1;
+//获取当前日
+	var date=myDate.getDate(); 
+    $('#paper_name').val($('#keynoteid').html()+month+date+'-'+$('#testnum').text());
+  }
+</script>
+</html>

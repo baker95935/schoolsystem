@@ -1,0 +1,265 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>学生考试</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/stu.css"/>
+	<script src="__PUBLIC__/jquery/jquery.min.js"></script>
+	<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+	<script src="__PUBLIC__/js/public.js"></script>
+
+	<script language="javascript">
+		function work1(target) {
+			//e.preventDefault();
+			$("#dropdownMenu1").text($(target).text());
+		}
+
+		function work2(target) {
+			//e.preventDefault();
+			$("#dropdownMenu2").text($(target).text());
+		}
+
+		function work3(target) {
+			//e.preventDefault();
+			$("#dropdownMenu3").text($(target).text());
+		}
+	</script>
+</head>
+<body class="background_color">
+ </div>
+	<div class="container" style="height: 100%;">
+		<div class="row title_class">
+			<div class="col-xs-2"><a href="{:U('home',array('userid'=>$userid,'username'=>$username,'realname'=>$realname))}"><img src="__PUBLIC__/img/reg_back.png" class="title_left_img"></a></div>
+			<div id='nowclass' class="col-xs-8  title_font_middle " > 我的班级</div>
+			<div class="col-xs-2"><a href="{:U('managestukeynote0402',array('userid'=>$userid,'paper_name'=>$paper_name,'classid'=>$classid,'testid'=>$testid,'username'=>$username,'realname'=>$realname))}" style="color: white;font-size: 15px;display: block;margin-top: 1px;"></a></div>
+		</div>
+		<div class="row parent_nav">
+		<div class="col-xs-3" >
+				<select onchange="selectinfo()" name="subjectid" id="subjectid" class="blackselect">
+				 
+				<foreach name="subjectList" item="item">
+					<option value ="{$item.id}"  <if condition="$item.id eq $subjectid">  selected="selected"  </if>  >{$item.subjectmsg}</option>
+				</foreach>
+			</select>
+		 
+
+		</div>
+		<div class="col-xs-3">
+			<select onchange="selectinfo()" name="class" id="class" class="blackselect">
+				<option value="">班级</option>
+				<foreach name="classList" item="item">
+					<option value ="{$item.id}">{$item.classname}</option>
+				</foreach>
+			</select>
+		</div>
+			<div class="col-xs-3">
+
+			
+			</div>
+
+			<div class="col-xs-3">
+				<select onchange="selectinfo()" name="group" id="group" class="blackselect">
+					<option value="">群组</option>
+					<foreach name="groupList" item="item">
+						<option value ="{$item.id}">{$item.groupname}</option>
+					</foreach>
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div id="contentdiv" class="col-xs-12" style="height: 600px;overflow-y: auto;">
+				<ol id="list1" id="list1" style="list-style-type:none;font-size: 15px;margin-left: -30px;padding-top:10px;">
+                  <!-- <volist name='stu_data' id='this_stu_id'>
+                  		<li>
+							<div style="padding-left: 20px;padding-top: 4px;width: 330px;overflow-x:scroll;white-space: nowrap;">
+                              {++$m}.&nbsp;&nbsp;&nbsp;姓名：<a href="{:U('managestu_test0403',array('userid'=>$userid,'username'=>$username,'realname'=>$realname,'stu_id'=>$this_stu_id['userid'],'stu_name'=>$this_stu_id['realname'],'subject_msg'=>$subjectdata['subjectmsg'],'subject_id'=>$subjectdata['id']))}">{$this_stu_id['realname']}</a>&nbsp;&nbsp;&nbsp;&nbsp;错误率：{$this_stu_id['test_ave_ratio']}&nbsp;&nbsp;&nbsp;&nbsp;群组：{$this_stu_id['groupname']}
+							</div>
+							<hr>
+						</li>
+                  </volist> -->
+				</ol>
+				
+				<div id="downdiv" onclick="nextpage()" style="width: 100%;height: 40px; text-align: center;">点击加载习题（<span id="nowpage">1</span>/<span id="pagenum">4</span>）</div>
+				
+              	<ol id="key_list1" style="list-style-type:none;font-size: 15px;margin-left: -30px;padding-top: 10px;display:none;">
+				</ol>
+				<div id="key_downdiv" onclick="key_nextpage()" style="width: 100%;height: 40px; text-align: center;display:none;">点击加载习题（<span id="key_nowpage">1</span>/<span id="key_pagenum">4</span>）</div>
+				
+			</div>
+		</div>
+	</div>
+
+
+	<input id="userid" type="hidden" value="{$userid}">
+  	<input id="username" type="hidden" value="{$username}">
+    <input id="realname" type="hidden" value="{$realname}">
+    
+	<input id="pagelength" type="hidden" value="10">
+	<input id="testidarr" type="hidden" value="">
+	<input id="questionsum" type="hidden" value="0">
+    <input id="subjectid" type="hidden" value="{$subjectid}">
+
+</body>
+
+<script>
+	$(function(){
+		var nowpage=1;
+		var pagelength=$('#pagelength').val();
+		var userid=$('#userid').val();
+		var classinfo=$("#class").val();
+		var group=$("#group").val();
+		var subjectid=$("#subjectid").val();
+		
+		managetestdata(userid,nowpage,pagelength,classinfo,group,subjectid);
+	});
+	
+	
+	function selectinfo()
+    {
+		var subjectid=$("#subjectid").val();
+		var classinfo=$("#class").val();
+		var group=$("#group").val();
+		var nowpage=1;
+		var pagelength=$('#pagelength').val();
+		var userid=$('#userid').val();
+		if(classinfo) {
+			$('#nowclass').html($("#class").find("option:selected").text()+'班级');
+		} else {
+			$('#nowclass').html('我的班级');
+		}
+		$('#list1').html('');
+		
+		$('#nowpage').text(1);
+		
+		managetestdata(userid,nowpage,pagelength,classinfo,group,subjectid);
+    }
+	
+	function nextpage(){
+		var nowpage=$('#nowpage').text();
+		var maxnum=$('#pagenum').text();
+		var userid=$('#userid').val();
+		var pagelength=$('#pagelength').val();
+		var classinfo=$("#class").val();
+		var group=$("#group").val();
+		var subjectid=$("#subjectid").val();
+		
+		nowpage=nowpage*1+1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+
+		$("tr[name='testlisttr']").remove();
+		$('#nowpage').text(nowpage);
+		 
+		managetestdata(userid,nowpage,pagelength,classinfo,group,subjectid)
+		selectele();
+
+
+	}
+	function managetestdata(userid,nowpage,pagelength,classinfo,group,subjectid)
+	{
+		$.ajax({
+			url:"{:U('phpmanagestuscore0401')}",
+			data:{userid:userid,nowpage:nowpage,pagelength:pagelength,classinfo:classinfo,group:group,subjectid:subjectid},
+			datatype:'json',
+			type:'post',
+			success:function(re){
+				var testlist=eval("("+re+")");
+				var addhtmlmsg = '';
+				var beginhtml = $('#list1').html();
+				var mylength = testlist['length'];
+
+				var testid = '';
+				var classid=testlist['classid'];
+				var pagenum=testlist['pagenum'];
+				var papername;
+				$('#pagenum').text(pagenum);
+				var j;
+				for (var i = 0; i < mylength; i++) {
+					j=i+1;
+					if(nowpage>1) {
+						j=i+1+(nowpage-1)*$('#pagelength').val();
+					}
+					testid=testlist[i]['testid'];
+					 //var ahtml='/index.php/Home/HeadTeacher/managepaperdetail0202/testid/'+testid+'/classid/'+classid+'.html';
+                  
+                    var ahtml='/index.php/Home/headteacher/managestu_test0403/userid/'+$('#userid').val()+'/username/'+$('#username').val()+'/realname/'+$('#realname').val()+'/stu_id/'+testlist[i]['userid']+'/stu_name/'+testlist[i]['realname']+'/subject_id/'+$('#subjectid').val()+'/subject_msg/'+$("#subjectid").find("option:selected").text();
+					//var ahtml='/index.php/Home/headteacher/managestu_test0403/userid/'+userid+'/username/'+$('#username').val()+'/realname/'+testlist[i]['realname'];
+					addhtmlmsg=addhtmlmsg+'<li><div style="padding-left: 20px;padding-top: 4px;width: 330px;overflow-x:scroll;white-space: nowrap;">'+j+'.&nbsp;&nbsp;&nbsp;姓名：<a href="'+ahtml+'">'+testlist[i]['realname']+'</a>&nbsp;&nbsp;&nbsp;&nbsp;错误率：'+testlist[i]['test_ave_ratio']+'&nbsp;&nbsp;&nbsp;&nbsp;群组：'+testlist[i]['groupname']+'</div><hr></li>';
+					$('#list1').html(beginhtml + addhtmlmsg);
+				}
+			}
+		})
+	}
+	function selectsub() {
+		var mytestarr='';
+		var ctsumarr='';
+		var ctsum=0;
+		$("input[name='testid']").each(function(){
+			if($(this).prop("checked")==true)
+			{
+
+				mytestarr=mytestarr+','+$(this).val();
+				ctsum=ctsum+$(this).attr('ctsum')*1;
+			}
+		});
+
+		mytestarr=mytestarr.substr(1);
+
+		$('#notesum').text('('+ctsum+')');
+		$('#testidarr').val(mytestarr);
+		$('#questionsum').val(ctsum);
+
+	}
+	function datasubmit(){
+		var userid=$('#userid').val();
+		var questionsum=$('#questionsum').val();
+		var testidarr=$('#testidarr').val();
+		var paper_name=$('#paper_name').val();
+
+		if(paper_name=='')
+		{
+			alert('请输入试卷名称！！');
+			return;
+		}
+
+		if(questionsum==0)
+		{
+			alert('请选择习题！！')
+		}
+
+		$.ajax({
+			url:"{:U('phpstumytestdata')}",
+			data:{userid:userid,testidarr:testidarr,questionsum:questionsum,paper_name:paper_name},
+			datatype:'json',
+			type:'post',
+			success:function(re){
+				window.location.href ="/index.php/Home/Student/managelist0202/userid/"+$('#userid').val()+".html";
+			}
+		});
+
+
+	}
+	function selectele(){
+
+		var txt=','+$('#testidarr').val()+',';
+		var parttxt;
+		$("input[name='testid']").each(function(){
+			parttxt=','+$(this).val()+',';
+			if(hasstring(parttxt,txt))
+			{
+				$(this).attr("checked",true);
+			}
+		});
+	}
+</script>
+</html>

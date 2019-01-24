@@ -1,0 +1,35 @@
+[ 2018-11-18T09:34:24+08:00 ] 111.167.235.43 /index.php/Home/Headteacher/pagepanel0102/userid/150/username/18902182280/realname/Public/img/reg.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000013s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000272s ]
+
+[ 2018-11-18T09:36:25+08:00 ] 111.167.235.43 /index.php/Home/Headteacher/pagepanel0102/userid/150/username/18902182280/realname/__Public__/img/shrink_mirror.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000274s ]
+
+[ 2018-11-18T09:36:25+08:00 ] 111.167.235.43 /index.php/Home/Headteacher/pagepanel0102/userid/150/username/18902182280/realname/__Public__/img/read_glass.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000234s ]
+
+[ 2018-11-18T09:36:25+08:00 ] 111.167.235.43 /index.php/Home/Headteacher/pagepanel0102/userid/150/username/18902182280/realname/__Public__/testpic/20180801.jpg
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000222s ]
+
+[ 2018-11-18T09:37:22+08:00 ] 111.167.235.43 /index.php/Home/Headteacher/pagepanel0102/userid/150/username/18902182280/realname/__Public__/img/shrink_mirror.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000242s ]
+
+[ 2018-11-18T09:37:22+08:00 ] 111.167.235.43 /index.php/Home/Headteacher/pagepanel0102/userid/150/username/18902182280/realname/__Public__/img/read_glass.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000230s ]
+
+[ 2018-11-18T09:37:22+08:00 ] 111.167.235.43 /index.php/Home/Headteacher/pagepanel0102/userid/150/username/18902182280/realname/__Public__/testpic/20180801.jpg
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000232s ]
+

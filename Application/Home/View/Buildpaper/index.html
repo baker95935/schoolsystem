@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="__PUBLIC__/js/buildpage.js"></script>
+    <script src="__PUBLIC__/js/titlenum.js"></script>
+    <script src="__PUBLIC__/js/public.js"></script>
+    <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+    <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+<body style="background-image: url('__PUBLIC__/img/login-bg.jpg')">
+<div class="container">
+    <div class="row" style="height: 115px;">
+    </div>
+    <div class="row" style="height: 440px;">
+        <div style="width: 440px;height: 440px;margin: 0 auto;text-align:center;background-color:rgba(255,255,255,0.1);border:3px solid #aa8c81;border-radius:25px;">
+                <div style="height: 30px;"></div>
+                <img src="__PUBLIC__/img/paper.png" style="width: 68px;height: 68px;">
+                <div style="height: 15px;"></div>
+            <span style="color: #ffffff;font-size:20px;margin-top: 15px;">好好组卷系统V1.0</span>
+            <input type="text" id="username" style="font-size:14px;color: #ffffff;width: 365px;height: 45px;border:3px solid #aa8c81;background-color:rgba(255,255,255,0.1);margin-top: 30px;padding-left: 34px;" placeholder="用户名">
+            <input type="password" id="password" style="font-size:14px;color: #ffffff;width: 365px;height: 45px;border:3px solid #aa8c81;background-color:rgba(255,255,255,0.1);margin-top: 15px;padding-left: 34px;" placeholder="密码">
+            <input type="submit" style="width:145px;height: 45px;margin-top: 14px; margin-left:260px;background-color: #6c89ff;border: 1px double #aa8c81;color: white;font-size: 16px;" onclick="userupload()"  value="登录">
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function userupload()
+    {
+        var username=$('#username').val();
+        var password=$('#password').val();
+        $.ajax({
+            url:"{:U('phpuserupload')}",
+            data:{username:username,password:password},
+            datatype:'json',
+            type:'post',
+            success:function(re){
+                var userdata=eval("("+re+")");
+                if(userdata['id']==0)
+                {
+                    alert('用户名或密码错误!!');
+                }
+                else
+                {
+                    window.location.href ="/index.php/Home/buildpaper/buildpage01/userid/"+userdata['id']+".html";
+                }
+            }
+        })
+    }
+</script>
+</html>

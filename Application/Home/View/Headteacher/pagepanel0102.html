@@ -1,0 +1,1243 @@
+<!doctype html>
+<html>
+<head>
+<title>错题系统</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="__PUBLIC__/js/jquery.min.js"></script>
+	<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+
+	<script src="__PUBLIC__/js/addfile.js"></script>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
+</head>
+<body   class="background_color">
+<div id="imgpreviewdivid" style="background-color: #006dab;overflow-x: hidden;display: none;" >
+	<div class="row" style="height: 60px;">
+		<div class="col-xs-9" style="text-align: center;">
+			<span style="margin-top: 18px;margin-left:100px;display: block;font-size: 16px;color: black;">图片预览</span>
+		</div>
+		<div class="col-xs-3">
+			<img id="img1" onclick="scalesub(this.id)" src="__PUBLIC__/img/read_glass.png" style="margin-left:25%;margin-top:15px;width: 27px;height: 27px;">
+			<img id="img0" onclick="scalesub(this.id)" src="__PUBLIC__/img/shrink_mirror.png" style="margin-left:25%;margin-top:15px;width: 27px;height: 27px;display: none;">
+		</div>
+	</div>
+	<div class="row">
+
+		<div id="imgid" class="col-xs-12" style="overflow-y: auto;overflow-x: auto;">
+			<img id="imgpreviewid" src="__PUBLIC__/testpic/20180801.jpg" style="width: 100%;height: 100%;">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-6" style="height: 40px;text-align: center;background-color: #345289;height: 50px;padding-top: 16px;">
+			<a style="color: white;text-underline: none; " href="javascript:void(0)" onclick="closesub()">删除</a>
+		</div>
+		<div class="col-xs-6" style="height: 40px;text-align: center;background-color: #06ae93;height: 50px;padding-top: 16px;">
+			<a style="color: white; text-underline: none;" href="javascript:void(0)" onclick="tprocess()">保存</a>
+		</div>
+	</div>
+
+</div>
+<div id="uploadid"  class="container">
+	<div class="row">
+		<div class="col-xs-2 teacher_left_01"></div>
+		<div class="col-xs-8 teacher_middle_01">
+			<div id="teacher_middle_01_01" class="row">
+				<div class="col-xs-6" style="text-align: left;"><a href="{:U('setpage0101','userid='.$userid.'&username='.$username.'&realname='.$realname)}"><img class="teacher_back_img" src="__PUBLIC__/img/reg.png"></a></div>
+				<div class="col-xs-6" style="text-align: right;"><div class="teacher_font">习题系统</div></div>
+			</div>
+			<div id="teacher_middle_01_02_plan" class="row">
+
+			<div class="col-xs-12" id="div_cover"  style="height:362px;position: relative;">
+					<img id="test_img"  src="__PUBLIC__/img/sample_01.png" class="teacher_paper_img">
+				<div  name="ruleimg" id="rule_div" style="position: absolute;z-index: 2; width: 60%;height: 20px; background-color: #4c4c4c;top: 120px;right:40px;opacity:0.2;display: none;"></div>
+					<img name="ruleimg" id="rule_img" onclick="mysub1()" style="position:absolute;z-index:2;top: 120px;right:20px;width:20px;height: 20px;display: none;" src="__PUBLIC__/img/phone_b.png">
+			</div>
+			</div>
+			<div class="row teacher_middle_01_03 mybootpadding" >
+				<div class="col-xs-1"></div>
+				<div class="col-xs-2"><img class="teacher_padding_top_big" id="leftbutton" style="width: 16px;height: 24px;" src="__PUBLIC__/img/phone01.png"></div>
+				<div class="col-xs-1" ><div id="num_div" class="teacher_padding_top_font">0</div></div>
+				<div class="col-xs-2"><img class="teacher_padding_top_big"  id="rightbutton" style="width: 16px;height: 24px;"  src="__PUBLIC__/img/phone02.png"></div>
+				<div class="col-xs-1"></div>
+				<div class="col-xs-2"></div>
+				<div class="col-xs-2"><img class="teacher_padding_top_small"  style="display:block;" id="rulebuttona" src="__PUBLIC__/img/phone03a.png"><img class="teacher_padding_top_small"  style="display:none;" id="rulebuttonb" src="__PUBLIC__/img/phone03b.png"></div>
+				<div class="col-xs-1"></div>
+			</div>
+			<div  class="row teacher_middle_01_03 mybootpadding">
+				<div class="col-xs-9"><div id="test_temp" style="padding-top: 16px;height:50px;overflow-x:scroll;white-space:nowrap;">对试题拍照！！</div></div>
+				<form name="tform" id="tform">
+					<input name="tfilesernum" type="hidden" value="">
+					<input id="test_sum" name="test_sum" value="1" type="hidden">
+					<input name="papername" value="{$testdata['papername']}" type="hidden">
+					<input name="arraymsg" value="{$testdata['arraymsg']}" type="hidden">
+					<input name="paperkind" value="{$testdata['paperkind']}" type="hidden">
+					<input name="gradeid" value="{$testdata['gradeid']}" type="hidden">
+					<input name="publishname" value="{$testdata['publishname']}" type="hidden">
+					<input name="publishtime" value="{$testdata['publishtime']}" type="hidden">
+
+
+				<div class="col-xs-2" id="tdiv">
+				</div>
+				</form>
+				<div class="col-xs-1"></div>
+			</div>
+			<div class="row teacher_middle_01_03_checked mybootpadding" >
+				<div class="col-xs-9" ><div id="answer_temp" style="padding-top: 16px;height:50px;overflow-x:scroll;white-space:nowrap;">对答案拍照！！</div></div>
+				<form name="aform" id="aform">
+					<input name="afilesernum" type="hidden" value="">
+					<input id="answer_sum" name="answer_sum" value="1" type="hidden">
+					<input name="papername" value="{$testdata['papername']}" type="hidden">
+					<input name="arraymsg" value="{$testdata['arraymsg']}" type="hidden">
+					<input name="paperkind000" value="hello1" type="hidden">
+					<input name="gradeid" value="{$testdata['gradeid']}" type="hidden">
+					<input name="chapterid" value="{$testdata['chapterid']}" type="hidden">
+					<input name="publishname" value="{$testdata['publishname']}" type="hidden">
+					<input name="publishtime" value="{$testdata['publishtime']}" type="hidden">
+				<div class="col-xs-2" id="adiv">
+				</div>
+				</form>
+				<div class="col-xs-1"></div>
+			</div>
+			<div  class="row teacher_middle_01_03 mybootpadding">
+				<div class="col-xs-1"></div>
+				<div class="col-xs-2"><img onclick="backsub()"  class="teacher_padding_top_small"  src="__PUBLIC__/img/phone31.png"></div>
+				<div class="col-xs-2" style="padding-top: 15px;"><span id="justnum">0</span></div>
+				<div class="col-xs-2"><img onclick="upsub()"  class="teacher_padding_top_small"  src="__PUBLIC__/img/phone32.png"></div>
+				<div class="col-xs-2"><a id="previewaid" name="1" onclick="previewasub()" href="javascript:void(0)" style="display: block;margin-top: 14px;color:black;">预览</a></div>
+				<div class="col-xs-2"><img onclick="deletesub()"class="teacher_padding_top_small"  src="__PUBLIC__/img/phone34.png"></div>
+				<div class="col-xs-1"></div>
+			</div>
+			<div  class="row teacher_middle_01_03 mybootpadding">
+				<div class="col-xs-1"></div>
+				<div class="col-xs-5" style="text-align: left;margin-top: 16px;">
+					<div  name="tprogressdiv">
+					<span>试题上传：</span>
+					<progress id="tp" value="0" style="width: 40%"></progress><br/>
+					</div>
+					<p id="tprogress" ></p>
+				</div>
+				<div class="col-xs-5" style="text-align: left;margin-top: 16px;">
+					<div name="aprogressdiv">
+						<span>答案上传：</span>
+						<progress id="ap" value="0" style="width: 40%"></progress><br/>
+					</div>
+					<p id="aprogress"></p>
+				</div>
+				<div class="col-xs-1"></div>
+			</div>
+		</div>
+		<div class="col-xs-2 teacher_right_01">
+		</div>
+	</div>
+	<div class="row teacher_bottom">
+		<div class="col-xs-2"><a href="{:U('setpage0101','userid='.$userid.'&username='.$username.'&realname='.$realname)}"><img class="img-responsive center-block teacher_bottom_arrow" src="__PUBLIC__/img/reg.png"></a></div>
+		<div class="col-xs-8 teacher_bottom_middle" style="padding-top: 20px;"><a href="#" onclick="submitfile()">上传试卷信息</a></div>
+		<div class="col-xs-2"></div>
+	</div>
+</div>
+<div id="test_hidden_div" style="display: none;" >
+</div>
+<div id="answer_hidden_div" style="display: none;">
+
+</div>
+<input id="choosedele" type="hidden" value="">
+<input id="sumele" type="hidden" value="0">
+<input id="userdata" type="hidden" value="{$userdata}">
+<input id="testdata" type="hidden" value="{$testdata}">
+
+<input id="userid" name="userid" type="hidden" value="{$userid}">
+<input id="username" type="hidden" value="{$username}">
+<input id="realname" type="hidden" value="{$realname}">
+<input id="subjectid" name="subjectid" type="hidden" value="{$subjectid}">
+<input id="gradeid" name="gradeid" type="hidden" value="{$testdata['gradeid']}">
+
+
+<input id="kind" type="hidden" value="">
+
+
+<input id="midnum" type="hidden" value="">
+
+<script>
+//测试软件
+function hello() {
+	alert(123);
+}
+$(function(){
+	$("div[name='tprogressdiv']").css('display','none');
+	$("div[name='aprogressdiv']").css('display','none');
+})
+//标尺点击事件A显示
+$(function(){
+		$("#rulebuttona").click(function(){
+			$("[name='ruleimg']").css('display','block');
+			$("#rulebuttona").css('display','none');
+			$("#rulebuttonb").css('display','block');
+			x=$("p").offset();
+		})})
+//标尺点击事件B显示
+$(function(){
+		$("#rulebuttonb").click(function(){
+			$("[name='ruleimg']").css('display','none');
+			$("#rulebuttonb").css('display','none');
+			$("#rulebuttona").css('display','block');
+		})})
+//向左旋转事件
+$(function(){
+		$("#leftbutton").click(function(){
+			var deg=$("#num_div").text();
+			deg=parseInt(deg)+1;
+			if(deg<4) {
+				$("#test_img").css({transform: "rotate(" + deg + "deg)"});
+				$("#num_div").html(deg);
+				nowreg(deg);
+			}
+
+		})})
+//向右旋转事件
+$(function(){
+		$("#rightbutton").click(function(){
+			var deg=$("#num_div").text();
+			deg=parseInt(deg)-1;
+			if(deg>-4) {
+				$("#test_img").css({transform: "rotate(" + deg + "deg)"});
+				$("#num_div").html(deg);
+				nowreg(deg);
+			}
+		})})
+//添加当前的file文件对应的度数
+function nowreg(num1) {
+	var ele=$("#choosedele").val();
+	var num=ele.replace(/[^0-9]/ig, "");
+	if(ele.indexOf('test')>-1)
+	{
+		$("#treg"+num).val(num1);
+	}
+	if(ele.indexOf('answer')>-1)
+	{
+		$("#areg"+num).val(num1);
+	}
+}
+//加载当前file的旋转角度
+function myreg(num) {
+	var ele=$("#choosedele").val();
+	var num=ele.replace(/[^0-9]/ig, "");
+	if(ele.indexOf('test')>-1)
+	{
+		$("#num_div").html($("#treg"+num).val());
+	}
+	if(ele.indexOf('answer')>-1)
+	{
+		$("#num_div").html($("#areg"+num).val());
+
+	}
+}
+//标尺事件鼠标移动
+$("#div_cover").ready(function(){
+		$("#div_cover").mousemove(function(e){
+			var localnum=e.pageY;
+			localnum=parseInt(localnum)-72;
+			$("#mydiv").html(localnum);
+
+		if(localnum>45 && localnum<285)
+		{
+			var localmsg=localnum+"px";
+				$("#rule_img").css("top",localmsg);
+				$("#rule_div").css("top",localmsg);
+
+			}
+		});
+	});
+//1.添加试题和答案允许上传的数量,数量小于40超出后，需要在addfile.js中修改。
+add_file(20);
+//点击图片缩略图事件
+	function timgclick(id) {
+
+
+		var myid="#"+id;
+		$("#test_img").attr('src',$(myid)[0].src);
+		var num = parseInt(id.replace(/[^0-9]/ig,""));
+
+		var mynum=$("#test_sum").val();
+		for(var i=1;i<mynum+1;i++)
+		{
+			if(i==num)
+			{
+				var labelmsg="#tlabel"+num;
+				$(labelmsg).css("display","block");
+				var imgmsg="#test_img"+num;
+				$(imgmsg).css('border',"1px solid #4b88a6");
+				choosedsub("test_div",i);
+			}
+			else
+			{
+				var labelmsg1="#tlabel"+i;
+				$(labelmsg1).css("display","none");
+				var imgmsg="#test_img"+i;
+				$(imgmsg).css('border',"1px none #4b88a6");
+			}
+		}
+		var tsum=parseInt($("#answer_sum").val());
+		for(var i=1;i<tsum;i++)
+		{
+			$("#answer_img"+i).css("border","1px none #4b88a6");
+		}
+		myreg(num);
+
+	}
+//点击答案缩略图事件
+	function aimgclick(id) {
+		var myid="#"+id;
+		$("#test_img").attr('src',$(myid)[0].src);
+		var num = parseInt(id.replace(/[^0-9]/ig,""));
+		var mynum=$("#answer_sum").val();
+		for(var i=1;i<mynum+1;i++)
+		{
+			if(i==num)
+			{
+				var labelmsg="#alabel"+num;
+				$(labelmsg).css("display","block");
+				var imgmsg="#answer_img"+num;
+				$(imgmsg).css('border',"1px solid #4b88a6");
+			//	$("#justnum").html(num);
+
+				choosedsub("answer_div",num);
+			}
+			else
+			{
+				var labelmsg1="#alabel"+i;
+				$(labelmsg1).css("display","none");
+				var imgmsg="#answer_img"+i;
+				$(imgmsg).css('border',"1px none #4b88a6");
+			}
+		}
+
+		var tsum=parseInt($("#test_sum").val());
+		for(var i=1;i<tsum;i++)
+		{
+			$("#test_img"+i).css("border","1px none #4b88a6");
+		}
+		myreg(num);
+
+	}
+//最后一张图片添加禁止提示试题
+	function testdeclare()
+	{
+		var num=parseInt($("#test_sum").val())-1;
+		var msg="只允许添加"+num+"张图片";
+		alert(msg);
+	}
+//最后一张图片添加禁止提示答案
+	function answerdeclare()
+	{
+		var num=parseInt($("#answer_sum").val())-1;
+		var msg="只允许添加"+num+"张图片";
+		alert(msg);
+	}
+//删除函数
+	function deletesub()
+	{
+
+		var ele="#"+$("#choosedele").val();
+		var num=ele.replace(/[^0-9]/ig, "");
+
+
+
+		if(ele.indexOf('test')>-1)
+		{
+			unbind_tfile_event($("#sumele").val());
+			var sum=$("#test_sum").val();
+			if(sum==2)
+			{
+				$(ele).remove();
+				$("#tlabel2").css("display","none");
+				$("#tlabel1").css("display","block");
+				$("#tupload1").val("");
+				$("#test_img").attr('src',"__PUBLIC__/img/sample_01.png");
+				$("#test_sum").val(1);
+				fontintcss("test");
+				choosedsub("test_div",0);
+			}
+			if(sum>2)
+			{
+				var num1=parseInt(num)+1;
+				var mynum=parseInt(num)-1;
+				if(num1==sum)
+				{
+					$(ele).remove();
+					$("#tlabel"+num).css("display","block");
+					$("#tlabel"+num1).css("display","none");
+					$("#tupload"+num).val("");
+					var imgsrc=$("#test_img"+mynum)[0].src;
+					$("#test_img").attr('src',imgsrc);
+					sum=parseInt(sum)-1;
+					$("#test_sum").val(sum);
+					$("#test_img"+mynum).css("border","1px solid #4b88a6");
+					choosedsub("test_div",mynum);
+				}
+				if(num1<sum)
+				{
+					$(ele).remove();
+					$("#tlabel"+num).css("display","none");
+					$("#tupload"+num).val("");
+					num=parseInt(num)+1;
+					$("#tlabel"+num).css("display","block");
+					$("#test_img"+num).css("border","1px solid #4b88a6");
+					var imgsrc=$("#test_img"+num)[0].src;
+					$("#test_img").attr('src',imgsrc);
+					sum=parseInt(sum)-1;
+					$("#test_sum").val(sum);
+
+
+					num=parseInt(num)-1;
+					choosedsub("test_div",num);
+					ordersub("test",sum,num);
+				}
+			}
+
+			bind_tfile_event($("#sumele").val());
+		}
+
+		if(ele.indexOf('answer')>-1)
+		{
+			unbind_afile_event($("#sumele").val());
+
+			var sum=$("#answer_sum").val();
+			if(sum==2)
+			{
+				$(ele).remove();
+				$("#alabel2").css("display","none");
+				$("#alabel1").css("display","block");
+				$("#aupload1").val("");
+				$("#test_img").attr('src',"__PUBLIC__/img/sample_01.png");
+				$("#answer_sum").val(1);
+				fontintcss("answer");
+				choosedsub("answer_div",0);
+
+			}
+			if(sum>2)
+			{
+				var num1=parseInt(num)+1;
+				var mynum=parseInt(num)-1;
+				if(num1==sum)
+				{
+					$(ele).remove();
+					$("#alabel"+num).css("display","block");
+					$("#alabel"+num1).css("display","none");
+					$("#aupload"+num).val("");
+					var imgsrc=$("#answer_img"+mynum)[0].src;
+					$("#test_img").attr('src',imgsrc);
+					sum=parseInt(sum)-1;
+					$("#answer_sum").val(sum);
+					$("#answer_img"+mynum).css("border","1px solid #4b88a6");
+
+					choosedsub("answer_div",mynum);
+					//	$("#test_img2").css("border","1px solid #4b88a6");
+				}
+				if(num1<sum)
+				{
+					$(ele).remove();
+					$("#alabel"+num).css("display","none");
+					$("#aupload"+num).val("");
+					num=parseInt(num)+1;
+					$("#alabel"+num).css("display","block");
+					$("#answer_img"+num).css("border","1px solid #4b88a6");
+					var imgsrc=$("#answer_img"+num)[0].src;
+					$("#test_img").attr('src',imgsrc);
+					sum=parseInt(sum)-1;
+					$("#answer_sum").val(sum);
+					choosedsub("answer_div",sum);
+
+					num=parseInt(num)-1;
+					choosedsub("answer_div",num);
+					ordersub("answer",sum,num);
+				}
+			}
+			bind_afile_event($("#sumele").val());
+		}
+
+	}
+//修改元素后重新排序
+	function ordersub(kind,sum,num)
+	{
+		var j;
+
+		var totalnum=$("#sumele").val();
+		if(kind=="test") {
+				$("#tlabel"+num).attr('id',"tlabelm");
+
+				$("#tupload"+num).attr('id',"tuploadm");
+				$("#tuploadm").attr('name',"tuploadm");
+
+				$("#treg"+num).attr('id',"tregm");
+				$("#tregm").attr('name',"tregm");
+
+				$("#tspan"+num).attr('id',"tspanm");
+				$("#tspanm").attr('name',"tspanm");
+
+				num=parseInt(num)+1;
+				sum=parseInt(sum)+1;
+
+				totalnum=parseInt(totalnum)+1;
+				//修改缩略图
+				for(var i=num;i<sum;i++)
+				{
+					j=i-1;
+					$("#test_div_"+i).attr('id','test_div_'+j);
+					$("#test_img"+i).attr('id','test_img'+j);
+				}
+
+				for(var i=num;i<totalnum;i++)
+				{
+					j=i-1;
+					$("#tlabel"+i).attr('id','tlabel'+j);
+					$("#tupload"+i).attr('id',"tupload"+j);
+					$("#tupload"+j).attr('name',"tupload"+j);
+
+					$("#treg"+i).attr('id',"treg"+j);
+					$("#treg"+j).attr('name',"treg"+j);
+
+					$("#tspan"+i).attr('id',"tspan"+j);
+					$("#tspan"+j).html(j);
+
+				}
+
+				i=parseInt(i)-1;
+				$("#tlabelm").attr('id','tlabel'+i);
+				$("#tuploadm").attr('id',"tupload"+i);
+				$("#tupload"+i).attr('name',"tupload"+i);
+				$("#tregm").attr('id',"treg"+i);
+				$("#treg"+i).attr('name',"treg"+i);
+				$("#tspanm").attr('id',"tspan"+i);
+				$("#tspan"+i).html(i);
+				num=parseInt(num)-1;
+				$("#justnum").html(num);
+		}
+		if(kind=="answer")
+		{
+			var j;
+			$("#alabel"+num).attr('id',"alabelm");
+
+			$("#aupload"+num).attr('id',"auploadm");
+			$("#auploadm").attr('name',"auploadm");
+
+			$("#areg"+num).attr('id',"aregm");
+			$("#aregm").attr('name',"aregm");
+
+			$("#aspan"+num).attr('id',"aspanm");
+			$("#aspanm").attr('name',"aspanm");
+
+			num=parseInt(num)+1;
+			sum=parseInt(sum)+1;
+
+			totalnum=parseInt(totalnum)+1;
+			//修改缩略图
+			for(var i=num;i<sum;i++)
+			{
+				j=i-1;
+				$("#answer_div_"+i).attr('id','answer_div_'+j);
+				$("#answer_img"+i).attr('id','answer_img'+j);
+			}
+
+			for(var i=num;i<totalnum;i++)
+			{
+				j=i-1;
+				$("#alabel"+i).attr('id','alabel'+j);
+				$("#aupload"+i).attr('id',"aupload"+j);
+				$("#aupload"+j).attr('name',"aupload"+j);
+
+				$("#areg"+i).attr('id',"areg"+j);
+				$("#areg"+j).attr('name',"areg"+j);
+
+				$("#aspan"+i).attr('id',"aspan"+j);
+				$("#aspan"+j).html(j);
+
+			}
+
+			i=parseInt(i)-1;
+			$("#alabelm").attr('id','alabel'+i);
+			$("#auploadm").attr('id',"aupload"+i);
+			$("#aupload"+i).attr('name',"aupload"+i);
+			$("#aregm").attr('id',"areg"+i);
+			$("#areg"+i).attr('name',"areg"+i);
+			$("#aspanm").attr('id',"aspan"+i);
+			$("#aspan"+i).html(i);
+			num=parseInt(num)-1;
+			$("#justnum").html(num);
+		}
+
+
+	}
+//选中字体样式
+	function fontintcss(kind)
+	{
+		if(kind=="test")
+		{
+			$("#test_temp").html("对试题拍照！！");
+			$("#test_temp").css("padding-left","0px");
+			$("#test_temp").css("padding-top","16px");
+			$("#justnum").html("0");
+		}
+		if(kind=="answer")
+		{
+			$("#answer_temp").html("对答案拍照！！");
+			$("#answer_temp").css("padding-left","0px");
+			$("#answer_temp").css("padding-top","16px");
+		}
+	}
+//向前移动
+	function backsub()
+	{
+		var ele=$("#choosedele").val();
+		var num=ele.replace(/[^0-9]/ig, "");
+		var testsum=$("#test_sum").val();
+		var answersum=$("#answer_sum").val();
+
+
+		if(ele.indexOf('test')>-1)
+		{
+			unbind_tfile_event($("#sumele").val());
+
+			if(num==1)
+			{
+				alert("当前为第一个习题，无法前移！！")
+			}
+			else
+			{
+				var num1=parseInt(num)-1;
+				//调换缩略图图片src
+				var imgsrc=$("#test_img"+num)[0].src;
+				var imgsrc1=$("#test_img"+num1)[0].src;
+				$("#test_img"+num).attr('src',imgsrc1);
+				$("#test_img"+num1).attr('src',imgsrc);
+
+				//绑定预览图片
+				$("#test_img").attr('src',imgsrc);
+
+
+				//调整文件板块，调整外层label
+				$("#tlabel"+num).attr('id','tlabelm');
+				$("#tlabel"+num1).attr('id','tlabel'+num);
+				$("#tlabelm").attr('id','tlabel'+num1);
+
+
+
+
+				//调整文件file文件
+				$("#tupload"+num).attr('id',"tuploadm");
+				$("#tuploadm").attr('name',"tuploadm");
+				$("#tupload"+num1).attr('id',"tupload"+num);
+				$("#tupload"+num).attr('name',"tupload"+num);
+				$("#tuploadm").attr('id',"tupload"+num1);
+				$("#tupload"+num1).attr('name',"tupload"+num1);
+
+
+
+				$("#treg"+num).attr('id',"tregm");
+				$("#treg"+num).attr('name',"tregm");
+				$("#treg"+num1).attr('id',"treg"+num);
+				$("#treg"+num1).attr('name',"treg"+num);
+				$("#tregm").attr('id',"treg"+num1);
+				$("#tregm").attr('name',"treg"+num1);
+
+
+				//调整显示的数字
+
+				$("#tspan"+num).attr('id','tspanm');
+				$("#tspan"+num1).attr('id','tspan'+num);
+
+				$("#tspan"+num).html("");
+				$("#tspan"+num).html(num);
+
+				$("#tspanm").attr('id','tspan'+num1);
+				$("#tspan"+num1).html("");
+				$("#tspan"+num1).html(num1);
+
+				testsum=parseInt(testsum)-1;
+				if(num==testsum)
+				{
+					var anum=parseInt(num)+1;
+					var cnum=parseInt(num)-1;
+					$("#test_img"+num).css("border","1px none #4b88a6");
+					$("#test_img"+cnum).css("border","1px solid #4b88a6");
+					$("#tlabel"+num).css('display','none');
+					$("#tlabel"+anum).css('display','none');
+					$("#tlabel"+cnum).css('display','block');
+					choosedsub("test_div",num1);
+				}
+				else
+				{
+					$("#test_img"+num).css("border","1px none #4b88a6");
+					$("#test_img"+num1).css("border","1px solid #4b88a6");
+					$("#tlabel"+num).css('display','none');
+					$("#tlabel"+num1).css('display','block');
+					choosedsub("test_div",num1);
+				}
+
+			}
+			bind_tfile_event($("#sumele").val());
+		}
+		if(ele.indexOf('answer')>-1)
+		{
+			unbind_afile_event($("#sumele").val());
+
+			if(num==1)
+			{
+				alert("当前为第一个答案，无法前移！！")
+			}
+			else
+			{
+				var num1=parseInt(num)-1;
+				//调换缩略图图片src
+				var imgsrc=$("#answer_img"+num)[0].src;
+				var imgsrc1=$("#answer_img"+num1)[0].src;
+				$("#answer_img"+num).attr('src',imgsrc1);
+				$("#answer_img"+num1).attr('src',imgsrc);
+
+				//绑定预览图片
+				$("#test_img").attr('src',imgsrc);
+
+
+				//调整文件板块，调整外层label
+				$("#alabel"+num).attr('id','alabelm');
+				$("#alabel"+num1).attr('id','alabel'+num);
+				$("#alabelm").attr('id','alabel'+num1);
+
+
+
+
+				//调整文件file文件
+				$("#aupload"+num).attr('id',"auploadm");
+				$("#auploadm").attr('name',"auploadm");
+				$("#aupload"+num1).attr('id',"aupload"+num);
+				$("#aupload"+num).attr('name',"aupload"+num);
+				$("#auploadm").attr('id',"aupload"+num1);
+				$("#aupload"+num1).attr('name',"aupload"+num1);
+
+
+
+				$("#areg"+num).attr('id',"aregm");
+				$("#areg"+num).attr('name',"aregm");
+				$("#areg"+num1).attr('id',"areg"+num);
+				$("#areg"+num1).attr('name',"areg"+num);
+				$("#aregm").attr('id',"areg"+num1);
+				$("#aregm").attr('name',"areg"+num1);
+
+
+				//调整显示的数字
+
+				$("#aspan"+num).attr('id','aspanm');
+				$("#aspan"+num1).attr('id','aspan'+num);
+
+				$("#aspan"+num).html("");
+				$("#aspan"+num).html(num);
+
+				$("#aspanm").attr('id','aspan'+num1);
+				$("#aspan"+num1).html("");
+				$("#aspan"+num1).html(num1);
+
+				answersum=parseInt(answersum)-1;
+				if(num==answersum)
+				{
+					var anum=parseInt(num)+1;
+					var cnum=parseInt(num)-1;
+					$("#answer_img"+num).css("border","1px none #4b88a6");
+					$("#answer_img"+cnum).css("border","1px solid #4b88a6");
+					$("#alabel"+num).css('display','none');
+					$("#alabel"+anum).css('display','none');
+					$("#alabel"+cnum).css('display','block');
+					choosedsub("answer_div",num1);
+				}
+				else
+				{
+					$("#answer_img"+num).css("border","1px none #4b88a6");
+					$("#answer_img"+num1).css("border","1px solid #4b88a6");
+					$("#alabel"+num).css('display','none');
+					$("#alabel"+num1).css('display','block');
+					choosedsub("answer_div",num1);
+				}
+
+			}
+			bind_afile_event($("#sumele").val());
+		}
+	}
+//向后移动
+	function upsub()
+	{
+		var ele=$("#choosedele").val();
+		var num=ele.replace(/[^0-9]/ig, "");
+		var testsum=$("#test_sum").val();
+		var answersum=$("#answer_sum").val();
+
+
+		if(ele.indexOf('test')>-1)
+		{
+			unbind_tfile_event($("#sumele").val());
+			var lasttestnum=parseInt(testsum)-1;
+			if(num==lasttestnum)
+			{
+				alert("当前为最后一个习题，无法后移！！")
+			}
+			else
+			{
+				var num1=parseInt(num)+1;
+				//调换缩略图图片src
+				var imgsrc=$("#test_img"+num)[0].src;
+				var imgsrc1=$("#test_img"+num1)[0].src;
+				$("#test_img"+num).attr('src',imgsrc1);
+				$("#test_img"+num1).attr('src',imgsrc);
+
+				//绑定预览图片
+				$("#test_img").attr('src',imgsrc);
+
+
+				//调整文件板块，调整外层label
+				$("#tlabel"+num).attr('id','tlabelm');
+				$("#tlabel"+num1).attr('id','tlabel'+num);
+				$("#tlabelm").attr('id','tlabel'+num1);
+
+
+
+
+				//调整文件file文件
+				$("#tupload"+num).attr('id',"tuploadm");
+				$("#tuploadm").attr('name',"tuploadm");
+				$("#tupload"+num1).attr('id',"tupload"+num);
+				$("#tupload"+num).attr('name',"tupload"+num);
+				$("#tuploadm").attr('id',"tupload"+num1);
+				$("#tupload"+num1).attr('name',"tupload"+num1);
+
+
+
+				$("#treg"+num).attr('id',"tregm");
+				$("#treg"+num).attr('name',"tregm");
+				$("#treg"+num1).attr('id',"treg"+num);
+				$("#treg"+num1).attr('name',"treg"+num);
+				$("#tregm").attr('id',"treg"+num1);
+				$("#tregm").attr('name',"treg"+num1);
+
+
+				//调整显示的数字
+
+				$("#tspan"+num).attr('id','tspanm');
+				$("#tspan"+num1).attr('id','tspan'+num);
+
+				$("#tspan"+num).html("");
+				$("#tspan"+num).html(num);
+
+				$("#tspanm").attr('id','tspan'+num1);
+				$("#tspan"+num1).html("");
+				$("#tspan"+num1).html(num1);
+
+				testsum=parseInt(testsum)-1;
+				if(num==testsum)
+				{
+					var anum=parseInt(num)+1;
+					var cnum=parseInt(num)-1;
+					$("#test_img"+num).css("border","1px none #4b88a6");
+					$("#test_img"+cnum).css("border","1px solid #4b88a6");
+					$("#tlabel"+num).css('display','none');
+					$("#tlabel"+anum).css('display','none');
+					$("#tlabel"+cnum).css('display','block');
+					choosedsub("test_div",num1);
+				}
+				else
+				{
+					$("#test_img"+num).css("border","1px none #4b88a6");
+					$("#test_img"+num1).css("border","1px solid #4b88a6");
+					$("#tlabel"+num).css('display','none');
+					$("#tlabel"+num1).css('display','block');
+					choosedsub("test_div",num1);
+				}
+
+			}
+			bind_tfile_event($("#sumele").val());
+		}
+		if(ele.indexOf('answer')>-1)
+		{
+			unbind_afile_event($("#sumele").val());
+
+			var lastanswernum=parseInt(answersum)-1;
+
+			if(num==lastanswernum)
+			{
+				alert("当前为最后一个答案，无法后移！！")
+			}
+			else
+			{
+				var num1=parseInt(num)+1;
+				//调换缩略图图片src
+				var imgsrc=$("#answer_img"+num)[0].src;
+				var imgsrc1=$("#answer_img"+num1)[0].src;
+				$("#answer_img"+num).attr('src',imgsrc1);
+				$("#answer_img"+num1).attr('src',imgsrc);
+
+				//绑定预览图片
+				$("#test_img").attr('src',imgsrc);
+
+
+				//调整文件板块，调整外层label
+				$("#alabel"+num).attr('id','alabelm');
+				$("#alabel"+num1).attr('id','alabel'+num);
+				$("#alabelm").attr('id','alabel'+num1);
+
+
+
+
+				//调整文件file文件
+				$("#aupload"+num).attr('id',"auploadm");
+				$("#auploadm").attr('name',"auploadm");
+				$("#aupload"+num1).attr('id',"aupload"+num);
+				$("#aupload"+num).attr('name',"aupload"+num);
+				$("#auploadm").attr('id',"aupload"+num1);
+				$("#aupload"+num1).attr('name',"aupload"+num1);
+
+
+
+				$("#areg"+num).attr('id',"aregm");
+				$("#areg"+num).attr('name',"aregm");
+				$("#areg"+num1).attr('id',"areg"+num);
+				$("#areg"+num1).attr('name',"areg"+num);
+				$("#aregm").attr('id',"areg"+num1);
+				$("#aregm").attr('name',"areg"+num1);
+
+
+				//调整显示的数字
+
+				$("#aspan"+num).attr('id','aspanm');
+				$("#aspan"+num1).attr('id','aspan'+num);
+
+				$("#aspan"+num).html("");
+				$("#aspan"+num).html(num);
+
+				$("#aspanm").attr('id','aspan'+num1);
+				$("#aspan"+num1).html("");
+				$("#aspan"+num1).html(num1);
+
+				answersum=parseInt(answersum)-1;
+				if(num==answersum)
+				{
+					var anum=parseInt(num)+1;
+					var cnum=parseInt(num)-1;
+					$("#answer_img"+num).css("border","1px none #4b88a6");
+					$("#answer_img"+cnum).css("border","1px solid #4b88a6");
+					$("#alabel"+num).css('display','none');
+					$("#alabel"+anum).css('display','none');
+					$("#alabel"+cnum).css('display','block');
+					choosedsub("answer_div",num1);
+				}
+				else
+				{
+					$("#answer_img"+num).css("border","1px none #4b88a6");
+					$("#answer_img"+num1).css("border","1px solid #4b88a6");
+					$("#alabel"+num).css('display','none');
+					$("#alabel"+num1).css('display','block');
+					choosedsub("answer_div",num1);
+				}
+
+			}
+			bind_afile_event($("#sumele").val());
+		}
+	}
+
+//试题和答案上传
+
+function submitfile() {
+	filesernum();
+	if($('#tupload1').val()!="")
+	{
+		tsubmit();
+      
+    //  return;
+		if($('#aupload1').val()!="")
+		{
+			asubmit();
+		}
+	}
+  
+ // return;
+	if($('#aupload1').val()!="")
+	{
+		if($('#tupload1').val()=="") {
+			alert("请上传习题！！");
+		}
+
+	}
+	if($('#aupload1').val()=="")
+	{
+		if($('#tupload1').val()=="") {
+			alert("没有上传数据，无法提交！！");
+		}
+	}
+}
+//生成用户序列号
+function filesernum() {
+	var msg=$("#userdata").val();
+	//var nowtime=new Date().Format("yyyy-MM-dd");
+	var mydate = new Date();
+	var month=mydate.getMonth()+1;
+	var t=mydate.getFullYear()+""+month+""+mydate.getDate()+""+mydate.getHours()+""+mydate.getMinutes()+""+mydate.getSeconds();
+	msg=msg+t;
+	$("[name='tfilesernum']").val(msg);
+	$("[name='afilesernum']").val(msg);
+}
+
+//试题文件上传
+function tsubmit(){
+	$("div[name='tprogressdiv']").css('display','block');
+	var test_sum=$('#test_sum').val();
+	var i=1;
+	var formData = new FormData();
+	for(i=1;i<test_sum;i++)
+	{
+		formData.append('tupload'+i, $('input[name=tupload'+i+']')[0].files[0]);
+		formData.append('treg'+i, $('input[name=treg'+i+']').val());
+	}
+	test_sum=parseInt(test_sum);
+	formData.append('test_sum',test_sum);
+	formData.append('tfilesernum',$("input[name='tfilesernum']").val());
+	formData.append('paperkind',$("input[name='paperkind']").val());
+	formData.append('chapterid',$("input[name='chapterid']").val());
+	formData.append('publishtime',$("input[name='publishtime']").val());
+	formData.append('filesernum',$("input[name='publishname']").val());
+	formData.append('papername',$("input[name='papername']").val());
+	formData.append('arraymsg',$("input[name='arraymsg']").val());
+	formData.append('reg2',$("input[name='reg2']").val());
+	formData.append('userid',$("input[name='userid']").val());
+	formData.append('gradeid',$("input[name='gradeid']").val());
+	formData.append('subjectid',$("input[name='subjectid']").val());
+  
+  
+  //alert($("input[name='gradeid']").val());
+  
+  //return;
+
+	$.ajax({
+		url: "{:U('Headteacher/tupload')}",
+		type: 'POST',
+		data: formData,
+		dataType: 'text',
+		cache: false,
+		async : true,
+		processData: false,
+		contentType: false,
+		xhr: function(){ //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数
+			myXhr = $.ajaxSettings.xhr();
+			if(myXhr.upload){ //检查upload属性是否存在
+				//绑定progress事件的回调函数
+				myXhr.upload.addEventListener('progress',tprogressHandlingFunction, false);
+			}
+			return myXhr; //xhr对象返回给jQuery使用
+		},
+		success:function(re){
+			if(re==1)
+			{
+				$('#tprogress').html("试卷上传成功！！");
+				setTimeout("successpage()",1500);
+			}
+			else
+			{
+				$('#tprogress').html("试卷上传失败！！");
+			}
+		},
+		error:function(){
+			alert('110');
+		}
+	})
+
+}
+//上传进度回调函数：
+function tprogressHandlingFunction(e) {
+	if (e.lengthComputable) {
+		$('#tp').attr({value : e.loaded, max : e.total}); //更新数据到进度条
+		var percent = e.loaded/e.total*100;
+		$('#tprogress').html(percent.toFixed(2) + "%");
+		if(e.loaded==e.total)
+		{
+			setTimeout("tnotesub()",100);
+		}
+	}
+}
+
+function tnotesub() {
+	$("div[name='tprogressdiv']").css('display','none');
+}
+
+//答案文件上传
+function asubmit(){
+	$("div[name='aprogressdiv']").css('display','block');
+	var answer_sum=$('#answer_sum').val();
+
+	var i=1;
+	var formData = new FormData();
+	for(i=1;i<answer_sum;i++)
+	{
+		formData.append('aupload'+i, $('input[name=aupload'+i+']')[0].files[0]);
+		formData.append('areg'+i, $('input[name=areg'+i+']').val());
+	}
+	answer_sum=parseInt(answer_sum);
+	formData.append('answer_sum',answer_sum);
+	formData.append('afilesernum',$("input[name='afilesernum']").val());
+
+
+	$.ajax({
+		url: "{:U('Headteacher/aupload')}",
+		type: 'POST',
+		data: formData,
+		dataType: 'text',
+		cache: false,
+		processData: false,
+		contentType: false,
+		xhr: function(){ //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数
+			myXhr = $.ajaxSettings.xhr();
+			if(myXhr.upload){ //检查upload属性是否存在
+				//绑定progress事件的回调函数
+				myXhr.upload.addEventListener('progress',aprogressHandlingFunction, false);
+			}
+			return myXhr; //xhr对象返回给jQuery使用
+		},
+		success:function(re){
+			if(re==1)
+			{
+			$('#aprogress').html("答案上传成功！！");
+			setTimeout("successpage()",1500);
+			}
+			else
+			{
+				$('#aprogress').html("答案上传失败！！");
+			}
+		}
+	})
+}
+//上传进度回调函数：
+function aprogressHandlingFunction(e) {
+	if (e.lengthComputable) {
+		$('#ap').attr({value : e.loaded, max : e.total}); //更新数据到进度条
+		var percent = e.loaded/e.total*100;
+		$('#aprogress').html(percent.toFixed(2) + "%");
+		if(e.loaded==e.total)
+		{
+			setTimeout("anotesub()",100);
+		}
+	}
+}
+
+function anotesub() {
+	$("div[name='aprogressdiv']").css('display','none');
+
+}
+
+function successpage() {
+	window.location.href ="/index.php/Home/headteacher/testlist0103/userid/"+$('#userid').val()+"/username/"+$('#username').val()+"/realname/"+$('#realname').val()+".html";
+}
+$(function(){
+	imgpreviewidsub();
+});
+
+function imgpreviewidsub(){
+	var height=$(window).height();
+	var width=$(window).width();
+//	$('#imgpreviewdivid').css('height',height);
+	$('#imgpreviewdivid').css('width',width);
+
+
+
+	$('#imgid').css('height',height-110);
+	$('#imgpreviewid').css('height',height-110);
+	$('#imgpreviewid').css('width',width);
+
+
+}
+
+//切换图片预览
+function changedisplayimg(num)
+{
+	$('#midnum').val(num);
+	$('#imgpreviewdivid').css('display','');
+	$('#uploadid').css('display','none');
+}
+
+//隐藏图片预览
+
+function closesub()
+{
+	$('#imgpreviewdivid').css('display','none');
+	$('#uploadid').css('display','');
+}
+
+//确定上传
+function tprocess()
+{
+	closesub();
+	var num=$('#midnum').val();
+
+	var kind=$('#kind').val();
+
+	if(kind=='t')
+	{
+		treadfileprocessnext(num);
+	}
+
+	if(kind=='a')
+	{
+		areadfileprocessnext(num);
+	}
+
+
+
+}
+
+function previewasub()
+{
+	var name=$('#previewaid').attr('name');
+
+	if(name=='1')
+	{
+		$('#previewaid').css('color','grey');
+		$('#previewaid').attr('name',0);
+	}
+	else
+	{
+		$('#previewaid').css('color','black');
+		$('#previewaid').attr('name',1);
+	}
+}
+
+//缩小放大
+function scalesub(id)
+{
+	if(id=='img1')
+	{
+		$("#img1").css('display','none');
+		$("#img0").css('display','');
+
+		var width=$('#imgpreviewid').css('width');
+		var height=$('#imgpreviewid').css('height');
+
+
+		$('#imgpreviewid').css('width',parseInt(width)*2);
+		$('#imgpreviewid').css('height',parseInt(height)*2);
+
+
+	}
+
+	if(id=='img0')
+	{
+		$("#img0").css('display','none');
+		$("#img1").css('display','');
+
+		var width=$('#imgpreviewid').css('width');
+		var height=$('#imgpreviewid').css('height');
+
+
+		$('#imgpreviewid').css('width',parseInt(width)/2);
+		$('#imgpreviewid').css('height',parseInt(height)/2);
+	}
+}
+
+
+</script>
+
+</body>
+</html>

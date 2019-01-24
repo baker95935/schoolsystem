@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>错题管理</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
+	<script src="__PUBLIC__/jquery/jquery.min.js"></script>
+	<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+
+<script language="javascript">  
+    function work1(target) {
+		$("#dropdownMenu1").text($(target).text());
+    }   
+	
+	 function work2(target) {
+		$("#dropdownMenu2").text($(target).text());
+    }  
+	
+		 function work3(target) {
+		$("#dropdownMenu3").text($(target).text());
+    }  
+	
+       $(document).ready(function(){
+ 			$("b").click(function(){
+				$('#myModal01').modal(); 
+ 		});
+	   	});
+</script>
+
+</head>
+<body class="background_color">
+	<div class="container">
+	
+	
+		<div class="row title_class">
+			<div class="col-xs-2"><a href="managetest0201.html"><img src="../img/reg_back.png" class="title_left_img"></a></div>
+			<div class="col-xs-8  title_font_middle " >初中物理二年级</div>
+			<div class="col-xs-2"><a href="home.html">主页</a></div>		
+		</div>
+		<div class="row parent_nav">
+		<div class="col-xs-4" >
+			<div class="dropdown">
+	<button type="button" class="btn dropdown-toggle parent_button" id="dropdownMenu1" 
+			data-toggle="dropdown">
+隐藏答案		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+		<li role="presentation" >
+			<a  href="javascript:void(0)" onclick="work1(this)" role="menuitem" tabindex="-1" href="#">隐藏答案</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work1(this)" role="menuitem" tabindex="-1" href="#">显示答案</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work1(this)" role="menuitem" tabindex="-1" href="#">点击弹出</a>
+		</li>
+	</ul>
+</div>
+
+			
+			
+		</div>
+		<div class="col-xs-4">
+			
+			
+				<div class="dropdown">
+	<button type="button" class="btn dropdown-toggle parent_button"  id="dropdownMenu2" 
+			data-toggle="dropdown">
+题行间距	<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+		<li role="presentation" >
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">1</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">2</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">3</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">4</a>
+		</li>
+		<li role="presentation" class="divider"></li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">默认</a>
+		</li>
+	</ul>
+</div>
+			
+			
+			
+		</div>
+		<div class="col-xs-4">
+			
+				<div class="dropdown">
+	<button type="button" class="btn dropdown-toggle parent_button"
+			>
+导出	
+	</button>
+</div>
+		</div>	
+		</div>
+		<div class="row">
+			<ol id="list1" style="padding-right: 6%;" class="parent_ol">
+				<li>		
+					<b>	<img  src="img/testsample.jpg" alt="答案：C，考察进行时知识点"></b>
+					
+				</li>
+				<li>
+					<b><img src="img/testsample.jpg" alt="答案：B，考察过去式知识点"></b>
+				</li>
+				<li>
+					<b><img src="img/testsample.jpg" alt="答案：A，考察进行时知识点"></b>
+						
+				</li>
+					</ol>
+			
+			
+		</div>
+	</div>
+<div class="modal fade" id="myModal01" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:10px;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+				本题答案及解析					</h4>
+			</div>
+			<div class="modal-body">
+				<p>答案：C</p>
+				<p>主要是考察完形填空方面的内容，同学们要十分注意。本题错误率达到60%。</p>
+			</div>
+		
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>	
+
+</body>
+</html>

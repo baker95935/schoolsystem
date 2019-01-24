@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head>
+<title>错题系统</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://cdn.gbtags.com/twitter-bootstrap/3.2.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css" href="../css/main.css"/>
+</head>
+<body class="background_color">
+<div class="container">
+	<div class="row">
+		<div class="col-xs-2 teacher_left_01"></div>
+		<div class="col-xs-8 teacher_middle_01">
+			<div id="teacher_middle_01_01" class="row">
+				<div class="col-xs-6" style="text-align: left;"><a href="home.html"><img class="teacher_back_img" src="../img/reg.png"></a></div>
+				<div class="col-xs-6" style="text-align: right;"><div class="teacher_font">习题处理系统</div></div>			
+			</div>
+			<div id="teacher_middle_01_02" class="row">
+			</div>
+			<div  class="row teacher_middle_01_03">
+			<div class="col-xs-2"><img class="teacher_img_01 " src="image/person.png"></div>
+			<div class="col-xs-10">
+				  <form action="" method="get"> 
+					<select name="" class="name-input input_class_new textarea_line teacher_txt_margin" > 
+					<option  value="0">个人试卷</option> 
+					<option  value="1">成品试卷</option> 
+					</select> 
+					</form>
+			</div>
+			</div>
+			<div class="row teacher_middle_01_03" >
+			<div class="col-xs-2"><img class="teacher_img_02 " src="image/msg_icon.png"></div>
+			<div class="col-xs-10">
+				<form action="" method="get"> 
+				<input required="required"  type="text" class="name-input input_class_new teacher_txt_margin" style="text-align: center;" placeholder="出版社名称" />
+				</form>
+			</div>
+			</div>
+			<div  class="row teacher_middle_01_03">
+			<div class="col-xs-2"><img class="teacher_img_02 " src="image/lock.png"></div>
+			<div class="col-xs-10">
+				 <form action="" method="get"> 
+					<select name="" class="name-input input_class_new textarea_line teacher_txt_margin" > 
+					<option value="0">出版时间：2010</option> 
+					<option value="1"  style="margin: 0 auto;">出版时间：2011</option> 
+					<option value="1"  style="margin: 0 auto;">出版时间：2012</option>
+					</select> 
+					</form>	
+			</div>
+			</div>
+			<div class="row teacher_middle_01_03" >
+			<div class="col-xs-2"><img class="teacher_img_02 " src="image/msg_icon.png"></div>
+			<div class="col-xs-10">
+				<form action="" method="get"> 
+				<input required="required"  type="text" class="name-input input_class_new teacher_txt_margin"  placeholder="试卷名称" />
+				</form>
+			</div>
+			</div>
+			<div  class="row teacher_middle_01_03">
+			<div class="col-xs-2"><img class="teacher_img_02 " src="image/tel_icon.png"></div>
+			<div class="col-xs-10 textcss" style="padding-top: 14px;padding-left: 60px;">
+				<a  data-toggle="modal" data-target="#myModal">请选择知识点</a>
+			</div>
+			</div>	
+		</div>
+		<div class="col-xs-2 teacher_right_01"></div>		
+	</div>
+	<div class="row teacher_bottom">
+		<div class="col-xs-2"><a href="home.html"><img class="teacher_bottom_left_img_a img-responsive center-block " src="image/setpage_04_a.gif"></a></div>
+		<div class="col-xs-8 teacher_bottom_middle"><a href="pagepanel0102.html">确认提交习题</a></div>
+		<div class="col-xs-2"><img class="teacher_bottom_right_img img-responsive center-block " src="image/setpage_06.png"></div>	
+	</div>
+	
+		<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:50px;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel01">
+							请选择您需要的知识点			
+			  </h4>
+			</div>
+			<div class="modal-body">
+				<p>初二物理，第一章至第六章知识点</p>
+				<p>
+				  <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_0">
+				    力学</label>&nbsp;&nbsp;
+				  <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_1">
+				   浮力</label>
+			  </p>
+				<hr>
+			<p>初三物理，第七章至第九章知识点</p>
+				<p>
+				  <label class="modeltext">
+				    <input  type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup122_0">
+				    光学</label>&nbsp;&nbsp;
+				  <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_2">
+				   浮力</label>&nbsp;&nbsp;
+				    <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_3">
+				   浮力</label>&nbsp;&nbsp;
+				    <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_4">
+				   浮力</label>&nbsp;&nbsp;
+				    <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_5">
+				   浮力</label>&nbsp;&nbsp;
+			        <label class="modeltext">
+				       <input  type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_6">
+				    光学</label>&nbsp;&nbsp;
+				  <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_7">
+				   浮力</label>&nbsp;&nbsp;
+				    <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_8">
+				   浮力</label>&nbsp;&nbsp;
+				    <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_9">
+				   浮力</label>&nbsp;&nbsp;
+				    <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_10">
+				   浮力</label>&nbsp;&nbsp;
+			        <label class="modeltext">
+				       <input  type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_11">
+				    光学</label>&nbsp;&nbsp;
+				  <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_12">
+				   浮力</label>&nbsp;&nbsp;
+				    <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_13">
+				   浮力</label>&nbsp;&nbsp;
+				    <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_14">
+				   浮力</label>&nbsp;&nbsp;
+				    <label class="modeltext">
+				    <input type="checkbox" name="CheckboxGroup1" value="复选框" id="CheckboxGroup1_15">
+				   浮力</label>&nbsp;&nbsp;
+				  <br>
+			  </p>
+		  </div>
+			<div class="modal-footer " >
+				<button type="button" class="btn btn-default" data-dismiss="modal" style="width:20%;background-color:#87c15d;color:white;" >关闭
+				</button>
+				<button type="button" class="btn btn-primary" style="background-image: url(../img/button_Bg.png);width:20%;">
+					确认
+				</button>
+			</div>
+		
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+
+</div>
+
+
+
+
+
+</body>
+</html>

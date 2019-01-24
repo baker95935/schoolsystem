@@ -1,0 +1,70 @@
+
+/*页眉*/
+.ctb_header{
+    padding-top: 40px;
+}
+/*页面标题*/
+.ctb_h1{
+
+}
+/*页面副标题*/
+.ctb_h2{
+
+}
+/*题型标题*/
+.ctb_h3{
+
+}
+/*单个题标题*/
+.ctb_h4{
+
+}
+/*页码*/
+.ctb_page{
+
+}
+/*分页线*/
+.ctb_paging{
+    font-size: 14px;
+    padding-left: 335px;
+}
+/*页脚*/
+.ctb_bottom{
+
+}
+
+/*行间距*/
+.ctb_lineheight{
+
+}
+
+#test_img_id div{
+    /*background-color: #8c8c8c;*/
+}
+/*单个习题分数输入框样式*/
+.onequestionscore{
+    width:30px;
+    margin-left:10px;
+    font-size:13px;
+    height:16px;
+    border:0px;
+    float: left;
+    text-align: center;
+}
+
+/*部分子分数样式*/
+.partscore{
+    width:30px;
+    margin-left:10px;
+    font-size:13px;
+    height:16px;
+    border:0px;
+    float: left;
+    text-align: center;
+}
+/*文字样式*/
+#ruler {
+    visibility: hidden;
+    white-space: nowrap;
+    font-size: 14px;
+}

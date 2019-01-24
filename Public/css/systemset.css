@@ -1,0 +1,91 @@
+@charset "UTF-8";
+.sysset_msgtable{
+	border-bottom: 1px solid #3c3c3c;
+	border-top: 1px solid #3c3c3c;
+}
+.sysset_msgtable tr{
+	border-bottom: 1px solid #3c3c3c;
+	border-top: 1px solid #3c3c3c;
+	height: 30px;
+}
+
+.sysset_per5{
+	width: 5%;
+}
+
+.sysset_per10{
+	width: 10%;
+}
+
+.sysset_per15{
+	width: 15%;
+}
+
+.sysset_per20{
+	width: 20%;
+}
+
+.sysset_per30{
+	width: 30%;
+}
+.sysset_msgtable a{
+	color: #000000;
+}
+.sysset_msgtable a:hover{
+	color: #000000;
+}
+
+.sysset_blue a{
+	color: blue;
+}
+.sysset_blue a:hover{
+	color: blue;
+}
+
+.sysset_msgli ol li{
+	list-style-type:none;
+}
+.sysset_msgli ol li input{
+	margin-top: 8px;
+	border-bottom: 1px solid #3c3c3c;
+	border-top: 0px solid #3c3c3c;
+	border-left: 0px solid #3c3c3c;
+	border-right: 0px solid #3c3c3c;
+}
+
+.sysset_msgli ol li select{
+	margin-top: 16px;
+}
+
+.sysset_msgli ol li input{
+	text-align: center;
+}
+
+.sysset_marginleft14{
+	margin-left: 14px;
+}
+.sysset_marginleft28{
+	margin-left: 28px;
+}
+
+.readonlycss{
+	background-color: #d8d8d8;
+}
+#table_part th{
+	width: 10%;
+	text-align: center;
+}
+
+#table_part th td{
+	width: 10%;
+	text-align: center;
+}
+
+#table_chaptermsg th{
+	width: 20%;
+}
+
+#table_chaptermsg th td{
+	width: 20%;
+	text-align: center;
+}

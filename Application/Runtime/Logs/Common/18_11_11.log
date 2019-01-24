@@ -1,0 +1,60 @@
+[ 2018-11-11T22:09:14+08:00 ] 117.13.25.164 /index.php/Home/Index/Public/img/logo.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000264s ]
+
+[ 2018-11-11T22:09:14+08:00 ] 117.13.25.164 /index.php/Home/Index/Public/img/ask.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000250s ]
+
+[ 2018-11-11T22:09:34+08:00 ] 117.13.25.164 /index.php/Home/Index/Public/img/logo.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000243s ]
+
+[ 2018-11-11T22:09:34+08:00 ] 117.13.25.164 /index.php/Home/Index/Public/img/ask.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000239s ]
+
+[ 2018-11-11T22:12:49+08:00 ] 117.13.25.164 /index.php/Home/Index/Public/img/logo.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000241s ]
+
+[ 2018-11-11T22:12:49+08:00 ] 117.13.25.164 /index.php/Home/Index/Public/img/ask.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000226s ]
+
+[ 2018-11-11T22:12:59+08:00 ] 117.13.25.164 /index.php/Home/Index/Public/img/ask.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000204s ]
+
+[ 2018-11-11T22:12:59+08:00 ] 117.13.25.164 /index.php/Home/Index/Public/img/logo.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000204s ]
+
+[ 2018-11-11T22:16:04+08:00 ] 117.13.25.164 /index.php/Home/Index/Public/img/logo.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000249s ]
+
+[ 2018-11-11T22:16:04+08:00 ] 117.13.25.164 /index.php/Home/Index/Public/img/ask.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000239s ]
+
+[ 2018-11-11T22:37:51+08:00 ] 117.13.25.164 /index.php/Home/Headteacher/pagepanel0102/userid/135/username/100/realname/__PUBLIC__/img/phone10.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000247s ]
+
+[ 2018-11-11T22:37:51+08:00 ] 117.13.25.164 /index.php/Home/Headteacher/pagepanel0102/userid/135/username/100/realname/__PUBLIC__/img/phone20.png
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000256s ]
+

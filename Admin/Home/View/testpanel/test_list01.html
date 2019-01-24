@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html class="login-bg">
+<head>
+    <title>CTB-Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+    <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        tr.change:hover
+        {
+            background-color:#f4fafc;
+        }
+    </style>
+</head>
+<body>
+<div class="container" style="width: 100%;">
+<div class="row">
+<div class="col-xs-9">
+    <div class="row" style="height: 54px;"></div>
+    <div class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-10">
+            <table>
+                <tr>
+                    <td><a href="{:U('adminindex/index')}"><img class="img-circle" style="width: 70px;height: 70px;" src="__PUBLIC__/img/admin_radio.png"></a></td>
+
+                    <td class="admin_title" style="padding-left: 20px;">
+                        <span style="font-size: 24px;">习题处理模块-列表</span>
+                        <br>
+                        <span id="nowtimeid" class="admin_sec_title">当前日期：2018-2-12</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-1">
+            <input id="tid" type="hidden" value="{$userdata[id]}">
+            <input id="tusername" type="hidden" value="{$userdata[username]}">
+            <input id="trealname" type="hidden" value="{$userdata[realname]}">
+        </div>
+    </div>
+    <div class="row" style="margin-top: 34px;"> <hr class="admin_hr"></div>
+    <div class="row">
+        <div style="height: 30px;"></div>
+        <div style="padding-left: 5%;"><b>待处理习题统计列表</b></div>
+    </div>
+    <div class="row" id="undotest" style="margin-top: 35px;">
+        <div class="col-xs-12 admin_data_tabel admin_list" style="padding-left:5%;padding-right:5%;">
+        <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
+            <tr style="height: 45px;">
+                <th>序号</th><th>标题</th><th>用户id</th><th>时间</th><th>操作</th>
+            </tr>
+            <volist name="data" id="testdata">
+            <tr class="change">
+                <td >{++$m}<input type="hidden" value="{$testdata.id}"></td><td >{$testdata.paper_name}</td><td>{$testdata.userid}</td><td>{$testdata.creat_time}</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum]))}">进行处理</a></td>
+            </tr>
+            </volist>
+        </table>
+            <hr style="margin-top: 0px;">
+            <div style="padding-right: 0px;"><div class="result page">{$page}</div></div>
+        </div>
+    </div>
+
+
+
+
+
+        <div id="finishtest" class="col-xs-12 admin_data_tabel admin_list" style="padding-left:5%;padding-right:5%;display: none;">
+            <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
+                <tr style="height: 45px;">
+                    <th>序号</th><th>标题</th><th>用户id</th><th>时间</th><th>操作</th>
+                </tr>
+                <volist name="fdata" id="testdata">
+                    <tr class="change">
+                        <td >{++$m}<input type="hidden" value="{$testdata.id}"></td><td >{$testdata.paper_name}</td><td>{$testdata.userid}</td><td>{$testdata.creat_time}</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum]))}">完成</a></td>
+                    </tr>
+                </volist>
+            </table>
+            <hr style="margin-top: 0px;">
+            <div style="padding-right: 0px;"><div class="result page">{$fpage}</div></div>
+        </div>
+
+
+
+
+
+
+    </div>
+<div class="col-xs-3">
+   <div class="row" style="height:70px; "></div>
+   <div class="row" style=""><input id="inputbutton" type="submit" onclick="testsub()" value="处理完成习题" style="width:115px;height:32px;font-size:12px;background-color:#e8eef5; border: none;border-radius: 3px;border: 1px solid #cccccc;"></div>
+   <div class="row" style="height: 80px;"></div>
+   <div class="row">
+       <div class="col-xs-1" style="height: 680px; border-left: 1px solid #dae2ea; "></div>
+       <div class="col-xs-10">
+           <div>统计数据(unfinished)</div>
+           <div style="height: 100px;"></div>
+           <div style="color: #333333;">
+               &nbsp;&nbsp;当前提交120张试卷，600张图片，最后一次提交为《初中物理试卷》。<br><br>&nbsp;&nbsp;1.习题列表&nbsp;2.整体处理&nbsp;3.试题分解&nbsp;4.答案分解&nbsp;5.完成返回<br><br>技术支持：18902182280<br><br><br>错题本系统V1.0
+           </div>
+       </div>
+       <div class="col-xs-1"></div>
+   </div>
+</div>
+</div>
+</div>
+<script>
+
+
+    $(document).ready(function(){
+
+        nowtime();
+
+    })
+
+    function testsub()
+    {
+        if($('#undotest').css('display')!="none")
+        {
+            $('#undotest').css('display','none');
+            $('#finishtest').css('display','block');
+            $('#inputbutton').val('未完成习题');
+        }
+        else
+        {
+            $('#undotest').css('display','block');
+            $('#finishtest').css('display','none');
+            $('#inputbutton').val('处理完成习题');
+        }
+    }
+
+    function nowtime()
+    {
+        var myDate = new Date();
+        var year=myDate.getFullYear();    //获取完整的年份(4位,1970-????)
+        var month=myDate.getMonth();       //获取当前月份(0-11,0代表1月)
+        var date=myDate.getDate();        //获取当前日(1-31)
+        var nowtime=year+'-'+(parseInt(month)+1)+'-'+date;
+        $('#nowtimeid').text('当前日期：'+nowtime);
+    }
+</script>
+</body>
+</html>

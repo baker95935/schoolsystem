@@ -1,0 +1,200 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>错题管理列表</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
+	<script src="__PUBLIC__/jquery/jquery.min.js"></script>
+	<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+
+	<script language="javascript">
+		function work1(target) {
+			//e.preventDefault();
+			$("#dropdownMenu1").text($(target).text());
+		}
+
+		function work2(target) {
+			//e.preventDefault();
+			$("#dropdownMenu2").text($(target).text());
+		}
+
+		function work3(target) {
+			//e.preventDefault();
+			$("#dropdownMenu3").text($(target).text());
+		}
+	</script>
+</head>
+<body class="background_color">
+<div style="position: absolute;width: 80px;height:80px;background-color: #1b6d85;border-radius: 40px;top: 600px;left: 360px;color: #ffffff;font-size: 16px;padding-top: 28px;padding-left: 24px;">PDF↓</div>
+	<div class="container">
+		<div class="row title_class">
+			<div class="col-xs-2"><a href="{:U('home',array('userid'=>$userid,'username'=>$username,'realname'=>$realname))}"><img src="__PUBLIC__/img/reg_back.png" class="title_left_img"></a></div>
+			<div class="col-xs-8  title_font_middle " >我的错题本</div>
+			<div class="col-xs-2"><a href="javascript:void(0)" style="color: white;font-size: 15px;display: block;margin-top: 1px;">添加</a></div>
+		</div>
+		<div class="row parent_nav">
+		<div class="col-xs-4" >
+			<div class="dropdown">
+	<button type="button" class="btn dropdown-toggle parent_button" id="dropdownMenu1" data-toggle="dropdown">题型		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+		<li role="presentation" >
+			<a  href="javascript:void(0)" onclick="work1(this)" role="menuitem" tabindex="-1" href="#">未完成</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work1(this)" role="menuitem" tabindex="-1" href="#">已完成</a>
+		</li>
+		<li role="presentation" class="divider"></li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work1(this)" role="menuitem" tabindex="-1" href="#">全部</a>
+		</li>
+	</ul>
+</div>
+
+			
+			
+		</div>
+		<div class="col-xs-4">
+			
+			
+				<div class="dropdown">
+	<button type="button" class="btn dropdown-toggle parent_button"  id="dropdownMenu2" 
+			data-toggle="dropdown">操作(10)	<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+		<li role="presentation" >
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">下载pdf</a>
+		</li>
+		<li role="presentation" >
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">下一题</a>
+		</li>
+		<li role="presentation" >
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">上一题</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">移除</a>
+		</li>
+		<li role="presentation" class="divider"></li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">操作(10)</a>
+		</li>
+	</ul>
+</div>
+			
+			
+			
+		</div>
+		<div class="col-xs-4">
+			
+				<!--<div class="dropdown">-->
+	<!--<button type="button" class="btn dropdown-toggle parent_button"  id="dropdownMenu3" -->
+			<!--data-toggle="dropdown">全部题型<span class="caret"></span>-->
+	<!--</button>-->
+	<!--<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu3">-->
+	<!--<li role="presentation" >-->
+			<!--<a  href="javascript:void(0)" onclick="work3(this)" role="menuitem" tabindex="-1" href="#">填空</a>-->
+		<!--</li>-->
+		<!--<li role="presentation" >-->
+			<!--<a  href="javascript:void(0)" onclick="work3(this)" role="menuitem" tabindex="-1" href="#">选择</a>-->
+		<!--</li>-->
+		<!--<li role="presentation">-->
+			<!--<a  href="javascript:void(0)" onclick="work3(this)" role="menuitem" tabindex="-1" href="#">完形</a>-->
+		<!--</li>-->
+		<!--<li role="presentation" class="divider"></li>-->
+		<!--<li role="presentation">-->
+			<!--<a  href="javascript:void(0)" onclick="work3(this)" role="menuitem" tabindex="-1" href="#">全部</a>-->
+		<!--</li>-->
+	<!--</ul>-->
+<!--</div>-->
+		</div>	
+		</div>
+		<div class="row">
+			<div id="contentdiv" class="col-xs-12" style="height: 470px;overflow-y: auto;">
+				<ol id="list1" style="list-style-type:none;font-size: 15px;margin-left: -30px;padding-top: 10px;">
+					<li >
+						<div style="float: left;"><input style="font-size: 30px;zoom:130%;" type="checkbox"></div> <div style="padding-left: 20px;padding-top: 4px;"><span>1.初中物理测试卷</span><span style="margin-left: 70px;">2018-09-12</span><span style="margin-left:20px;">12</span></div>
+					</li>
+					<hr style="margin-top: 14px; margin-bottom: 10px;">
+					<li>
+						<div style="float: left;"><input style="font-size: 30px;zoom:130%;" type="checkbox"></div> <div style="padding-left: 20px;padding-top: 4px;"><span>2.初中物理测试卷</span><span style="margin-left: 70px;">2018-09-12</span><span style="margin-left: 20px;">12</span></div>
+					</li>
+					<hr style="margin-top: 14px; margin-bottom: 10px;">
+					<li>
+						<div style="float: left;"><input style="font-size: 30px;zoom:130%;" type="checkbox"></div> <div style="padding-left: 20px;padding-top: 4px;"><span>3.初中物理测试卷</span><span style="margin-left: 70px;">2018-09-12</span><span style="margin-left: 20px;">12</span></div>
+					</li>
+					<hr style="margin-top: 14px; margin-bottom: 10px;">
+				</ol>
+				<div id="downdiv" onclick="nextpage()" style="width: 100%;height: 40px; text-align: center;">点击加载（<span id="nowpage">1</span>/<span id="pagenum">4</span>）</div>
+			</div>
+		</div>
+	</div>
+
+	<input id="userid" type="hidden" value="{$userid}">
+	<input id="pagelength" type="hidden" value="5">
+</body>
+
+<script>
+	$(function(){
+//		var nowpage=1;
+//		var pagelength=$('#pagelength').val();
+//		var userid=$('#userid').val();
+//		testdata(userid,nowpage,pagelength);
+	});
+
+
+//	function nextpage(){
+//		var nowpage=$('#nowpage').text();
+//		var maxnum=$('#pagenum').text();
+//		var userid=$('#userid').val();
+//		var pagelength=$('#pagelength').val();
+//
+//		nowpage=nowpage*1+1;
+//		if(nowpage>maxnum)
+//		{
+//			return;
+//		}
+//		if(nowpage<1)
+//		{
+//			return;
+//		}
+//
+//		$("tr[name='testlisttr']").remove();
+//		$('#nowpage').text(nowpage);
+//		testdata(userid,nowpage,pagelength);
+//
+//
+//	}
+
+//	function testdata(userid,nowpage,pagelength)
+//	{
+//		$.ajax({
+//			url:"{:U('phptask0101')}",
+//			data:{userid:userid,nowpage:nowpage,pagelength:pagelength},
+//			datatype:'json',
+//			type:'post',
+//			success:function(re){
+//				var testlist=eval("("+re+")");
+//				var addhtmlmsg = '';
+//				var beginhtml = $('#list1').html();
+//				var mylength = testlist['length'];
+//				var testid = '';
+//				var pagenum=testlist['pagenum'];
+//				$('#pagenum').text(pagenum);
+//				for (var i = 0; i < mylength; i++) {
+//					testid=testlist[i]['id'];
+//					var ahtml='/index.php/Home/Student/testchecked0102/testid/'+testid+'/userid/'+$('#userid').val()+'/paper_name/'+testlist[i]['paper_name']+'.html';
+//					addhtmlmsg=addhtmlmsg+'<li><a href="'+ahtml+'"><p class="h5">'+testlist[i]['paper_name']+'</p> <p  class="h6">科目：'+testlist[i]['subject']+'；考试时间：'+testlist[i]['publish_time']+'；试题数：'+testlist[i]['sum']+'；状态：'+testlist[i]['status']+'。</p></a><hr></li>';
+//					$('#list1').html(beginhtml + addhtmlmsg);
+//				}
+//
+//			}
+//
+//		})
+//	}
+
+
+</script>
+</html>

@@ -1,0 +1,1054 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html>
+<html class="login-bg">
+<head>
+    <title>CTB-Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/Public/jquery/jquery.min.js"></script>
+    <link href="/Public/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/Public/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/Public/js/addtest.js"></script>
+    <link rel="stylesheet" type="text/css" href="/Public/css/main.css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+<div id="titlemsg" style="width: 140px;height: 20px;background-color: #19639c;position: absolute;z-index: 3;color: #FFFFFF;text-align: center;font-size: 13px;padding-top: 2px;">
+
+   <table style="border: 0px;">
+       <tr>
+           <td style="width: 100px;">  <span id="titlespan" >标题信息</span><span id="kindspan" ></span> </td>
+           <td style="width: 40px;">  <img id="answerimgpre" style="width: 40px;height:20px;" src="0"></td>
+       </tr>
+   </table>
+
+
+
+</div>
+
+<!--选项框-->
+<div id="squarebutton" style="width: 15px;height: 20px;background-color: #000000;position: absolute;z-index: 2;opacity:0.3;" onclick="answersub()"></div>
+
+<!--横向标尺-->
+<hr id="rule_hr" style="z-index: 2;width:420px;height: 1px;background-color: black;position: absolute;">
+
+<div id="finish_div" style="z-index: 2;width:470px;background-color: black;opacity: 0.7;position: absolute;"></div>
+
+
+<!--显示选择添加的时候添加图片-->
+<div id="add_pic_div_a">
+    <img id="add_pic_a"  src="/Public/img/picbegin_a.png">
+</div>
+<div id="add_pic_div_b">
+    <img id="add_pic_b"  src="/Public/img/picbegin_b.png" >
+</div>
+<div id="add_pic_div" onclick="answersub()">
+</div>
+
+<div class="contain" style="width: 100%">
+    <div class="row" style="height: 45px;"></div>
+    <div class="row">
+        <div class="col-xs-4" style="padding-left:45px;">
+            <span style="font-size: 18px;"><b>答案&nbsp;&nbsp;</b></span><span>&nbsp;&nbsp;分解</span>
+        </div>
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4">
+            <div class="admin_bt_div">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="admin_div_unchicked">
+                                <a href="<?php echo U('test_list01');?>">习题列表</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div  class="admin_div_unchicked">
+                                <a href="<?php echo U('test_whole02',array('filesernum'=>$filesernum,'kind'=>$kind,'oldstatus'=>$oldstatus));?>">整体处理</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div  class="admin_div_unchicked">
+                                <a href="<?php echo U('test_del03',array('filesernum'=>$filesernum,'kind'=>$kind,'oldstatus'=>$oldstatus));?>">习题分解</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: #c0b9c8" class="admin_div_unchicked">
+                                答案分解
+                            </div>
+                        </td>
+                        <td>
+                            <div class="admin_div_unchicked admin_list">
+                                <a  href="<?php echo U('erase_del05',array('filesernum'=>$filesernum,'kind'=>$kind,'oldstatus'=>$oldstatus));?>">橡皮擦处理</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="height: 43px;"></div>
+    <div class="row" style="min-height: 26px;border: 1px solid #eaf0f2;text-align: center;font-size: 12px;padding-top: 4px;padding-bottom: 4px;">
+        <span>方框选区(Q)：<input id="square1" name="kind" type="radio"    value="square"/>&nbsp;&nbsp;&nbsp;&nbsp;<input id="inputw" type="text" style="height: 18px;width: 20px;" value="15"><span style="font-size:20px;height: 18px;">×</span><input id="inputh" type="text" style="height: 18px;width: 20px;" value="20">&nbsp;<input type="button" style="height: 20px;width: 40px;" onclick="resquaresize()" value="OK"></span>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span>矩形选区(W):&nbsp;&nbsp;<input id="rang1"  name="kind" type="radio"  value="rang"/></span>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span>直线选区(E):&nbsp;&nbsp;<input id="line1" name="kind" type="radio" value="line" checked="checked"/></span>
+        <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+        <span>编辑区域：<input name="edit" type="radio"  id="automove" value="down" checked="checked"  />自动向下（F）&nbsp;&nbsp;<input name="edit" type="radio" value="up"/>自动向上（U）&nbsp;&nbsp;<input id="stopmove" name="edit" type="radio" value="stop" />停止自动（D）&nbsp;&nbsp;</span>
+        <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+        <span>答案连接方式：<input name="link1" type="radio" value="line"  checked="checked"/>&nbsp;下&nbsp;&nbsp;&nbsp;<input name="link2" type="radio" value="line"  checked="checked"/>&nbsp;左&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="link1" type="radio" value="line"/>&nbsp;上&nbsp;&nbsp;&nbsp;<input name="link2" type="radio" value="line"/>&nbsp;右&nbsp;&nbsp;</span>
+        <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+        <span id="button_del05"><u><a href="javascript:void(0)" onclick="finishdel_04()">完成</a></u>&nbsp;&nbsp;</span>
+    </div>
+    <div class="row" style="height: 15px;"></div>
+    <div class="row">
+        <div class="col-xs-6" style="min-height: 700px;border-right: 1px solid #728090;background-color: #fcf9e2;">
+            <div class="row">
+                <div class="col-xs-2"></div>
+                <div class="col-xs-8" style="background-color: #fcf9e2;min-height: 678px;padding-top: 30px;text-align: center;">
+                    <div class="row">
+                        <div class="col-xs-9" style="text-align: left;"> <span><input name="titleedit" type="radio" value="add" id="addedit"  >&nbsp;添加&nbsp;&nbsp;<input name="titleedit" type="radio" value="re" checked="checked" id="reedit">&nbsp;编辑&nbsp;&nbsp;<input name="titleedit" type="radio" value="del" id="titleedit" >&nbsp;删除&nbsp;&nbsp;</span></div>
+                        <div class="col-xs-3"><span id="titlekind"></span>&nbsp;<span id="othernote">错题云</span></div>
+                    </div>
+                    <div id="contenttest" style="width: 460px;height: 200px; border: 1px solid #f9f9f8;background-color: #FFFFFF;padding-left: 10px;overflow-y: scroll;margin-top: 15px;">
+                        <div  style="text-align: left;width: 100%"> <span id="nowtitle" style="margin-left: 0px;color: red;">当前题:未选择</span></div>
+                        <img id="testimg" style="width: 460px;">
+                        <hr>
+                        <img id="answerimg" style="width: 460px;" onclick="answereditsub()">
+
+                    </div>
+                    <div style="width: 100%;text-align: right;margin-top: 40px;margin-bottom: 20px;">
+                        <span>Down:Auto        </span><span id="nexttitle">下一题:未选择</span>
+                    </div>
+                    <div id="answercontentid" style="height: 300px;width:465px;overflow-y: scroll;">
+                        <span></span>
+                        <table border="1px;" style="width: 460px;height: 300px;background-color: #2b669a;color:white;">
+                            <tr style="height: 45px;">
+                                <th style="text-align: center;">标题</th><th style="text-align: center;">类型</th><th style="text-align: center;">答案</th><th style="text-align: center;">图片</th><th style="text-align: center;">操作</th>
+                            </tr>
+                            <?php if(is_array($data)): $i = 0; $__LIST__ = $data;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$testdata): $mod = ($i % 2 );++$i;?><tr id="tr<?php echo ($testdata["id"]); ?>" name="tr<?php echo ++$m;?>"  style="height: 45px;">
+                                    <input id="in_ser<?php echo ($testdata["in_ser"]); ?>" name="<?php echo ($testdata["id"]); ?>" type="hidden">
+                                    <td ><span id="title<?php echo ($testdata["id"]); ?>"><?php echo ($testdata["title"]); ?></span></td><td><span id="kind<?php echo ($testdata["id"]); ?>"><?php echo ($testdata["kind"]); ?></span></td><td><span id="answer<?php echo ($testdata["id"]); ?>"><?php echo ($testdata["answerid"]); ?></span></td><td><a   href="javascript:void(0)" onclick="test1()">查看</a></td><td><a id="<?php echo ($testdata["id"]); ?>" name="<?php echo ($testdata["srcid"]); ?>"  data-name="<?php echo ($testdata["srcid"]); ?>" testid="<?php echo ($testdata["srcid"]); ?>" href="javascript:void(0)" onclick="choosetitle(this.id)">选择</a></td>
+                                </tr><?php endforeach; endif; else: echo "" ;endif; ?>
+                            <input id="datasum" value="<?php echo ($m); ?>" type="hidden">
+                        </table>
+                    </div>
+                </div>
+                <div class="col-xs-2" style=" min-height: 700px;">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6" style="min-height: 700px;background-color: #fcf9e2;">
+            <div class="row">
+                <div class="col-xs-2" style=" min-height: 700px;">
+                    <div class="row" style="height: 130px;"></div>
+                    <div class="row admin_test_img_thumb" style="height: 400px;overflow-y: scroll;text-align: center;margin-left: 0px;">
+                        <?php if(is_array($adata)): $i = 0; $__LIST__ = $adata;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$aid): $mod = ($i % 2 );++$i;?><img  id="aimg<?php echo ++$aimg;?>"  name="<?php echo ($aid[id]); ?>" onclick="anowimgsub(this.id)"  src="<?php echo ($aid[src_pic]); ?>">
+                            <input id="aimg_x_ratio<?php echo ($aimg); ?>" type="hidden" value="<?php echo ($aid[x_ratio]); ?>">
+                            <input id="aimg_y_ratio<?php echo ($aimg); ?>" type="hidden" value="<?php echo ($aid[y_ratio]); ?>"><?php endforeach; endif; else: echo "" ;endif; ?>
+                    </div>
+                    <div class="row admin_note_css">答案：<span id="anownum">1</span>/<span id="asumnum"><?php echo ($aimg); ?></span></div>
+                </div>
+                <div class="col-xs-10" style="width: 420px;background-color: #fcf9e2;min-height: 678px;padding-top: 30px;text-align: center;">
+                    <div class="row" style="width: 420px;background-color: yellow;height: 18px;margin-left: -10px;">
+                        <div class="col-xs-10" style="background-color: yellow;height: 18px;"><span id="notemsg" style="font-size: 12px;margin-bottom: 2px;">方框</span> </div>
+                        <div class="col-xs-2" style="background-color: red;height: 18px;"> </div>
+                    </div>
+                    <img name="adata" id="choose_img" onclick="cutchoosesub()"   style="width: 420px;height: 610px; border: 1px solid #f9f9f8;margin-left: -10px;" src="<?php echo ($adata[0][src_pic]); ?>">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input id="pretr" type="hidden" value="">
+<input id="prea" type="hidden" value="">
+<input id="picnav" type="hidden" value="aimg1">
+<input id="filesernum" type="hidden" value="<?php echo ($filesernum); ?>">
+<input id="nowtestid" type="hidden" value="0">
+<input id="nowanswerid" type="hidden" value="0">
+<input id="nowid" type="hidden" value="0">
+
+<input id="edit_left" type="hidden" value="110">
+<input id="edit_top" type="hidden" value="80">
+
+
+<input id="edit_left1" type="hidden" value="">
+<input id="edit_top1" type="hidden" value="">
+
+<input id="operkind" type="hidden" value="rang">
+
+<input id="rangstation" type="hidden" value="1">
+
+<input id="textmsg" type="hidden" value="测试">
+
+<input id="nownote" type="hidden" value="1">
+
+<input id="div_top" type="hidden" value="0">
+
+<input id="kind"  type="hidden" value="<?php echo ($kind); ?>">
+<input id="oldstatus"  type="hidden" value="<?php echo ($oldstatus); ?>">
+<script>
+    $(document).ready(function(){
+
+        initchoosetitle();
+        checkboxsub();
+        squarelocal();
+
+    })
+
+//初始化选择的数据
+    function initchoosetitle(){
+        var id=$("tr[name=tr1]").attr("id").replace(/[^0-9]/ig,"");
+
+//        $('#nowid').val(id);
+
+
+        $('#tr'+id).css('background-color','#FFFFFF');
+        $('#tr'+id).css('color','#2b669a');
+        var srcid=$('#'+id).attr('name');
+        $('#'+srcid).css("color","#2b669a");
+        $('#'+id).css("color","#2b669a");
+       var testsrcid=$("#"+id).attr("name");
+        var answersrcid=$('#answer'+id).text();
+        imgidtosrc(answersrcid,'answer');
+        imgidtosrc(testsrcid,'test');
+        $("#pretr").val(id);
+        $('#titlespan').text($('#title'+id).text());
+        $('#kindspan').text($('#kind'+id).text());
+
+        $('#aimg1').css("border", "1px solid #9b9ca3");
+
+        $('#nowtitle').text('当前题：'+$('#title'+id).text());
+    }
+//选择数据操作
+    function choosetitle(id){
+     
+        $('#answerimg').css('display','none');
+        $('#testimg').css('display','none');
+        var in_ser=$("input[name='"+id+"']").attr("id").replace(/[^0-9]/ig,"");
+        var datasum=$('#datasum').val();
+
+        var oldid=$("#pretr").val();
+        $('#tr'+oldid).css('background-color','#2b669a');
+        $('#tr'+oldid).css('color','#FFFFFF');
+        var oldsrcid=$('#'+oldid).attr('name');
+        $('#'+oldsrcid).css("color",'#FFFFFF');
+        $('#'+oldid).css("color",'#FFFFFF');
+
+        $('#tr'+id).css('background-color','#FFFFFF');
+        $('#tr'+id).css('color','#2b669a');
+        var srcid=$('#'+id).attr('name');
+        $('#'+srcid).css("color","#2b669a");
+        $('#'+id).css("color","#2b669a");
+        $("#pretr").val(id);
+        var datasum=$('#datasum').val();
+
+        $('#nowtitle').text('当前题：'+$('#title'+id).text());
+        $('#titlespan').text($('#title'+id).text());
+        $('#kindspan').text($('#kind'+id).text());
+      
+     // alert("#"+id);
+      
+     // return;
+
+    //  var testsrcid=$('a[id=35]').attr('testid').val();
+    //  var testsrcid=$("a[id=35]").attr("data-name");
+      
+     //   var testsrcid=$("#"+id).attr("testid");
+       var testsrcid=$("#"+id).attr("name");
+      
+    //  testsrcid=35;
+      
+      
+      //return;
+        imgidtosrc(testsrcid,'test');
+
+
+        var answersrcid=$('#answer'+id).text();
+      
+       // alert(answersrcid);
+        imgidtosrc(answersrcid,'answer');
+
+
+        $('#titlekind').text($('#kind'+id).text());
+        $('#othernote').text(in_ser+'/'+datasum);
+
+        if(datasum==in_ser){
+            $('#nexttitle').text('最后一题');
+            return;
+
+        }
+        else
+        {
+           var nextid=parseInt(in_ser)+1;
+            var titleid=$('#in_ser'+nextid).attr('name');
+            var nexttitlemsg=$('#title'+titleid).text();
+            $('#nexttitle').text('下一题：'+nexttitlemsg);
+        }
+
+        scrolltopsub04();
+
+
+    }
+//当前图片模式
+    function anowimgsub(id){
+        var nowimg=$('#picnav').val();
+        $('#' + nowimg).css("border", "");
+        $('#' + id).css("border", "1px solid #9b9ca3");
+        $('#picnav').val(id);
+        $('#choose_img').attr('src',$('#'+id)[0].src);
+        var num=id.replace(/[^0-9]/ig,"");
+        $('#anownum').text(num);
+        $('#nowpagemsg').val(num);
+        $('#finish_div').css('height',0);
+//        inithr();
+//        initfinishdiv();
+    }
+    function test1(){
+//        alert(id);
+       // var top=$('#answercontentid').scrollTop();
+//        alert(top);
+     //   $('#answercontentid').scrollTop(90);
+
+    }
+//方框初始化
+    function squarebutton(){
+
+        var e=window.event;
+        newPos=new Object();
+
+        var x1 = e.pageX;
+        var y1= e.pageY;
+
+        var x0=$('#choose_img').offset().left;
+        var y0=$('#choose_img').offset().top;
+
+        var left=x1-x0;
+        var top=y1-y0;
+
+
+        $('#edit_left').val(left);
+        $('#edit_top').val(top);
+
+
+    }
+
+//窗口变动函数。
+    $(document).ready(function(){
+        $(window).resize(function() {
+            squarelocal();
+            hrlocal();
+            divlocal();
+            ranglocal('a');
+            ranglocal('b');
+            titlemsglocal();
+        });
+    });
+
+//图片上面鼠标跟随
+    $("#choose_img").ready(function(){
+        $("#choose_img").mousemove(function(e) {
+
+           var rangstation=$('#rangstation').val();
+
+            var e=window.event;
+            newPos=new Object();
+
+            var x1 = e.pageX;
+            var y1= e.pageY;
+
+            var x0=$('#choose_img').offset().left;
+            var y0=$('#choose_img').offset().top;
+
+            var left=x1-x0;
+            var top=y1-y0;
+
+            $('#edit_left').val(left);
+            $('#edit_top').val(top);
+
+
+
+            var msg=$("input[name=kind]:checked").attr('value');
+            if(msg=='square'){
+                squarelocal();
+            };
+
+
+            if(msg=='rang'){
+
+                if(rangstation==1)
+                {
+                    ranglocal('a');
+                }
+
+                if(rangstation==2)
+                {
+                    ranglocal('b');
+                }
+
+            };
+            if(msg=='line'){
+                hrlocal();
+            };
+
+
+
+        })
+    })
+
+//初始化
+
+//重新设置方框的标尺
+    function resquaresize(){
+        $('#squarebutton').css('width',$('#inputw').val());
+        $('#squarebutton').css('height',$('#inputh').val());
+    }
+//通过图片id返回src
+    function imgidtosrc(id,kind){
+        if(id==0)
+        {
+            if(kind=='test')
+            {
+                $('#nowtestid').val(id);
+            }
+            else {
+                $('#nowanswerid').val(id);
+            }
+
+            return;
+        }
+        $.ajax({
+            url: "<?php echo U('imgidtosrcsql');?>",
+            type: 'POST',
+            async:false,
+            data: {id:id},
+            dataType: 'text',
+            success: function (re) {
+                if(kind=='test')
+                {
+                    if(re==0)
+                    {
+                        $('#nowtestid').val(0);
+                        $('#testimg').css('display','none');
+                    }
+                    else
+                    {
+                        $('#nowtestid').val(id);
+                        $('#testimg').css('display','block');
+                        $('#testimg').attr('src',re);
+                        $('#nowtestid').attr('name',re);
+                    }
+                }
+                if(kind=='answer')
+                {
+                    if(re==0)
+                    {
+                        $('#answerimg').css('display','none');
+                        //
+                        $('#answerimgpre').css('display','none');
+                        $('#nowanswerid').val(0);
+                    }
+                    else
+                    {
+                        $('#nowanswerid').val(id);
+                        $('#answerimg').css('display','block');
+                        $('#answerimgpre').css('display','block');
+                        $('#answerimg').attr('src',re);
+                        $('#answerimgpre').attr('src',re);
+                        $('#nowanswerid').attr('name',re);
+                    }
+                }
+
+
+            }
+        })
+    }
+//next 标题函数
+    function nextchoosetitle(){
+        var id=$('#pretr').val();
+
+        var in_ser=$("input[name='"+id+"']").attr("id").replace(/[^0-9]/ig,"");
+        var datasum=$('#datasum').val();
+        if(in_ser==datasum){
+            return;
+        }
+
+        $('#answerimg').css('display','none');
+        $('#answerimgpre').css('display','none');
+        $('#testimg').css('display','none');
+
+        $('#tr'+id).css('background-color','#2b669a');
+        $('#tr'+id).css('color','#FFFFFF');
+        var srcid=$('#'+id).attr('name');
+        $('#'+srcid).css("color","#FFFFFF");
+        $('#'+id).css("color","#FFFFFF");
+
+
+        var nextin_ser=parseInt(in_ser)+1;
+        var nextid=$('#in_ser'+nextin_ser).attr('name');
+
+        $('#tr'+nextid).css('background-color','#FFFFFF');
+        $('#tr'+nextid).css('color','#2b669a');
+        var nextsrcid=$('#'+nextid).attr('name');
+        $('#'+nextsrcid).css("color","#2b669a");
+        $('#'+nextid).css("color","#2b669a");
+
+        $('#titlespan').text($('#title'+nextid).text());
+        $('#kindspan').text($('#kind'+nextid).text());
+        $('#nowtitle').text('当前题：'+$('#title'+nextid).text());
+
+
+
+
+
+        var testsrcid=$("#"+nextid).attr("name")
+        imgidtosrc(testsrcid,'test');
+
+        var answersrcid=$('#answer'+nextid).text();
+        imgidtosrc(answersrcid,'answer');
+
+        if(datasum==nextin_ser){
+            $('#nexttitle').text('最后一题');
+        }
+        else
+        {
+
+            var mynextid=parseInt(nextin_ser)+1;
+            var mytitleid=$('#in_ser'+mynextid).attr('name');
+            var mynexttitlemsg=$('#title'+mytitleid).text();
+            $('#nexttitle').text('下一题：'+mynexttitlemsg);
+        }
+        $('#pretr').val(nextid);
+        scrolltopsub04();
+
+    }
+//pre 标题函数
+    function prechoosetitle(){
+        var id=$('#pretr').val();
+
+        var in_ser=$("input[name='"+id+"']").attr("id").replace(/[^0-9]/ig,"");
+        var datasum=$('#datasum').val();
+        if(in_ser==1){
+            return;
+        }
+
+        $('#answerimg').css('display','none');
+        $('#answerimgpre').css('display','none');
+        $('#testimg').css('display','none');
+
+        $('#tr'+id).css('background-color','#2b669a');
+        $('#tr'+id).css('color','#FFFFFF');
+        var srcid=$('#'+id).attr('name');
+        $('#'+srcid).css("color","#FFFFFF");
+        $('#'+id).css("color","#FFFFFF");
+
+        $('#nexttitle').text('下一题：'+$('#title'+id).text());
+
+
+        var prein_ser=parseInt(in_ser)-1;
+        var preid=$('#in_ser'+prein_ser).attr('name');
+
+        $('#tr'+preid).css('background-color','#FFFFFF');
+        $('#tr'+preid).css('color','#2b669a');
+        var presrcid=$('#'+preid).attr('name');
+        $('#'+presrcid).css("color","#2b669a");
+        $('#'+preid).css("color","#2b669a");
+
+
+        $('#titlespan').text($('#title'+preid).text());
+        $('#kindspan').text($('#kind'+preid).text());
+        $('#nowtitle').text('当前题：'+$('#title'+preid).text());
+
+
+        var testsrcid=$("#"+preid).attr("name")
+        imgidtosrc(testsrcid,'test');
+
+        var answersrcid=$('#answer'+preid).text();
+        imgidtosrc(answersrcid,'answer');
+
+        $('#pretr').val(preid);
+        scrolltopsub04();
+
+    }
+//checked选项值
+    $("input[name=kind]").change(function() {
+        checkboxsub();
+    });
+//隐藏所有操作工具
+    function operdisplaynone() {
+        $('#squarebutton').css('display','none');
+
+
+        $('#rule_hr').css('display','none');
+        $('#finish_div').css('display','none');
+
+
+        $('#add_pic_div_a').css('display','none');
+        $('#add_pic_div_b').css('display','none');
+        $('#add_pic_div').css('display','none');
+    }
+    //初始化checkbox的选值
+    function checkboxsub(){
+
+        operdisplaynone();
+
+        var msg=$("input[name=kind]:checked").attr('value');
+        if(msg=='square'){
+            $('#squarebutton').css('display','block');
+            squarelocal();
+            $('#operkind').val('square');
+            $('#notemsg').text('方框选区');
+        }
+        if(msg=='rang'){
+            $('#add_pic_div_a').css('display','block');
+            ranglocal('a');
+            $('#operkind').val('rang');
+            $('#notemsg').text('矩形选区');
+        }
+        if(msg=='line'){
+            $('#rule_hr').css('display','block');
+            $('#finish_div').css('display','block');
+            $('#operkind').val('line');
+            $('#div_top').val($('#edit_top').val());
+            $('#notemsg').text('直线选区');
+            divlocal();
+            hrlocal();
+        }
+        $('#operkind').val(msg);
+    }
+//square位置
+    function squarelocal(){
+        newPos=new Object();
+        var x0=$('#choose_img').offset().left;
+        var y0=$('#choose_img').offset().top;
+        var left=$('#edit_left').val();
+        var top=$('#edit_top').val();
+        newPos.left= left-10+x0;
+        newPos.top= top-10+y0;
+        $('#squarebutton').offset(newPos);
+        titlemsglocal();
+
+    }
+    //titlemsg位置
+    function titlemsglocal(){
+        newPos=new Object();
+        var x0=$('#choose_img').offset().left;
+        var y0=$('#choose_img').offset().top;
+        var left=$('#edit_left').val();
+        var top=$('#edit_top').val();
+        newPos.left= left-50+x0;
+        newPos.top= top-40+y0;
+        $('#titlemsg').offset(newPos);
+
+    }
+//rang位置
+    function ranglocal(kind){
+        newPos=new Object();
+        var x0=$('#choose_img').offset().left;
+        var y0=$('#choose_img').offset().top;
+        var left=$('#edit_left').val();
+        var top=$('#edit_top').val();
+        newPos.left= parseInt(left)-24+parseInt(x0);
+        newPos.top= parseInt(top)-15+parseInt(y0);
+
+
+        if(kind=='a')
+        {
+            $('#add_pic_div_a').offset(newPos);
+            titlemsglocal();
+        }
+
+        if(kind=='b')
+        {
+            newPos.left= parseInt(left)+10+parseInt(x0);
+            newPos.top= parseInt(top)+5+parseInt(y0);
+            $('#add_pic_div_b').offset(newPos);
+        }
+    }
+//linediv位置函数
+    function divlocal(){
+        newPos=new Object();
+        var x0=$('#choose_img').offset().left;
+        var y0=$('#choose_img').offset().top;
+        var top=$('#div_top').val();
+//        newPos.left= x0;
+//        newPos.top= parseInt(top)+y0;
+//        $('#rule_hr').offset(newPos);
+
+        var height=top-2;
+
+        newPos1=new Object();
+        newPos1.left= x0;
+        newPos1.top= y0;
+        $('#finish_div').offset(newPos1);
+        $('#finish_div').css('height',height);
+        $('#finish_div').css('width',350);
+
+
+        titlemsglocal();
+
+    }
+//hr直线 函数
+    function hrlocal(){
+        newPos=new Object();
+        var x0=$('#choose_img').offset().left;
+        var y0=$('#choose_img').offset().top;
+        var top=$('#edit_top').val();
+        newPos.left= x0;
+        newPos.top= parseInt(top)+y0-4;
+        $('#rule_hr').offset(newPos);
+
+    }
+//点击图片事件cutchoosesub
+function cutchoosesub(){
+
+
+
+        var msg=$("input[name=kind]:checked").attr('value');
+        var rangkind=$('#rangstation').val();
+        if(msg=='square'){
+
+        }
+        if(msg=='rang'){
+            if(rangkind==1)
+            {
+                $('#add_pic_div_b').css('display','block');
+                $('#rangstation').val(2);
+            }
+            if(rangkind==2)
+            {
+                $('#add_pic_div').css('display','block');
+                var width=parseInt($('#add_pic_div_b').offset().left)-parseInt($('#add_pic_div_a').offset().left)+7;
+                var height=parseInt($('#add_pic_div_b').offset().top)-parseInt($('#add_pic_div_a').offset().top)+7;
+                newPos1=new Object();
+                newPos1.left= parseInt($('#add_pic_div_a').offset().left)+4;
+                newPos1.top= parseInt($('#add_pic_div_a').offset().top)+4;
+                $('#add_pic_div').offset(newPos1);
+                $('#add_pic_div').css('width',width);
+                $('#add_pic_div').css('height',height);
+                $('#add_pic_div_b').css('display','block');
+                $('#rangstation').val(3);
+            }
+            if(rangkind==3)
+            {
+                $('#add_pic_div').css('display','none');
+                $('#add_pic_div_b').css('display','none');
+                $('#rangstation').val(4);
+            }
+            if(rangkind==4)
+            {
+
+                $('#rangstation').val(1);
+            }
+        }
+        if(msg=='line'){
+            var e=window.event;
+            newPos=new Object();
+            var x1 = e.pageX;
+            var x0=$('#choose_img').offset().left;
+            var y0=$('#choose_img').offset().top;
+
+            var beginx=parseInt(x0)+350;
+            var endx=parseInt(x0)+420;
+
+            if(x1>beginx && x1< endx)
+            {
+            }
+            else
+            {
+
+
+                if($('#kindspan').text()=='(T)')
+                {
+                    alert('标题无法添加答案！！');
+                    return;
+                }
+
+                answersub();
+            }
+            $('#div_top').val($('#edit_top').val());
+            divlocal();
+            scrolltopsub04();
+        }
+    }
+//答案处理方式
+function answersub(){
+    var titleeditkind=$("input[name=titleedit]:checked").attr('value');
+
+  
+    var nowtestid=$('#nowtestid').val();
+  
+    var eleid=$("a[data-name='"+nowtestid+"']").attr('id');
+  	eleid='#kind'+eleid;
+    var elemsg=$(eleid).text();
+  
+ 	 if(elemsg=='(T)')
+ 	 {
+    	alert('标题无法添加答案！！');
+        return;
+ 	 }
+  
+    var nowanswerid=$('#nowanswerid').val();
+    var nowid=$('#pretr').val();
+    var editkind=$("input[name=edit]:checked").attr('value');
+    var kind=$('#operkind').val();
+    var x;
+    var y;
+    var width;
+    var height;
+    var x1=$('#choose_img').offset().left;
+    var y1=$('#choose_img').offset().top;
+
+    var id=$('#anownum').text();
+
+    var inputpicid_x='#aimg_x_ratio'+id;
+    var inputpicid_y='#aimg_y_ratio'+id;
+
+
+    var x_ratio=$(inputpicid_x).val();
+    var y_ratio=$(inputpicid_y).val();
+
+    if(kind=='square')
+    {
+        var x2=$('#squarebutton').offset().left;
+        var y2=$('#squarebutton').offset().top;
+        var width=$('#squarebutton').width();
+        var height=$('#squarebutton').height();
+
+        x=(x2-x1)*x_ratio;
+        y=(y2-y1)*y_ratio;
+        width=width*x_ratio;
+        height=height*y_ratio;
+    }
+
+    if(kind=='rang')
+    {
+        var x2=$('#add_pic_div').offset().left;
+        var y2=$('#add_pic_div').offset().top;
+        var width=$('#add_pic_div').width();
+        var height=$('#add_pic_div').height();
+
+        x=(x2-x1)*x_ratio;
+        y=(y2-y1)*y_ratio;
+        width=width*x_ratio;
+        height=height*y_ratio;
+    }
+    if(kind=='line')
+    {
+        var x2=$('#finish_div').offset().left;
+        y1=parseInt($('#finish_div').offset().top)+parseInt($('#finish_div').height());
+        var y2=$('#rule_hr').offset().top;
+        var width=$('#rule_hr').width();
+        var height=y2-y1;
+        x=0;
+        y=parseInt($('#finish_div').height());
+        y=y*y_ratio;
+        width=width*x_ratio;
+        height=height*y_ratio;
+    }
+
+        x=x.toFixed(2);
+        y=y.toFixed(2);
+        width=width.toFixed(2);
+        height=height.toFixed(2);
+
+        var src=$('#choose_img')[0].src;
+
+
+         if(src.indexOf('?')>0)
+         {
+             src=changesrc(src,1);
+          }
+          else
+         {
+             src=changesrc(src,0);
+         }
+
+
+    if(titleeditkind=='re'){
+      
+        $.ajax({
+            url: "<?php echo U('addanswersql');?>",
+            type: 'POST',
+            async:false,
+            data: {x: x,y: y,width:width, height: height,src:src,nowtestid:nowtestid,nowanswerid:nowanswerid},
+            dataType: 'json',
+            success: function (re) {
+//                alert(re['answerid']);
+                $('#nowanswerid').val(re['answerid']);
+                $('#answer'+nowid).text(re['answerid']);
+       
+              
+                $('#answerimg').attr('src',re['src']);
+                $('#answerimgpre').attr('src',re['src']);
+            }
+        })
+    }
+//
+
+ // alert(titleeditkind);
+    if(titleeditkind=='add'){
+        $.ajax({
+            url: "<?php echo U('addotheranswersql');?>",
+            type: 'POST',
+            async:false,
+            data: {x: x,y: y,width:width, height: height,src:src,nowtestid:nowtestid,nowanswerid:nowanswerid},
+            dataType: 'text',
+            success: function (re) {
+              
+         //     alert(re);
+              
+              $('#answerimg').attr('src',re);
+              $('#answerimgpre').attr('src',re);
+              
+              $('#reedit').prop('checked',true);
+
+            }
+        })
+    }
+
+
+
+    if(editkind=='up')
+    {
+        prechoosetitle();
+    }
+
+    if(editkind=='down')
+    {
+        nextchoosetitle();
+    }
+
+
+    if(editkind=='stop')
+    {
+
+    }
+
+    if(kind=='rang')
+    {
+        $('#add_pic_div').css('display','none');
+        $('#add_pic_div_b').css('display','none');
+        $('#rangstation').val(4);
+    }
+
+}
+function changesrc(src,kind){
+    if(kind==1)
+    {
+        var num = src.indexOf('uploads');
+        var length = src.length;
+        src = "./" + src.substr(num, length - num);
+        var num1=src.indexOf('?');
+        src=src.substr(0,num1);
+    }
+    else
+    {
+        var num = src.indexOf('uploads');
+        var length = src.length;
+        src = "./" + src.substr(num, length - num);
+    }
+
+    return src;
+}
+//删除事件
+function answereditsub(){
+    var msg=$("input[name=titleedit]:checked").attr('value');
+    var nowid=$('#pretr').val();
+    if(msg=='del')
+    {
+        var nowtestid=$('#nowtestid').val();
+        var nowanswerid=$('#nowanswerid').val();
+
+        if(nowanswerid==0)
+        {
+            return;
+        }
+            $.ajax({
+                url: "<?php echo U('jsanswereditsub');?>",
+                type: 'POST',
+                async:false,
+                data: {id:nowtestid,answerid:nowanswerid},
+                dataType: 'text',
+                success: function (re) {
+                    $('#answer'+nowid).text(0);
+                    $('#answerimg').attr('src','');
+                    $('#answerimgpre').attr('src','');
+                    $('#answerimg').css('display','none');
+                    $('#answerimgpre').css('display','none');
+                    $('#nowanswerid').val(0);
+                }
+            })
+    }
+
+
+}
+
+    //页面键盘事件
+    $(document).keydown(
+            function(e){
+                var dom;
+                if (e.which == 81) {
+//添加操作,Q
+
+                    dom='addedit';
+                  //  alert(dom);
+                   // $(":checkbox[id='"+dom+"']").prop("checked",true);
+
+                    $('#addedit').prop('checked',true);
+
+                  //  $("#cb1″).prop("checked",true);
+
+
+                }
+                if (e.which == 87) {
+//替换操作,W
+                    dom='reedit';
+//                    alert(dom);
+//                    $(":checkbox[id='"+dom+"']").prop("checked",true);
+
+                    $('#reedit').prop('checked',true);
+
+
+                }
+                if (e.which == 69) {
+//删除操作,E
+                    dom='titleedit';
+                    $('#titleedit').prop('checked',true);
+                }
+
+                if (e.which == 65) {
+//　上一个,A
+                    prechoosetitle();
+                }
+
+                if (e.which == 83) {
+//下一个,S
+                    nextchoosetitle();
+                }
+
+                if (e.which == 68) {
+//停止,D
+                    $('#stopmove').prop('checked',true);
+                }
+              
+                if (e.which == 70) {
+//自动向下,F
+                    $('#automove').prop('checked',true);
+                }
+
+            });
+    function scrolltopsub04(){
+        $('#contenttest').scrollTop($('#contenttest')[0].scrollHeight);
+    }
+
+
+    function finishdel_04()
+    {
+        window.location.href='/index.php/Home/testpanel/erase_del05/filesernum/'+$('#filesernum').val()+'/kind/'+$('#kind').val()+'/oldstatus/'+$('#oldstatus').val();
+    }
+
+
+</script>
+</body>
+</html>

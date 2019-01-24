@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>错题管理</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
+	<script src="__PUBLIC__/jquery/jquery.min.js"></script>
+	<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/stu.css"/>
+
+<script language="javascript">  
+    function work1(target) {
+		$("#dropdownMenu1").text($(target).text());
+    }   
+	
+	 function work2(target) {
+		$("#dropdownMenu2").text($(target).text());
+    }  
+	
+		 function work3(target) {
+		$("#dropdownMenu3").text($(target).text());
+    }  
+	
+       $(document).ready(function(){
+ 			$("b").click(function(){
+				$('#myModal01').modal(); 
+ 		});
+	   	});
+</script>
+
+</head>
+<body class="" style="background-color: #FFFFFF;">
+<div id="answerdiv" onclick="answerdivsub()" style="width: 100%;min-height: 80px;border:1px;position: absolute;z-index: 2;top:30%;display: none;">
+	<img id="preanswerimg" style="display:none;width: 40px;height: 40px;margin-left: 100px;border: 1px solid #000000;"><img id="answerimg" style="width: 90%;margin-left: 5%;border: 1px solid #000000;" src="">
+</div>
+	<div class="container">
+		<div class="row title_class">
+			<div class="col-xs-2"><a href="{:U('managetest0201',array('userid'=>$userid,'username'=>$username,'realname'=>$realname))}"><img src="__PUBLIC__//img/reg_back.png" class="title_left_img"></a></div>
+			<div class="col-xs-8  title_font_middle " >{$paper_name}</div>
+			<div class="col-xs-2"><a href="{:U('home',array('userid'=>$userid,'username'=>$username,'realname'=>$realname))}" style="color: white;">主页</a></div>
+		</div>
+		<div class="row parent_nav">
+		<div class="col-xs-4" >
+			<div class="dropdown">
+	<button type="button" class="btn dropdown-toggle parent_button" id="dropdownMenu1" 
+			data-toggle="dropdown">
+隐藏答案		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+		<li role="presentation" >
+			<a  href="javascript:void(0)" onclick="work1(this)" role="menuitem" tabindex="-1" href="#">隐藏答案</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work1(this)" role="menuitem" tabindex="-1" href="#">显示答案</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work1(this)" role="menuitem" tabindex="-1" href="#">点击弹出</a>
+		</li>
+	</ul>
+</div>
+</div>
+		<div class="col-xs-4">
+			
+			
+				<div class="dropdown">
+	<button type="button" class="btn dropdown-toggle parent_button"  id="dropdownMenu2" 
+			data-toggle="dropdown">
+题行间距	<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+		<li role="presentation" >
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">1</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">2</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">3</a>
+		</li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">4</a>
+		</li>
+		<li role="presentation" class="divider"></li>
+		<li role="presentation">
+			<a  href="javascript:void(0)" onclick="work2(this)" role="menuitem" tabindex="-1" href="#">默认</a>
+		</li>
+	</ul>
+</div>
+			
+			
+			
+		</div>
+		<div class="col-xs-4">
+
+					<select class="blackselect" style="background-color: transparent;font-weight: normal;" onchange="window.location=this.value">
+						<option value ="{:U('managepaperdetail0202',array('testid'=>$testid,'userid'=>$userid,'paper_name'=>$paper_name,'username'=>$username,'realname'=>$realname,'testkind'=>$testkind))}"> 导出</option>
+						<option value="{:U('phpmanagepaperdetailpdf',array('testid'=>$testid,'outkind'=>'D','paper_name'=>$paper_name,'testtime'=>$testtime,'testkind'=>$testkind))}">习题pdf</option>
+						<option value="{:U('php_mykeymanagepaperanswerpdf',array('testid'=>$testid,'outkind'=>'D','paper_name'=>$paper_name,'testtime'=>$testtime,'testkind'=>$testkind))}" >答案pdf</option>
+					</select>
+	<!--<a type="button" class="btn dropdown-toggle parent_button" href="{:U('test_checkpage_downpdf',array('testid'=>$testid))}">-->
+<!--导出-->
+	<!--</a>-->
+
+		</div>	
+		</div>
+		<div class="row">
+        <div class="col-xs-12" style="padding-left: 0px;padding-right: 0px;height: 532px;overflow-y: auto;">
+			<ol id="list1" style="padding-right: 0%;padding-left: 0%;list-style-type:none;border: 0px;" class="parent_ol">
+				<volist name="testdata" id="testid">
+					<li style="border: 0px;margin-top: 5px;">
+						<table style="border: 1px;">
+							<tr>
+								<td style="padding-left: 15px;vertical-align: top;"><span style="margin-top: 0px;">{$testid.newtitle}</span></td>
+								<td><img id="img{++$m}" name="{$testid.id}" onclick="answersub(this.id)" style="width: 100%"  src="{$testid.src}"></td>
+							</tr>
+							<tr>
+								<td style="padding-left: 15px;vertical-align: top;"></td><td style="padding-right: 0px;text-align: center;"><img id="imga{$m}" src="{$testid.pic1}" style="width: 15%;"><img id="imgb{$m}" src="{$testid.pic2}" style="width: 15%;"><img id="imgc{$m}" src="{$testid.pic3}" style="width: 15%;"><img id="imgd{$m}" src="{$testid.pic4}" style="width: 15%;"></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td style="text-align: center">
+									<span style="font-size: 10px;">{$testid.picnote}</span>
+								</td>
+							</tr>
+						</table>
+					</li>
+				</volist>
+					</ol>
+			<input type="hidden" id="sum" value="{$m}">
+        </div>
+		</div>
+	</div>
+<div class="modal fade" id="myModal01" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:10px;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel" style="text-align: center;">
+				本题答案及解析					</h4>
+			</div>
+			<div class="modal-body">
+				<p>答案：C</p>
+				<p>主要是考察完形填空方面的内容，同学们要十分注意。本题错误率达到60%。</p>
+			</div>
+		</div>
+	</div>
+</div>
+	<input type="hidden" value="{$testarr}" id="testarrid">
+<script>
+
+	$(function(){
+		var sum=$('#sum').val();
+		var i=1;
+		for(i=1;i<=sum;i++)
+		{
+			var imgsrca=$('#imga'+i)[0].src;
+			var imgsrcb=$('#imgb'+i)[0].src;
+			var imgsrcc=$('#imgc'+i)[0].src;
+			var imgsrcd=$('#imgd'+i)[0].src;
+
+			if(imgsrca.indexOf('uploads')>0)
+			{
+
+			}
+			else
+			{
+				$('#imga'+i).remove();
+			}
+
+			if(imgsrcb.indexOf('uploads')>0)
+			{
+
+			}
+			else
+			{
+				$('#imgb'+i).remove();
+			}
+
+			if(imgsrcc.indexOf('uploads')>0)
+			{
+
+			}
+			else
+			{
+				$('#imgc'+i).remove();
+			}
+
+			if(imgsrcd.indexOf('uploads')>0)
+			{
+
+			}
+			else
+			{
+				$('#imgd'+i).remove();
+			}
+
+
+		}
+	})
+
+
+	function answersub(id)
+	{
+		var id=$('#'+id).attr('name');
+		$.ajax({
+			url:"{:U('answersql')}",
+			data:{id:id},
+			dataType:'text',
+			type:'post',
+			success:function(re){
+				if(re!=0)
+				{
+					$('#answerdiv').css('display','');
+					$('#answerimg').attr('src',re);
+					$('#preanswerimg').attr('src',re);
+				}
+				else
+				{
+
+				}
+			}
+		})
+	}
+
+	function answerdivsub()
+	{
+		$('#answerdiv').css('display','none');
+	}
+</script>
+</body>
+</html>
