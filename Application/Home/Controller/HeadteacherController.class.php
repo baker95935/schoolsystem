@@ -1519,6 +1519,7 @@ class HeadTeacherController extends Controller
    {
 
 
+    
        $userid=$_POST['userid'];
        $nowpage=$_POST['nowpage'];
        $pagelength=$_POST['pagelength'];
@@ -2391,14 +2392,15 @@ class HeadTeacherController extends Controller
         $this->assign('userid',$userid);
         $this->assign('realname',$realname);
         $this->assign('username',$username);
-        
-             //获取老师对应的班级
+
+                     //获取老师对应的班级
         $class=M('class_data');
         $teach=M('user_teacher_addation_data');
         $teacherInfo=$teach->where('userid='.$userid)->find();
         $classList=$class->where('id in ('.$teacherInfo['classarray'].')')->select();
          $this->assign('classList',$classList);
-
+         
+         
         $this->display();
     }
 
@@ -2778,7 +2780,7 @@ class HeadTeacherController extends Controller
 
     public function dataphpsql0202()
     {
-        $userid=$_POST['userid'];
+       $userid=$_POST['userid'];
         $nowpage=$_POST['nowpage'];
         $pagelength=$_POST['pagelength'];
 
@@ -3443,13 +3445,7 @@ class HeadTeacherController extends Controller
      $keynote_id=$_GET['keynote_id'];
      $stu_id=$_GET['stu_id']; 
      $kind=1;
-    
-    //userid/"+$('#userid').val()+"/username/"+$('#username').val()+"/realname/"+$('#realname').val()+"/keynote_id/"+keynote_id+"/stu_id/"+stu_id+"/subject_id/"+subject_id+"/keynotemsg/"+keynotemsg+
-    
-    //$keynote_id=41;
-    //$stu_id=152;
-    //$kind=1;
-    
+      
     $userid=$_GET['userid'];
     $username=$_GET['username'];
     $realname=$_GET['realname'];
@@ -3485,7 +3481,7 @@ class HeadTeacherController extends Controller
     {
       $new_key_data[$i]['num']=$i+1;
       
-      $new_key_data[$i]['year']=date('y',strtotime($key_data[$i]['lastreadtime']));
+       $new_key_data[$i]['year']=date('y',strtotime($key_data[$i]['lastreadtime']));
        $new_key_data[$i]['month']=date('m',strtotime($key_data[$i]['lastreadtime']));
        $new_key_data[$i]['lastreadtime']=date('y-m-d',strtotime($key_data[$i]['lastreadtime']));
       
@@ -3503,8 +3499,6 @@ class HeadTeacherController extends Controller
         {
           $questionsum=$key_data[$i]['questionsum'];
           $questionw=sizeof(explode(',',$key_data[$i]['ctbtestid']));
-          
-         // $new_key_data[$i]['ratio']=(round(($questionw/$questionsum),3)*100).'%';
           $new_key_data[$i]['ratio']=(round(($questionw/$questionsum),3));
 
         }
@@ -3525,6 +3519,7 @@ class HeadTeacherController extends Controller
     
     $data=json_encode($charData);
     $this->assign('data',$data);
+   
     $this->display();
   }
   

@@ -2136,13 +2136,13 @@ echo 1;
         $testkind=$_POST['testkind'];
         $typequestion=$_POST['typequestion'];
       
-      	$userid=6;
-      	$testidarr='3,1';
-      	$questionsum=3;
-      	$paper_name='填空题119121-3';
-      	$testkind=0;
-      	$typequestion=2;
-      	$subjectid=1;
+      //	$userid=6;
+      //	$testidarr='3,1';
+      //	$questionsum=3;
+      //	$paper_name='填空题119121-3';
+      //	$testkind=0;
+      //	$typequestion=2;
+      //	$subjectid=1;
      
         $typeidarr='';
       
@@ -2270,9 +2270,9 @@ echo 1;
         $array['lastreadtime']=date('y-m-d h:i:s',time());
         $array['paper_name']=$paper_name;
       
-        print_r($array);
+        //print_r($array);
       
-        //echo $model_stumytest->add($array);
+        echo $model_stumytest->add($array);
     }
 
   
@@ -2683,11 +2683,11 @@ echo 1;
         $testtime=$_GET['$testtime'];//试卷种类
         $keynote_msg=$_GET['keynote_msg'];
       
-       $testid=11;
-      $outkind='D';
-      $paper_name='习题119119-3(key)';
-      $testtime='2019';
-      $testkind='key';
+     //  $testid=11;
+      //$outkind='D';
+      //$paper_name='习题119119-3(key)';
+      //$testtime='2019';
+      //$testkind='key';
 
         $testtime='知识点：'.$keynote_msg.' 生成时间：'.date('y-m-d h:i:s',time());
       
@@ -2727,8 +2727,15 @@ echo 1;
         $paper_name=$_GET['paper_name'].'答案';
       
         $testtime=$_GET['$testtime'];//试卷种类
+      
+      	$testid=15;
+        $paper_name='答案测试';
+      	$outkind='I';
         $testtime='生成时间：'.date('y-m-d h:i:s',time());
         $data=persontest_to_standtest($testid,'stu');
+      
+      //	print_r($data);
+      
         persontest_to_answerpdf($data,$paper_name,$outkind);
     }
 //个人试卷生成pdf
@@ -2752,29 +2759,37 @@ echo 1;
        
         persontestpdf($outkind,$paper_name,$testtime,$newtestdata);
     }
-
-//个人试卷生成答案pdf
-    public function phpmanagepaperanswerpdf()
+  //phpmykeymanagepaperdetailpdf
+  //个人知识点试卷生成pdf
+    public function php_mykeymanagepaperdetailpdf()
     {
+        $testid=$_GET['testid'];
+        $outkind=$_GET['outkind'];
+        $paper_name=$_GET['paper_name'];
+        $testtime='生成时间：'.date('y-m-d h:i:s',time());
+      
+      
+        $newtestdata=mykey_persontest_to_standtest($testid);
+        persontestpdf($outkind,$paper_name,$testtime,$newtestdata);
+    }
+
+//个人知识点试卷生成答案pdf
+    public function php_mykeymanagepaperanswerpdf()
+    {
+
         $testid=$_GET['testid'];
         $outkind=$_GET['outkind'];
         $paper_name=$_GET['paper_name'].'答案';
         $testtime=$_GET['$testtime'];//试卷种类
         $testtime='生成时间：'.date('y-m-d h:i:s',time());
-        $testkind=$_GET['testkind'].'答案';
       
-      if($testkind==0)
-      {
-        $data=persontest_to_standtest($testid,'tec');
-      }
-      else
-      {
-        $data=key_persontest_to_standtest($testid,'tec');
-      }
- 
-        
-  
-        persontest_to_answerpdf($data,$paper_name,$outkind);
+        //$testid=2;
+      	//$outkind='D';
+      	//$paper_name='wewds';
+     
+        $newtestdata=mykey_persontest_to_standtest($testid);
+      	persontest_to_answerpdf($newtestdata,$paper_name,$outkind);
+      
     }
     
     public function sharepdf()
@@ -2806,6 +2821,15 @@ echo 1;
     {
         $testid=$_POST['testid'];
         $model=M('stumytest');
+        $model->where('id='.$testid)->delete();
+        echo 1;
+    }
+  
+//删除个人试卷
+    public function mykey_phpmanagelistdelsub()
+    {
+        $testid=$_POST['testid'];
+        $model=M('key_stumytest');
         $model->where('id='.$testid)->delete();
         echo 1;
     }
