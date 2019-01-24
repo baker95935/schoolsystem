@@ -2787,6 +2787,8 @@ class HeadTeacherController extends Controller
         $keywords=$_POST['keywords'];
         $classid=$_POST['classid'];
         $groupid=$_POST['groupid'];
+        $gradeid=$_POST['gradeid'];
+        
 
 
         $beginnum=($nowpage-1)*$pagelength+1;
@@ -2801,6 +2803,7 @@ class HeadTeacherController extends Controller
         $array['userid']=$userid;
         $array['statusmsg']=3;
 		!empty($keywords) && $array['paper_name']=array('like', "%".$keywords."%");
+		!empty($gradeid) && $array['gradeid']=$gradeid;
 
 		//通过试卷数据库查询
 
@@ -3463,15 +3466,25 @@ class HeadTeacherController extends Controller
     $this->assign('stu_name',$stu_name);
     $this->assign('subject_id',$subject_id);
     $this->assign('keynotemsg',$keynotemsg);
-
     
-    
-    
+    $year=$_GET['year'];
+    $min=$_GET['min'];
+    $max=$_GET['max'];
+ 
+    //获取年的数据 今年和去年
+    $current=date('Y');
+    $pre=$current-1;
+    $yearAry=array($current,$pre);
+    $this->assign('yearAry',$yearAry);
+    $this->assign('year',$year);
+ 
     $key_arr['keynote_id']=$keynote_id;
     $key_arr['userid']=$stu_id;
     $key_arr['kind']=$kind;
+    !empty($year) && $key_arr["DATE_FORMAT(creatime,'%Y')"]=$year;
     
     $model_key_stumytest=M('key_stumytest');
+    
     
     $key_data=$model_key_stumytest->where($key_arr)->order('lastreadtime asc')->select();
     
@@ -3517,8 +3530,17 @@ class HeadTeacherController extends Controller
     	$charData[$k]['ratio']=$v['ratio'];
     }
     
+    $premin=1;
+    if(!empty($min) && !empty($max)) {
+    	$charData=array_slice($charData, 0,$max-$min+1);
+    	$count=$max;
+    	$premin=$min;
+    }
+    
     $data=json_encode($charData);
     $this->assign('data',$data);
+    $this->assign('countTotal',$count);
+    $this->assign('premin',$premin);
    
     $this->display();
   }

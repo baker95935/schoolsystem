@@ -39,7 +39,12 @@
 		</div>
 		<div class="row parent_nav">
 		<div class="col-xs-3" >
-			<span style="margin-top:6px;display: block;">题量:-</span>
+				<select onchange="searchdata();" name="gradeid" id="gradeid" class="blackselect">
+				<option value ="">年级</option>
+					<option value="23">初一</option>
+					<option value="24">初二</option>
+					<option value="25">初三</option>
+			</select>
 		</div>
 		<div class="col-xs-3">
 
@@ -94,8 +99,9 @@
 		var classid=$('#classid').val();
 		var groupid=$('#groupid').val();
 		var keywords=$('#keywords').val();
+		var gradeid=$("#gradeid").val();
 		
-		testdata(userid,nowpage,pagelength,classid,groupid,keywords);
+		testdata(userid,nowpage,pagelength,classid,groupid,keywords,gradeid);
 	});
 	
 	function searchdata()
@@ -106,9 +112,13 @@
 		var classid=$('#classid').val();
 		var groupid=$('#groupid').val();
 		var keywords=$('#keywords').val();
+		var gradeid=$("#gradeid").val();
+		
 		$('#list1').html('');
 		$('#nowpage').text(nowpage);
-		testdata(userid,nowpage,pagelength,classid,groupid,keywords);
+
+		
+		testdata(userid,nowpage,pagelength,classid,groupid,keywords,gradeid);
 	}
 	
 	//下一页
@@ -121,7 +131,9 @@
 		var classid=$('#classid').val();
 		var groupid=$('#groupid').val();
 		var keywords=$('#keywords').val();
-
+		var gradeid=$("#gradeid").val();
+		
+		
 		nowpage=nowpage*1+1;
 		if(nowpage>maxnum)
 		{
@@ -133,7 +145,7 @@
 		}
 
 		$('#nowpage').text(nowpage);
-		testdata(userid,nowpage,pagelength,classid,groupid,keywords);
+		testdata(userid,nowpage,pagelength,classid,groupid,keywords,gradeid);
 		$('#contentdiv').scrollTop(height);
 
 
@@ -141,12 +153,12 @@
 
 
 	//加载页面数据
-	function testdata(userid,nowpage,pagelength,classid,groupid,keywords)
+	function testdata(userid,nowpage,pagelength,classid,groupid,keywords,gradeid)
 	{
 
 		$.ajax({
 			url:"{:U('dataphpsql0202')}",
-			data:{userid:userid,nowpage:nowpage,pagelength:pagelength,classid:classid,groupid:groupid,keywords:keywords},
+			data:{userid:userid,nowpage:nowpage,pagelength:pagelength,classid:classid,groupid:groupid,keywords:keywords,gradeid:gradeid},
 			datatype:'json',
 			type:'post',
 			success:function(re) {

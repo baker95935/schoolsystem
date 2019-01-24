@@ -30,26 +30,31 @@
 	</script>
 </head>
 <body class="background_color">
-
+<form method="get" action="{:U('keystatistic',array('keynotemsg'=>$keynotemsg,'keynote_id'=>$keynote_id,'userid'=>$userid,'username'=>$username,'realname'=>$realname,'stu_id'=>$stu_id,'stu_name'=>$stu_name,'subject_id'=>$subject_id))}">
 	<div class="container" style="height: 100%;">
 		<div class="row title_class">
 			<div class="col-xs-2"><a href="{:U('managestu_keylist0405',array('userid'=>$userid,'username'=>$username,'realname'=>$realname,'keynote_id'=>$keynote_id,'stu_id'=>$stu_id,'stu_name'=>$stu_name,'subject_id'=>$subject_id))}"><img src="__PUBLIC__/img/reg_back.png" class="title_left_img"></a></div>
-			<div class="col-xs-8  title_font_middle " >{$keynotemsg}(5次)</div>
+			<div class="col-xs-8  title_font_middle " >{$keynotemsg}({$countTotal}次)</div>
 			<div class="col-xs-2"><a href="{:U('managestu_keylist0405',array('userid'=>$userid,'username'=>$username,'realname'=>$realname,'stu_id'=>$stu_id,'stu_name'=>$stu_name,'subject_id'=>$subject_id))}" style="color: white;font-size: 15px;display: block;margin-top: 1px;">Key</a></div>
 		</div>
 		<div class="row parent_nav">
 		<div class="col-xs-4" >
-			<select class="blackselect" style="padding-left: -10px;">
-				<option value ="volvo">2019</option>
+			<select id="year" name="year" class="blackselect" style="padding-left: -10px;">
+			<foreach name="yearAry" item="item">
+				<option value="{$item}" <if condition="$item eq $year"> selected="selected" </if> >{$item}</option>
+			</foreach>
 			</select>
 
 		</div>
 			<div class="col-xs-4" style="border-right:1px solid #b9b9b9;">
-                  <input type="text" onchange="searchdata();" name="keywords"  value='1' style="width: 100px;text-align: center;height: 22px;font-size: 13px;margin-top: 5px;border-radius: 3px;border:0px solid #FFFFFF;">
+                  <input type="text" onchange="isRealNum(this.value);" name="min" id="minx"  value='{$premin}' style="width: 100px;text-align: center;height: 22px;font-size: 13px;margin-top: 5px;border-radius: 3px;border:0px solid #FFFFFF;">
 			</div>
 
 			<div class="col-xs-4">
-				<input type="text" onchange="searchdata();" name="keywords"  value='5' style="width: 100px;text-align: center;height: 22px;font-size: 13px;margin-top: 5px;border-radius: 3px;border:0px solid #FFFFFF;">
+				<input type="text" onchange="isRealNum(this.value);" name="max" id="max" value='{$countTotal}' style="width: 100px;text-align: center;height: 22px;font-size: 13px;margin-top: 5px;border-radius: 3px;border:0px solid #FFFFFF;">
+			</div>
+			<div class="col-xs-4">
+				<input type="submit"   style="width: 100px;text-align: center;height: 22px;font-size: 13px;margin-top: 5px;border-radius: 3px;border:0px solid #FFFFFF;">
 			</div>
 		</div>
 		<div class="row">
@@ -57,7 +62,7 @@
 				
 			</div>
 	  </div>
- 
+ </form>
 	<input id="userid" type="hidden" value="{$userid}">
 	<input id="pagelength" type="hidden" value="5">
 	<input id="testidarr" type="hidden" value="">
@@ -103,6 +108,19 @@ function a(){
 }
   a();
   
+  function isRealNum(val)
+  {
+	  
+	  var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+	    var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+	    if(regPos.test(val) || regNeg.test(val)){
+	        return true;
+	    }else{
+	    	alert('请输入数字');
+	        return false;
+	    }
+	     
+  }
   
 </script>
 </html>
