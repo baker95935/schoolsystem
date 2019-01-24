@@ -1529,14 +1529,24 @@ class HeadTeacherController extends Controller
        $model_test_public=M('test_public_data');
 
       //这里添加时间和关键词搜索条件
-     
+       $keywords=$_POST['keywords'];
+       $startDate=$_POST['startDate'];
+       $endDate=$_POST['endDate'];
+       
        $array['userid']=$userid;
        $array['statusmsg']=array('in','1,2');
+       !empty($keywords) && $array['paper_name']=array('like','%'.$keywords.'%');
+       !empty($startDate) && $array['publish_time']=array('gt',$startDate);
+       !empty($endDate) && $array['publish_time']=array('lt',$endDate);
+       if(!empty($startDate) && !empty($endDate) ) {
+       	 	$array['publish_time']  = array(array('EGT',$startDate),array('ELT',$endDate),'and'); 
+       }
      
        $count=$model->where($array)->count();
+ 
        $data = $model->where($array)->order('publish_time desc')->limit($beginpagenum.','.$pagelength)->select();
      
-       //这里添加时间和关键词搜索条件
+      
 
        for($i=0;$i<sizeof($data);$i++)
        {
@@ -2381,6 +2391,13 @@ class HeadTeacherController extends Controller
         $this->assign('userid',$userid);
         $this->assign('realname',$realname);
         $this->assign('username',$username);
+        
+             //获取老师对应的班级
+        $class=M('class_data');
+        $teach=M('user_teacher_addation_data');
+        $teacherInfo=$teach->where('userid='.$userid)->find();
+        $classList=$class->where('id in ('.$teacherInfo['classarray'].')')->select();
+         $this->assign('classList',$classList);
 
         $this->display();
     }
@@ -2765,6 +2782,9 @@ class HeadTeacherController extends Controller
         $nowpage=$_POST['nowpage'];
         $pagelength=$_POST['pagelength'];
 
+        $keywords=$_POST['keywords'];
+        $classid=$_POST['classid'];
+        $groupid=$_POST['groupid'];
 
 
         $beginnum=($nowpage-1)*$pagelength+1;
@@ -2778,9 +2798,9 @@ class HeadTeacherController extends Controller
 
         $array['userid']=$userid;
         $array['statusmsg']=3;
+		!empty($keywords) && $array['paper_name']=array('like', "%".$keywords."%");
 
-
-//通过试卷数据库查询
+		//通过试卷数据库查询
 
         $count=$model->where($array)->count();
        $data = $model->where($array)->order('settime desc')->limit($beginpagenum.','.$pagelength)->select();
@@ -2804,6 +2824,18 @@ class HeadTeacherController extends Controller
             $groupname='';
 
 
+            if(!empty($classid) && !in_array($classid,$classidarr)) {
+            	 unset($data[$i]);
+            	 $count=$count-1;
+            	 continue;
+            }
+            
+            if(!empty($groupid) && !in_array($groupid,$groupidarr)) {
+            	 unset($data[$i]);
+            	 $count=$count-1;
+            	 continue;
+            }
+            
             for($j=0;$j<sizeof($classidarr);$j++)
             {
 //                echo $classidarr[$j].'<hr>';
@@ -2812,6 +2844,7 @@ class HeadTeacherController extends Controller
             }
             $classname=substr($classname,1);
             $data[$i]['class']=$classname;
+            
 
             for($j=0;$j<sizeof($groupidarr);$j++)
             {
@@ -3410,7 +3443,13 @@ class HeadTeacherController extends Controller
      $keynote_id=$_GET['keynote_id'];
      $stu_id=$_GET['stu_id']; 
      $kind=1;
-      
+    
+    //userid/"+$('#userid').val()+"/username/"+$('#username').val()+"/realname/"+$('#realname').val()+"/keynote_id/"+keynote_id+"/stu_id/"+stu_id+"/subject_id/"+subject_id+"/keynotemsg/"+keynotemsg+
+    
+    //$keynote_id=41;
+    //$stu_id=152;
+    //$kind=1;
+    
     $userid=$_GET['userid'];
     $username=$_GET['username'];
     $realname=$_GET['realname'];
@@ -3446,7 +3485,7 @@ class HeadTeacherController extends Controller
     {
       $new_key_data[$i]['num']=$i+1;
       
-       $new_key_data[$i]['year']=date('y',strtotime($key_data[$i]['lastreadtime']));
+      $new_key_data[$i]['year']=date('y',strtotime($key_data[$i]['lastreadtime']));
        $new_key_data[$i]['month']=date('m',strtotime($key_data[$i]['lastreadtime']));
        $new_key_data[$i]['lastreadtime']=date('y-m-d',strtotime($key_data[$i]['lastreadtime']));
       
@@ -3464,6 +3503,8 @@ class HeadTeacherController extends Controller
         {
           $questionsum=$key_data[$i]['questionsum'];
           $questionw=sizeof(explode(',',$key_data[$i]['ctbtestid']));
+          
+         // $new_key_data[$i]['ratio']=(round(($questionw/$questionsum),3)*100).'%';
           $new_key_data[$i]['ratio']=(round(($questionw/$questionsum),3));
 
         }
@@ -3484,7 +3525,6 @@ class HeadTeacherController extends Controller
     
     $data=json_encode($charData);
     $this->assign('data',$data);
-   
     $this->display();
   }
   
