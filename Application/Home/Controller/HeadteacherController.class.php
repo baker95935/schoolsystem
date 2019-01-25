@@ -2684,13 +2684,14 @@ class HeadTeacherController extends Controller
                  for($p=0;$p<$key_note_count;$p++)
                  {
                     $thiskeynote_arr['keynote_id']=$key_note_arr[$p];
-                    $thiskeynote_arr['userid']=$stu_id;
+                    $thiskeynote_arr['userid']=$userid;
                     $thiskeynote_data=$model_key_statistic->where($thiskeynote_arr)->find();
-                   
+                 
+                 
                     $onekeynote_data=$model_onekeynote->where('id='.$key_note_arr[$p])->find();
                    	$thiskeynote_name=$onekeynote_data['keynotemsg'];
                    
-                    $thiskeynote_msg=$thiskeynote_msg.' '.$thiskeynote_name.'（'.$thiskeynote_data['question_sum'].'）';
+                     $thiskeynote_msg=$thiskeynote_msg.' '.$thiskeynote_name.'（'.$thiskeynote_data['question_w'].'/'.$thiskeynote_data['question_sum'].'）';
                     
                  } 
                  $test_data[$i]['keynotename']=$thiskeynote_msg;
@@ -3471,11 +3472,8 @@ class HeadTeacherController extends Controller
     $min=$_GET['min'];
     $max=$_GET['max'];
  
-    //获取年的数据 今年和去年
-    $current=date('Y');
-    $pre=$current-1;
-    $yearAry=array($current,$pre);
-    $this->assign('yearAry',$yearAry);
+    
+    
     $this->assign('year',$year);
  
     $key_arr['keynote_id']=$keynote_id;
@@ -3486,15 +3484,29 @@ class HeadTeacherController extends Controller
     $model_key_stumytest=M('key_stumytest');
     
     
+    //时间获取
+    $yearAry=array();
+    $timeData=$model_key_stumytest->select();
+    for($i=0;$i<sizeof($timeData);$i++)
+    {
+	    if(!in_array(date('Y',strtotime($timeData[$i]['creatime'])),$yearAry)) {
+	    	$yearAry[]=date('Y',strtotime($timeData[$i]['creatime']));
+	    }
+    }
+    
     $key_data=$model_key_stumytest->where($key_arr)->order('lastreadtime asc')->select();
     
     $count=sizeof($key_data);
+    
+    
     
     for($i=0;$i<$count;$i++)
     {
       $new_key_data[$i]['num']=$i+1;
       
        $new_key_data[$i]['year']=date('y',strtotime($key_data[$i]['lastreadtime']));
+       
+      
        $new_key_data[$i]['month']=date('m',strtotime($key_data[$i]['lastreadtime']));
        $new_key_data[$i]['lastreadtime']=date('y-m-d',strtotime($key_data[$i]['lastreadtime']));
       
@@ -3533,14 +3545,16 @@ class HeadTeacherController extends Controller
     $premin=1;
     if(!empty($min) && !empty($max)) {
     	$charData=array_slice($charData, 0,$max-$min+1);
-    	$count=$max;
+    	$countTotal=$max;
     	$premin=$min;
     }
-    
+    rsort($yearAry);
     $data=json_encode($charData);
     $this->assign('data',$data);
-    $this->assign('countTotal',$count);
+    $this->assign('countTotal',$countTotal);
+    $this->assign('count',$count);
     $this->assign('premin',$premin);
+    $this->assign('yearAry',$yearAry);
    
     $this->display();
   }
