@@ -3483,11 +3483,21 @@ class HeadTeacherController extends Controller
     $model_key_stumytest=M('key_stumytest');
     
     
+    //时间获取
+    $yearAry=array();
+    $timeData=$model_key_stumytest->select();
+    for($i=0;$i<sizeof($timeData);$i++)
+    {
+	    if(!in_array(date('Y',strtotime($timeData[$i]['creatime'])),$yearAry)) {
+	    	$yearAry[]=date('Y',strtotime($timeData[$i]['creatime']));
+	    }
+    }
+    
     $key_data=$model_key_stumytest->where($key_arr)->order('lastreadtime asc')->select();
     
     $count=sizeof($key_data);
     
-    $yearAry=array();
+    
     
     for($i=0;$i<$count;$i++)
     {
@@ -3495,9 +3505,7 @@ class HeadTeacherController extends Controller
       
        $new_key_data[$i]['year']=date('y',strtotime($key_data[$i]['lastreadtime']));
        
-       if(!in_array(date('Y',strtotime($key_data[$i]['lastreadtime'])),$yearAry)) {
-       		$yearAry[]=date('Y',strtotime($key_data[$i]['lastreadtime']));
-       }
+      
        $new_key_data[$i]['month']=date('m',strtotime($key_data[$i]['lastreadtime']));
        $new_key_data[$i]['lastreadtime']=date('y-m-d',strtotime($key_data[$i]['lastreadtime']));
       
@@ -3536,13 +3544,14 @@ class HeadTeacherController extends Controller
     $premin=1;
     if(!empty($min) && !empty($max)) {
     	$charData=array_slice($charData, 0,$max-$min+1);
-    	$count=$max;
+    	$countTotal=$max;
     	$premin=$min;
     }
-    
+    rsort($yearAry);
     $data=json_encode($charData);
     $this->assign('data',$data);
-    $this->assign('countTotal',$count);
+    $this->assign('countTotal',$countTotal);
+    $this->assign('count',$count);
     $this->assign('premin',$premin);
     $this->assign('yearAry',$yearAry);
    
