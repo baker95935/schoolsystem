@@ -3471,11 +3471,8 @@ class HeadTeacherController extends Controller
     $min=$_GET['min'];
     $max=$_GET['max'];
  
-    //获取年的数据 今年和去年
-    $current=date('Y');
-    $pre=$current-1;
-    $yearAry=array($current,$pre);
-    $this->assign('yearAry',$yearAry);
+    
+    
     $this->assign('year',$year);
  
     $key_arr['keynote_id']=$keynote_id;
@@ -3490,11 +3487,17 @@ class HeadTeacherController extends Controller
     
     $count=sizeof($key_data);
     
+    $yearAry=array();
+    
     for($i=0;$i<$count;$i++)
     {
       $new_key_data[$i]['num']=$i+1;
       
        $new_key_data[$i]['year']=date('y',strtotime($key_data[$i]['lastreadtime']));
+       
+       if(!in_array(date('Y',strtotime($key_data[$i]['lastreadtime'])),$yearAry)) {
+       		$yearAry[]=date('Y',strtotime($key_data[$i]['lastreadtime']));
+       }
        $new_key_data[$i]['month']=date('m',strtotime($key_data[$i]['lastreadtime']));
        $new_key_data[$i]['lastreadtime']=date('y-m-d',strtotime($key_data[$i]['lastreadtime']));
       
@@ -3541,6 +3544,7 @@ class HeadTeacherController extends Controller
     $this->assign('data',$data);
     $this->assign('countTotal',$count);
     $this->assign('premin',$premin);
+    $this->assign('yearAry',$yearAry);
    
     $this->display();
   }
