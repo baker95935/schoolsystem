@@ -1757,9 +1757,10 @@ class HeadTeacherController extends Controller
 
         $count=sizeof($testid_data);
         
-        //查询条件获取
+        //查询条件获取 班级和学科
         $ndata=array();
         I('subject') && $ndata['subjectid']=I('subject');
+        I('gradeid') && $ndata['gradeid']=I('gradeid');
        
  		//$data['gradeid']=I('grade');
   		//$data['kind']=I('subject');
@@ -1768,6 +1769,8 @@ class HeadTeacherController extends Controller
         
         $beginnum=($nowpage-1)*$pagelength;
         $endnum=$beginnum+$pagelength;
+        
+        $data=array();
         for($i=0;$i<sizeof($testid_data);$i++)
         {
             if($i>=$beginnum && $i<$endnum)
@@ -1776,13 +1779,14 @@ class HeadTeacherController extends Controller
                 $data[$i]['testid']=$testid_data[$i];
 
                 $paperdata=$model_paper_msg->where('id='.$testid_data[$i])->where($ndata)->find();
-                
-                //学科搜索
+                //学科和班级搜索
                 if(empty($paperdata)) {
                 	unset($data[$i]);
                 	$count=$count-1;
                 	continue;
                 }
+                
+            
                 
                 //群组和班级
                 $sendclassInfo=$sendclass->where('testid='.$paperdata['id'])->find();

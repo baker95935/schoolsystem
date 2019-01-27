@@ -143,6 +143,8 @@
 		var nowpage=1;
 		var pagelength=$('#pagelength').val();
 		var userid=$('#userid').val();
+		
+		$('#nowpage').text(nowpage);
 		 
 		$('#list1').html('');
 		managetestdata(userid,nowpage,pagelength,classinfo,group);
