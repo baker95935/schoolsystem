@@ -84,18 +84,18 @@ class HeadTeacherController extends Controller
    public function managestu_addkey0404()
    {
      //选中的习题
-      $checktestid=$_POST['checktestid'];
+      $checktestid=$_GET['checktestid'];
      //习题类型id
-      $checktestkind=$_POST['checktestkind'];
+      $checktestkind=$_GET['checktestkind'];
      //习题类型信息
-      $checktestmsg=$_POST['checktestmsg'];
-      $subject_id=$_POST['subject_id'];
-      $subject_msg=$_POST['subject_msg'];
-      $userid=$_POST['userid'];
-      $username=$_POST['username'];
-      $realname=$_POST['realname'];
-      $stu_id=$_POST['stu_id'];
-      $stu_name=$_POST['stu_name'];
+      $checktestmsg=$_GET['checktestmsg'];
+      $subject_id=$_GET['subject_id'];
+      $subject_msg=$_GET['subject_msg'];
+      $userid=$_GET['userid'];
+      $username=$_GET['username'];
+      $realname=$_GET['realname'];
+      $stu_id=$_GET['stu_id'];
+      $stu_name=$_GET['stu_name'];
      
      
        $this->assign('userid',$userid);
@@ -400,6 +400,293 @@ class HeadTeacherController extends Controller
     
      
         $this->display();
+   }
+   
+ public function phpmanagestuaddkey0404()
+   {
+     //选中的习题
+      $checktestid=$_POST['checktestid'];
+     //习题类型id
+      $checktestkind=$_POST['checktestkind'];
+     //习题类型信息
+ 
+  
+      $model_mytest=M('mytest');
+      $model_test_public_data=M('test_public_data');
+      $model_img_cuted_data=M('img_cuted_data');
+     
+      $checktestid_arr=explode(',',$checktestid);
+     
+      $count=sizeof($checktestid_arr);
+     
+      $test_arr='';
+     
+      for($i=0;$i<$count;$i++)
+      {
+         $test_data=$model_mytest->where('testid='.$checktestid_arr[$i])->find();
+         $test_arr=$test_arr.','.$test_data['ctbtestid'];
+      }
+      
+     $testidarr=ltrim($test_arr, ",");
+     $testidarr=explode(',',$testidarr);   
+     $count=sizeof($testidarr);
+
+
+        for($i=0;$i<$count;$i++)
+        {
+            $test_public_data=$model_test_public_data->where('id='.$testidarr[$i])->find();
+            $srcid=$test_public_data[srcid];
+            $img_cuted_data=$model_img_cuted_data->where('id='.$srcid)->find();
+            $src=$img_cuted_data[src];
+
+            $pic1id=$test_public_data[pic1];
+            $img_cuted_data=$model_img_cuted_data->where('id='.$pic1id)->find();
+            $pic1src=$img_cuted_data[src];
+
+            $pic2id=$test_public_data[pic2];
+            $img_cuted_data=$model_img_cuted_data->where('id='.$pic2id)->find();
+            $pic2src=$img_cuted_data[src];
+
+            $pic3id=$test_public_data[pic3];
+            $img_cuted_data=$model_img_cuted_data->where('id='.$pic3id)->find();
+            $pic3src=$img_cuted_data[src];
+
+            $pic4id=$test_public_data[pic4];
+            $img_cuted_data=$model_img_cuted_data->where('id='.$pic4id)->find();
+            $pic4src=$img_cuted_data[src];
+
+            $test[$i][title]=cuttitlemsg($test_public_data[inputval]);
+            $test[$i][id]=$test_public_data[id];
+          	$test[$i][typeid]=$test_public_data[typeid];
+            $test[$i][src]=usersrc($src);
+            $test[$i][tsernum]=$test_public_data[tsernum];
+            $test[$i][ctbname]=$test_public_data[ctbname];
+            $test[$i][filesernum]=$test_public_data[filesernum];
+            $test[$i][pic1]=usersrc($pic1src);
+            $test[$i][pic2]=usersrc($pic2src);
+            $test[$i][pic3]=usersrc($pic3src);
+            $test[$i][pic4]=usersrc($pic4src);
+
+            $sum=0;
+            if($pic1src!='')
+            {
+                $sum=$sum+1;
+            }
+            if($pic2src!='')
+            {
+                $sum=$sum+1;
+            }
+            if($pic3src!='')
+            {
+                $sum=$sum+1;
+            }
+            if($pic4src!='')
+            {
+                $sum=$sum+1;
+            }
+
+            $test[$i][sum]=$sum;
+
+            if($sum!=0)
+            {
+                //$test[$i][picnote]='题 '.str_replace(array("\r\n", "\r", "\n",".","&nbps;"), '',$test[$i]['newtitle']).'图';
+                $test[$i][picnote]='';
+            }
+            else
+            {
+                $test[$i][picnote]='';
+            }
+        }
+
+
+        $mycount=count($test);
+        $tsernum=0;
+        $m=0;
+        $no1=1;
+        $no2=1;
+
+
+        for($j=0;$j<$mycount;$j++)
+        {
+
+            if($test[$j][tsernum]!=$tsernum && $test[$j][tsernum]!='0')//为第一个A的标题
+            {
+                $no2=1;
+                $testarr['ctbname']='t1';
+                $testarr['tsernum']=$test[$j][tsernum];
+                $testarr['filesernum']=$test[$j][filesernum];
+                $tdata=$model_test_public_data->where($testarr)->find();
+
+
+                $srcid=$tdata[srcid];
+                $img_cuted_data=$model_img_cuted_data->where('id='.$srcid)->find();
+                $src=$img_cuted_data[src];
+
+                $pic1id=$tdata[pic1];
+                $img_cuted_data=$model_img_cuted_data->where('id='.$pic1id)->find();
+                $pic1src=$img_cuted_data[src];
+
+                $pic2id=$tdata[pic2];
+                $img_cuted_data=$model_img_cuted_data->where('id='.$pic2id)->find();
+                $pic2src=$img_cuted_data[src];
+
+                $pic3id=$tdata[pic3];
+                $img_cuted_data=$model_img_cuted_data->where('id='.$pic3id)->find();
+                $pic3src=$img_cuted_data[src];
+
+                $pic4id=$tdata[pic4];
+                $img_cuted_data=$model_img_cuted_data->where('id='.$pic4id)->find();
+                $pic4src=$img_cuted_data[src];
+
+                $newtest[$m][title]=cuttitlemsg($tdata[inputval]);
+                $newtest[$m][src]=usersrc($src);
+                $newtest[$m][tsernum]=$tdata[tsernum];
+                $newtest[$m][ctbname]=$tdata[ctbname];
+                $newtest[$m][filesernum]=$tdata[filesernum];
+                $newtest[$m][pic1]=usersrc($pic1src);
+                $newtest[$m][pic2]=usersrc($pic2src);
+                $newtest[$m][pic3]=usersrc($pic3src);
+                $newtest[$m][pic4]=usersrc($pic4src);
+                $newtest[$m][id]=$tdata[id];
+
+                $sum=0;
+                if($pic1src!='')
+                {
+                    $sum=$sum+1;
+                }
+                if($pic2src!='')
+                {
+                    $sum=$sum+1;
+                }
+                if($pic3src!='')
+                {
+                    $sum=$sum+1;
+                }
+                if($pic4src!='')
+                {
+                    $sum=$sum+1;
+                }
+
+                $newtest[$m][sum]=$sum;
+
+                if($sum!=0)
+                {
+                    //$newtest[$m][picnote]='题 '.str_replace(array("\r\n", "\r", "\n",".","&nbps;"), '',$newtest[$m]['newtitle']).'图';
+                   $newtest[$m][picnote]='';
+                }
+                else{
+                    $newtest[$m][picnote]='';
+                }
+
+
+                $newtest[$m][title]=cuttitlemsg($tdata[inputval]);
+                $newtest[$m][src]=usersrc($src);
+                $newtest[$m][newtitle]=$no1;
+                $no1=$no1+1;
+
+
+                $m=$m+1;
+                $newtest[$m][title]= $test[$j][title];
+                $newtest[$m][src]=$test[$j][src];
+                $newtest[$m][newtitle]=$no2.'）';
+                $newtest[$m][typeid]=$test[$j][typeid];
+                $newtest[$m][pic1]=$test[$j][pic1];
+                $newtest[$m][pic2]=$test[$j][pic2];
+                $newtest[$m][pic3]=$test[$j][pic3];
+                $newtest[$m][pic4]=$test[$j][pic4];
+                $newtest[$m][sum]=$test[$j][sum];
+                $newtest[$m][picnote]=$test[$j][picnote];
+                $newtest[$m][id]=$test[$j][id];
+
+
+                $tsernum=$test[$m][tsernum];
+                $no2=$no2+1;
+                $m=$m+1;
+            }
+            else
+            {
+                $newtest[$m][title]= $test[$j][title];
+                $newtest[$m][src]=$test[$j][src];
+                $newtest[$m][ctbname]=$test[$j][ctbname];
+                $newtest[$m][tsernum]=$test[$j][tsernum];
+                $newtest[$m][filesernum]=$test[$j][filesernum];
+                $newtest[$m][newtitle]=$no2.'）';
+              	$newtest[$m][typeid]=$test[$j][typeid];
+                $newtest[$m][pic1]=$test[$j][pic1];
+                $newtest[$m][pic2]=$test[$j][pic2];
+                $newtest[$m][pic3]=$test[$j][pic3];
+                $newtest[$m][pic4]=$test[$j][pic4];
+                $newtest[$m][sum]=$test[$j][sum];
+                $newtest[$m][picnote]=$test[$j][picnote];
+                $newtest[$m][id]=$test[$j][id];
+
+
+
+                if($test[$j][ctbname]=='t-a')
+                {
+                    $newtest[$m][newtitle]= $no1;
+                    $no1=$no1+1;
+                }
+
+                if($test[$j][ctbname]=='a')
+                {
+                    $newtest[$m][newtitle]= $no2.'）';
+                    $no2=$no2+1;
+                }
+                $m=$m+1;
+            }
+        }
+     
+     
+       	$count=sizeof($newtest);
+     	$m=0;
+     	for($i=0;$i<$count;$i++)
+        {
+          
+          if($checktestkind==0)
+          {
+                $choosenewtest[$m][title]=$newtest[$i][title];
+                $choosenewtest[$m][src]=$newtest[$i][src];
+                $choosenewtest[$m][ctbname]=$newtest[$i][ctbname];
+                $choosenewtest[$m][tsernum]=$newtest[$i][tsernum];
+                $choosenewtest[$m][filesernum]=$newtest[$i][filesernum];
+                $choosenewtest[$m][newtitle]=($m+1).'）';
+              	$choosenewtest[$m][typeid]=$newtest[$i][typeid];
+                $choosenewtest[$m][pic1]=$newtest[$i][pic1];
+                $choosenewtest[$m][pic2]=$newtest[$i][pic2];
+                $choosenewtest[$m][pic3]=$newtest[$i][pic3];
+                $choosenewtest[$m][pic4]=$newtest[$i][pic4];
+                $choosenewtest[$m][sum]=$newtest[$i][sum];
+                $choosenewtest[$m][picnote]=$newtest[$i][picnote];
+                $choosenewtest[$m][id]=$newtest[$i][id];
+            	$m=$m+1;
+          }
+          else
+          {
+              if($newtest[$i][typeid]==$checktestkind)
+          		{
+                	$choosenewtest[$m][title]=$newtest[$i][title];
+                	$choosenewtest[$m][src]=$newtest[$i][src];
+                	$choosenewtest[$m][ctbname]=$newtest[$i][ctbname];
+                	$choosenewtest[$m][tsernum]=$newtest[$i][tsernum];
+                	$choosenewtest[$m][filesernum]=$newtest[$i][filesernum];
+               		$choosenewtest[$m][newtitle]=($m+1).'）';
+              		$choosenewtest[$m][typeid]=$newtest[$i][typeid];
+                	$choosenewtest[$m][pic1]=$newtest[$i][pic1];
+                	$choosenewtest[$m][pic2]=$newtest[$i][pic2];
+                	$choosenewtest[$m][pic3]=$newtest[$i][pic3];
+                	$choosenewtest[$m][pic4]=$newtest[$i][pic4];
+                	$choosenewtest[$m][sum]=$newtest[$i][sum];
+                	$choosenewtest[$m][picnote]=$newtest[$i][picnote];
+                	$choosenewtest[$m][id]=$newtest[$i][id];
+            		$m=$m+1;
+          		}
+          }
+        
+
+        }
+     
+     	echo json_encode($choosenewtest);
    }
   
     public function tupload()
@@ -2681,6 +2968,7 @@ class HeadTeacherController extends Controller
               {
                 
                  $key_note_arr=explode(',',$test_data[$i]['keynote_id']);
+           
                  $key_note_count=sizeof($key_note_arr);
                 
                  $thiskeynote_msg='';
@@ -2691,11 +2979,12 @@ class HeadTeacherController extends Controller
                     $thiskeynote_arr['userid']=$userid;
                     $thiskeynote_data=$model_key_statistic->where($thiskeynote_arr)->find();
                  
-                 
-                    $onekeynote_data=$model_onekeynote->where('id='.$key_note_arr[$p])->find();
-                   	$thiskeynote_name=$onekeynote_data['keynotemsg'];
+                    if($key_note_arr[$p]>0) {
+                    	$onekeynote_data=$model_onekeynote->where('id='.$key_note_arr[$p])->find();
+                   		$thiskeynote_name=$onekeynote_data['keynotemsg'];
                    
-                     $thiskeynote_msg=$thiskeynote_msg.' '.$thiskeynote_name.'（'.$thiskeynote_data['question_w'].'/'.$thiskeynote_data['question_sum'].'）';
+                     	$thiskeynote_msg=$thiskeynote_msg.' '.$thiskeynote_name.'（'.$thiskeynote_data['question_w'].'/'.$thiskeynote_data['question_sum'].'）';
+                    }
                     
                  } 
                  $test_data[$i]['keynotename']=$thiskeynote_msg;
@@ -3161,11 +3450,29 @@ class HeadTeacherController extends Controller
   public function keynote_data_php()
   {
      $subject_id=$_POST['subject_id'];
+     $gradeid=$_POST['gradeid'];
+     $keywords=$_POST['keywords'];
+     
      $model_onekeynote=M('onekeynote');
      $onekeynote_arr['subjectid']=$subject_id;
      $onekeynote_arr['delornot']=1;
+     $gradeid>0  && $onekeynote_arr['gradeid']=$gradeid;
+     //!empty($keywords) && $onekeynote_arr['keynotemsg']=array('like',"%".$keywords."%");
+     
      $onekeynote_data=$model_onekeynote->where($onekeynote_arr)->select();
+ 
      $onekeynote_data=turnArray($onekeynote_data);
+     if(!empty($keywords)) {
+     	//字母搜索
+     	$letter=strtolower($keywords);
+ 
+     	foreach($onekeynote_data as $k=>$v) {
+     		if($v['letter']!=$letter) {
+     			unset($onekeynote_data[$k]);
+     			continue;
+     		}
+     	}
+     }
      $onekeynote_data['count']=sizeof($onekeynote_data);
      echo json_encode($onekeynote_data);
     

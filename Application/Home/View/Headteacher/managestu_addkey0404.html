@@ -50,7 +50,7 @@
 		<div class="row title_class">
 			<div class="col-xs-2"><a href="{:U('managestu_test0403',array('userid'=>$userid,'username'=>$username,'realname'=>$realname,'subject_id'=>$subject_id,'subject_msg'=>$subject_msg,'stu_id'=>$stu_id,'stu_name'=>$stu_name))}"><img src="__PUBLIC__/img/reg_back.png" class="title_left_img"></a></div>
 			<div class="col-xs-8  title_font_middle " >习题-知识点</div>
-			<div class="col-xs-2"><a href="#" style="color: white;font-size: 15px;display: block;margin-top: 1px;">Key</a></div>
+			<div class="col-xs-2"><a href="{:U('managestu_keylist0405',array('userid'=>$userid,'username'=>$username,'realname'=>$realname,'stu_id'=>$stu_id,'stu_name'=>$stu_name,'subject_id'=>$subject_id))}"  style="color: white;font-size: 15px;display: block;margin-top: 1px;">Key</a></div>
 		</div>
 		<div class="row parent_nav">
 		<div class="col-xs-3" >
@@ -62,35 +62,37 @@
 		</div>
 		<div class="col-xs-3">
 
-			<select class="blackselect">
+			<select class="blackselect" style="display:none;">
 				<option value ="{$checktestkind}">{$checktestmsg}</option>
 			</select>
+          		<select  onchange="keynote_data();" id="gradeid" name="gradeid" class="blackselect">
+					<option value="volvo">年级</option>
+					<option value="23">初一</option>
+					<option value="24">初二</option>
+                  	<option value="25">初三</option>
+				</select>
 		</div>
 			<div class="col-xs-3">
 
-				<select class="blackselect">
-					<option value ="volvo">状态</option>
-					<option value ="volvo">完成</option>
-					<option value ="saab">未添加</option>
-				</select>
-			</div>
-
-			<div class="col-xs-3">
 				<select class="blackselect">
 					<option value ="volvo">混合</option>
 					<option value ="volvo">错题</option>
 					<option value ="saab">知识点</option>
 				</select>
 			</div>
+
+			<div class="col-xs-3">
+				<input type="text" onchange="keynote_data();"  name="keywords" id="keywords"  placeholder="首字母" style="width: 60px;text-align: center;height: 22px;font-size: 13px;margin-top: 5px;border-radius: 3px;border:0px solid #FFFFFF;">
+			</div>
 		</div>
 		<div class="row">
-			<div id="contentdiv" class="col-xs-12" style="height: 600px;overflow-y: auto;">
+			<div id="contentdiv" class="col-xs-12" style="height: 800px;overflow-y: auto;">
 				<div id="test_div" class="row" style="height: 300px;overflow-y: auto;padding-left: 10px;background-color: #ffffff;">
                   
                   
                   
 			<ol id="list1" style="padding-right: 0%;padding-left: 0%;list-style-type:none;border: 0px;" class="parent_ol">
-				<volist name="testdata" id="testid">
+				<!--  <volist name="testdata" id="testid">
 					<li style="border: 0px;margin-top: 5px;">
 						<table style="border: 1px;">
 							<tr>
@@ -108,7 +110,7 @@
 							</tr>
 						</table>
 					</li>
-				</volist>
+				</volist>-->
 					</ol>
 			<input type="hidden" id="sum" value="{$m}">
  
@@ -125,7 +127,7 @@
 					</div>
 					<div  class="col-xs-9" style="font-size:15px;border-left: 1px solid #1b6d85;padding-top: 20px;">
 						<span style="font-size: 16px;" style="height: 260px;overflow-y: auto;">{$subject_msg}知识点</span><input onclick="inputkeynotesub()" style="margin-left: 40%;" type="button" value="确定"><hr>
-                      <div id="keynote_div" style="height: 220px;overflow-y: auto;">
+                      <div id="keynote_div" style="height: 210px;overflow-y: auto;">
 
                       </div>
 					</div>
@@ -142,8 +144,12 @@
 	<input id="testidarr" type="hidden" value="">
 	<input id="questionsum" type="hidden" value="0">
     <input id="stu_id" type="hidden" value="{$stu_id}">
-    <input id="stu_name" type="text" value="{$stu_name}">
+    <input id="stu_name" type="hidden" value="{$stu_name}">
+    
+    
   	<input id="checktestid" type="hidden" value="{$checktestid}">
+  	<input id="checktestkind" type="hidden" value="{$checktestkind}">
+  
 </body>
 
 <script>
@@ -154,13 +160,19 @@
         keynote_data();
       my_keynote_data();
       
-		//managetestdata(userid,nowpage,pagelength);
+        var checktestid=$('#checktestid').val();
+        var checktestkind=$('#checktestkind').val();
+      
+		managetestdata(userid,nowpage,pagelength,checktestid,checktestkind);
 	});
 	function nextpage(){
 		var nowpage=$('#nowpage').text();
 		var maxnum=$('#pagenum').text();
 		var userid=$('#userid').val();
 		var pagelength=$('#pagelength').val();
+		
+        var checktestid=$('#checktestid').val();
+        var checktestkind=$('#checktestkind').val();
 
 		nowpage=nowpage*1+1;
 		if(nowpage>maxnum)
@@ -174,16 +186,16 @@
 
 		$("tr[name='testlisttr']").remove();
 		$('#nowpage').text(nowpage);
-		managetestdata(userid,nowpage,pagelength);
+		managetestdata(userid,nowpage,pagelength,checktestid,checktestkind);
 		selectele();
 
 
 	}
-	function managetestdata(userid,nowpage,pagelength)
+	function managetestdata(userid,nowpage,pagelength,checktestid,checktestkind)
 	{
 		$.ajax({
-			url:"{:U('phptestmsg0201')}",
-			data:{userid:userid,nowpage:nowpage,pagelength:pagelength},
+			url:"{:U('phpmanagestuaddkey0404')}",
+			data:{userid:userid,nowpage:nowpage,pagelength:pagelength,checktestid:checktestid,checktestkind:checktestkind},
 			datatype:'json',
 			type:'post',
 			success:function(re){
@@ -203,7 +215,7 @@
 					testid=testlist[i]['testid'];
 					papername=testlist[i]['num']+'. '+testlist[i]['paper_name']+'（'+testlist[i]['person_sum']+'/'+testlist[i]['classnum']+'）';
 					var ahtml='/index.php/Home/HeadTeacher/managepaperdetail0202/testid/'+testid+'/classid/'+classid+'.html';
-					addhtmlmsg=addhtmlmsg+'<li><div style="padding-left: 20px;padding-top: 4px;width: 330px;overflow-x:scroll;white-space: nowrap;"><a style="color: #000000;" href="'+ahtml+'">'+papername+'</a><br><a style="margin-left: 20px;color: #000000;">'+testlist[i]['publish_time']+'</a><a style="margin-left: 15px;color: #000000;">Edit：'+testlist[i]['lastreadtime']+'</a></div></li><hr style="margin-top: 14px; margin-bottom: 10px;">';
+					addhtmlmsg=addhtmlmsg+'<li style="border: 0px;margin-top: 5px;"><table style="border: 1px;"><tr><td style="padding-left: 15px;vertical-align: top;"><span style="margin-top: 0px;">'+testlist[i]['title']+'</span></td><td><img id="img'+j+'" name="'+testlist[i]['id']+'" onclick="answersub(this.id)" style="width: 100%"  src="'+testlist[i]['src']+'"></td></tr><tr><td style="padding-left: 15px;vertical-align: top;"></td><td style="padding-right: 0px;text-align: center;"><img id="imga'+j+'" src="'+testlist[i]['pic1']+'" style="width: 15%;"><img id="imgb'+j+'" src="'+testlist[i]['pic2']+'" style="width: 15%;"><img id="imgc'+j+'" src="'+testlist[i]['pic3']+'" style="width: 15%;"><img id="imgd'+j+'" src="'+testlist[i]['pic4']+'" style="width: 15%;"></td></tr><tr><td></td><td style="text-align: center"><span style="font-size: 10px;">'+testlist[i]['picnote']+'</span></td></tr></table></li>';
 					$('#list1').html(beginhtml + addhtmlmsg);
 				}
 			}
@@ -228,16 +240,18 @@
 		$('#questionsum').val(ctsum);
 	}
   
-  
-
+ 
   
   
 	function keynote_data(){
 		var subject_id=$('#subject_id').val();
 		var userid=$('#userid').val();
+		var gradeid=$("#gradeid").val();
+		var keywords=$("#keywords").val();
+		
 		$.ajax({
 			url:"{:U('keynote_data_php')}",
-			data:{subject_id:subject_id},
+			data:{subject_id:subject_id,gradeid:gradeid,keywords:keywords},
 			datatype:'json',
 			type:'post',
 			success:function(re){
