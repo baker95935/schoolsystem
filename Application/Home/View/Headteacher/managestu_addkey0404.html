@@ -45,36 +45,29 @@
 <!--<div  data-toggle="modal" data-target="#myModal" style="position: absolute;z-index:100;width: 80px;height:80px;background-color: #1b6d85;border-radius: 40px;top:70%;left: 70%;color: #ffffff;font-size: 16px;padding-top: 28px;text-align: center;"><span>预览</span><span id="notesum" style="margin-left: 2px;"></span>-->
 <!--</div>-->
 
- </div>
-	<div class="container" style="height: 100%;">
+	<div class="container">
 		<div class="row title_class">
 			<div class="col-xs-2"><a href="{:U('managestu_test0403',array('userid'=>$userid,'username'=>$username,'realname'=>$realname,'subject_id'=>$subject_id,'subject_msg'=>$subject_msg,'stu_id'=>$stu_id,'stu_name'=>$stu_name))}"><img src="__PUBLIC__/img/reg_back.png" class="title_left_img"></a></div>
 			<div class="col-xs-8  title_font_middle " >习题-知识点</div>
-			<div class="col-xs-2"><a href="#" style="color: white;font-size: 15px;display: block;margin-top: 1px;">Key</a></div>
+			<div class="col-xs-2"><a href="{:U('managestu_keylist0405',array('userid'=>$userid,'username'=>$username,'realname'=>$realname,'stu_id'=>$stu_id,'stu_name'=>$stu_name,'subject_id'=>$subject_id))}"  style="color: white;font-size: 15px;display: block;margin-top: 1px;">Key</a></div>
 		</div>
 		<div class="row parent_nav">
 		<div class="col-xs-3" >
-
 			<select class="blackselect" style="padding-left: -10px;">
 				<option value ="volvo">{$subject_msg}</option>
 			</select>
-
 		</div>
 		<div class="col-xs-3">
-
-			<select class="blackselect">
+			<select class="blackselect" style="display:none;">
 				<option value ="{$checktestkind}">{$checktestmsg}</option>
 			</select>
-		</div>
-			<div class="col-xs-3">
-
-				<select class="blackselect">
-					<option value ="volvo">状态</option>
-					<option value ="volvo">完成</option>
-					<option value ="saab">未添加</option>
+          		<select  onchange="keynote_data();" id="gradeid" name="gradeid" class="blackselect">
+					<option value="volvo">年级</option>
+					<option value="23">初一</option>
+					<option value="24">初二</option>
+                  	<option value="25">初三</option>
 				</select>
-			</div>
-
+		</div>
 			<div class="col-xs-3">
 				<select class="blackselect">
 					<option value ="volvo">混合</option>
@@ -82,55 +75,37 @@
 					<option value ="saab">知识点</option>
 				</select>
 			</div>
-		</div>
-		<div class="row">
-			<div id="contentdiv" class="col-xs-12" style="height: 600px;overflow-y: auto;">
-				<div id="test_div" class="row" style="height: 300px;overflow-y: auto;padding-left: 10px;background-color: #ffffff;">
-                  
-                  
-                  
-			<ol id="list1" style="padding-right: 0%;padding-left: 0%;list-style-type:none;border: 0px;" class="parent_ol">
-				<volist name="testdata" id="testid">
-					<li style="border: 0px;margin-top: 5px;">
-						<table style="border: 1px;">
-							<tr>
-								<td style="padding-left: 15px;vertical-align: top;"><span style="margin-top: 0px;">{$testid.newtitle}</span></td>
-								<td><img id="img{++$m}" name="{$testid.id}" onclick="answersub(this.id)" style="width: 100%"  src="{$testid.src}"></td>
-							</tr>
-							<tr>
-								<td style="padding-left: 15px;vertical-align: top;"></td><td style="padding-right: 0px;text-align: center;"><img id="imga{$m}" src="{$testid.pic1}" style="width: 15%;"><img id="imgb{$m}" src="{$testid.pic2}" style="width: 15%;"><img id="imgc{$m}" src="{$testid.pic3}" style="width: 15%;"><img id="imgd{$m}" src="{$testid.pic4}" style="width: 15%;"></td>
-							</tr>
-							<tr>
-								<td></td>
-								<td style="text-align: center">
-									<span style="font-size: 10px;">{$testid.picnote}</span>
-								</td>
-							</tr>
-						</table>
-					</li>
-				</volist>
-					</ol>
-			<input type="hidden" id="sum" value="{$m}">
- 
-                  
-                  
-                  
-				</div>
-
-				<div id="mykey_div" class="row" style="height: 5px;background-color:#f3f3f3;padding-top:4px;padding-left: 10px;"></div>
-
-				<div id="all_key_div" class="row" style="height: 310px;background-color: #FFFFFF;">
-					<div id="my_key_div" class="col-xs-3" style="height: 295px;padding-top: 20px;overflow-y: auto;">
-						
-					</div>
-					<div  class="col-xs-9" style="font-size:15px;border-left: 1px solid #1b6d85;padding-top: 20px;">
-						<span style="font-size: 16px;" style="height: 260px;overflow-y: auto;">{$subject_msg}知识点</span><input onclick="inputkeynotesub()" style="margin-left: 40%;" type="button" value="确定"><hr>
-                      <div id="keynote_div" style="height: 220px;overflow-y: auto;">
-
-                      </div>
-					</div>
-				</div>
+			<div class="col-xs-3">
+				<input type="text" onchange="keynote_data();"  name="keywords" id="keywords" length=1 maxlength=1  placeholder="首字母" style="width: 60px;text-align: center;height: 22px;font-size: 13px;margin-top: 5px;border-radius: 3px;border:0px solid #FFFFFF;">
 			</div>
+		</div>
+      
+  
+		<div class="row" >
+			<div id="contentdiv" class="col-xs-12" >
+              
+              	<div id="test_div" class="row" style="height: 300px;overflow-y: auto;padding-left: 10px;background-color: #ffffff;"> 
+				<ol id="list1" style="padding-right: 0%;padding-left: 0%;list-style-type:none;border: 0px;" class="parent_ol"></ol>
+				<input type="hidden" id="sum" value="{$m}">
+ 				</div>
+
+				<div id="mykey_div" class="row" style="height:15px;background-color:#f3f3f3;padding-top:4px;padding-left: 10px;"></div>
+              
+				<div id="all_key_div" class="row" style="background-color: #FFFFFF;">
+					
+                  <div id="my_key_div" class="col-xs-3" style="height: 275px;padding-top: 20px;overflow-y:auto;"></div>
+                  
+					<div  class="col-xs-9" style="font-size:15px;border-left: 1px solid #1b6d85;padding-top: 20px;height: 275px;overflow-y: auto;">
+						<span style="font-size: 16px;" >{$subject_msg}知识点</span><input onclick="inputkeynotesub()" style="margin-left: 40%;" type="button" value="确定"><hr>
+                      	<div id="keynote_div"></div>
+					</div>
+                  
+				</div>
+              
+              
+	
+			</div>
+          
 		</div>
 	</div>
 
@@ -142,8 +117,12 @@
 	<input id="testidarr" type="hidden" value="">
 	<input id="questionsum" type="hidden" value="0">
     <input id="stu_id" type="hidden" value="{$stu_id}">
-    <input id="stu_name" type="text" value="{$stu_name}">
+    <input id="stu_name" type="hidden" value="{$stu_name}">
+    
+    
   	<input id="checktestid" type="hidden" value="{$checktestid}">
+  	<input id="checktestkind" type="hidden" value="{$checktestkind}">
+  
 </body>
 
 <script>
@@ -152,15 +131,21 @@
 		var pagelength=$('#pagelength').val();
 		var userid=$('#userid').val();
         keynote_data();
-      my_keynote_data();
+      	my_keynote_data();
       
-		//managetestdata(userid,nowpage,pagelength);
+        var checktestid=$('#checktestid').val();
+        var checktestkind=$('#checktestkind').val();
+      
+		managetestdata(userid,nowpage,pagelength,checktestid,checktestkind);
 	});
 	function nextpage(){
 		var nowpage=$('#nowpage').text();
 		var maxnum=$('#pagenum').text();
 		var userid=$('#userid').val();
 		var pagelength=$('#pagelength').val();
+		
+        var checktestid=$('#checktestid').val();
+        var checktestkind=$('#checktestkind').val();
 
 		nowpage=nowpage*1+1;
 		if(nowpage>maxnum)
@@ -174,16 +159,16 @@
 
 		$("tr[name='testlisttr']").remove();
 		$('#nowpage').text(nowpage);
-		managetestdata(userid,nowpage,pagelength);
+		managetestdata(userid,nowpage,pagelength,checktestid,checktestkind);
 		selectele();
 
 
 	}
-	function managetestdata(userid,nowpage,pagelength)
+	function managetestdata(userid,nowpage,pagelength,checktestid,checktestkind)
 	{
 		$.ajax({
-			url:"{:U('phptestmsg0201')}",
-			data:{userid:userid,nowpage:nowpage,pagelength:pagelength},
+			url:"{:U('phpmanagestuaddkey0404')}",
+			data:{userid:userid,nowpage:nowpage,pagelength:pagelength,checktestid:checktestid,checktestkind:checktestkind},
 			datatype:'json',
 			type:'post',
 			success:function(re){
@@ -203,7 +188,7 @@
 					testid=testlist[i]['testid'];
 					papername=testlist[i]['num']+'. '+testlist[i]['paper_name']+'（'+testlist[i]['person_sum']+'/'+testlist[i]['classnum']+'）';
 					var ahtml='/index.php/Home/HeadTeacher/managepaperdetail0202/testid/'+testid+'/classid/'+classid+'.html';
-					addhtmlmsg=addhtmlmsg+'<li><div style="padding-left: 20px;padding-top: 4px;width: 330px;overflow-x:scroll;white-space: nowrap;"><a style="color: #000000;" href="'+ahtml+'">'+papername+'</a><br><a style="margin-left: 20px;color: #000000;">'+testlist[i]['publish_time']+'</a><a style="margin-left: 15px;color: #000000;">Edit：'+testlist[i]['lastreadtime']+'</a></div></li><hr style="margin-top: 14px; margin-bottom: 10px;">';
+					addhtmlmsg=addhtmlmsg+'<li style="border: 0px;margin-top: 5px;"><table style="border: 1px;"><tr><td style="padding-left: 15px;vertical-align: top;"><span style="margin-top: 0px;">'+testlist[i]['title']+'</span></td><td><img id="img'+j+'" name="'+testlist[i]['id']+'" onclick="answersub(this.id)" style="width: 100%"  src="'+testlist[i]['src']+'"></td></tr><tr><td style="padding-left: 15px;vertical-align: top;"></td><td style="padding-right: 0px;text-align: center;"><img id="imga'+j+'" src="'+testlist[i]['pic1']+'" style="width: 15%;"><img id="imgb'+j+'" src="'+testlist[i]['pic2']+'" style="width: 15%;"><img id="imgc'+j+'" src="'+testlist[i]['pic3']+'" style="width: 15%;"><img id="imgd'+j+'" src="'+testlist[i]['pic4']+'" style="width: 15%;"></td></tr><tr><td></td><td style="text-align: center"><span style="font-size: 10px;">'+testlist[i]['picnote']+'</span></td></tr></table></li>';
 					$('#list1').html(beginhtml + addhtmlmsg);
 				}
 			}
@@ -228,16 +213,18 @@
 		$('#questionsum').val(ctsum);
 	}
   
-  
-
+ 
   
   
 	function keynote_data(){
 		var subject_id=$('#subject_id').val();
 		var userid=$('#userid').val();
+		var gradeid=$("#gradeid").val();
+		var keywords=$("#keywords").val();
+		
 		$.ajax({
 			url:"{:U('keynote_data_php')}",
-			data:{subject_id:subject_id},
+			data:{subject_id:subject_id,gradeid:gradeid,keywords:keywords},
 			datatype:'json',
 			type:'post',
 			success:function(re){
@@ -249,30 +236,34 @@
               	var keynote_html='';
           		for (var i = 0; i < mylength; i++)
                 {
-                     if(keylist[i]['letter']!=newletter)
-                     {
-                       if(i==0)
-                       {
-                         letter_msg='<span>'+keylist[i]['letter'].toUpperCase()+'</span><br>';
-						 keynote_html='<input type="checkbox"  id="object'+i+'" name="keynote" value="'+keylist[i]['id']+'"><label for="object'+i+'">'+keylist[i]['keynotemsg']+'</label>';
-                       	 newhtml=newhtml+letter_msg+keynote_html;
-                         newletter=keylist[i]['letter'];
-                       }
-                       else
-                       {
-                         letter_msg='<br><span>'+keylist[i]['letter'].toUpperCase()+'</span><br>';
-						 keynote_html='<input type="checkbox"  id="object'+i+'"  name="keynote" value="'+keylist[i]['id']+'"><label for="object'+i+'">'+keylist[i]['keynotemsg']+'</label>';
-                         newhtml=newhtml+letter_msg+keynote_html;
-                         newletter=keylist[i]['letter'];
-                       }
-                      
-                     }
-                  else
-                  	{
-                       	keynote_html='<input type="checkbox"  id="object'+i+'"  name="keynote" value="'+keylist[i]['id']+'"><label for="object'+i+'">'+keylist[i]['keynotemsg']+'</label>';
-                        newhtml=newhtml+keynote_html;
-                        newletter=keylist[i]['letter'];
-                  	}
+          			if(typeof(keylist[i])!="undefined")
+          			{
+          				
+	                     if(keylist[i]['letter']!=newletter)
+	                     {
+	                       if(i==0)
+	                       {
+	                         letter_msg='<span>'+keylist[i]['letter'].toUpperCase()+'</span><br>';
+							 keynote_html='<input type="checkbox"  id="object'+i+'" name="keynote" value="'+keylist[i]['id']+'"><label for="object'+i+'">'+keylist[i]['keynotemsg']+'</label>';
+	                       	 newhtml=newhtml+letter_msg+keynote_html;
+	                         newletter=keylist[i]['letter'];
+	                       }
+	                       else
+	                       {
+	                         letter_msg='<br><span>'+keylist[i]['letter'].toUpperCase()+'</span><br>';
+							 keynote_html='<input type="checkbox"  id="object'+i+'"  name="keynote" value="'+keylist[i]['id']+'"><label for="object'+i+'">'+keylist[i]['keynotemsg']+'</label>';
+	                         newhtml=newhtml+letter_msg+keynote_html;
+	                         newletter=keylist[i]['letter'];
+	                       }
+	                      
+	                     }
+	                  else
+	                  	{
+	                       	keynote_html='<input type="checkbox"  id="object'+i+'"  name="keynote" value="'+keylist[i]['id']+'"><label for="object'+i+'">'+keylist[i]['keynotemsg']+'</label>';
+	                        newhtml=newhtml+keynote_html;
+	                        newletter=keylist[i]['letter'];
+	                  	}
+          			}
                 }
               
               $('#keynote_div').html(newhtml);
