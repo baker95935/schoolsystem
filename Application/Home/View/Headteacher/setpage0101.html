@@ -96,7 +96,7 @@
 			<div id='checkboxarea' class="modal-body" name="checkboxarea">
 		  </div>
 			<div class="modal-footer " >
-				<button type="button" class="btn btn-primary"  data-dismiss="modal" style="width:20%;">
+				<button type="button" onclick="selectdata();" class="btn btn-primary"  data-dismiss="modal" style="width:20%;">
 					确认
 				</button>
 			</div>
@@ -159,13 +159,11 @@
 
 						}
 					})
-//			bindchapter(subjectid,gradeid);
-			//bindchapter();
 				}
 		)
 	}
 	)
-
+//绑定章节
 	function bindchapter(){
 
 		var kind=$('#mychapterid').val();
@@ -173,21 +171,7 @@
 		var gradeid=$("[name='gradeid_subject']").val();
 
 		var chapter=$('#mychapterid').val();
-
-//		alert(chapter);
-//
-//		return;
-
-
-//		var chapter=1;
-//		var partid=1;
-
-//		alert(gradeid);
-//
-//		return;
-
-//		alert(kind);
-
+      
 		if(kind=='subject')
 		{
 			kind=1;
@@ -219,7 +203,7 @@
 				var begin=1;
 				var begin1=1;
 				var chapterbegin=1;
-
+	 
 				if(kind==1)
 				{
 					for(var i=0;i<count;i++)
@@ -240,23 +224,23 @@
 						}
 						if(re[i]['chapterkind']==3)
 						{
-
+					 
 							if(begin1==1)
 							{
-								inhtml=inhtml+'<br><span style="color: #68729e;">'+re[i]['chaptermsg']+'</span><hr style="margin-top: 4px;margin-bottom: 4px; height:2px;border:none;border-top:1px dotted #185598;" >';
+								inhtml=inhtml+'<br><span style="color: #68729e;">'+re[i]['chaptermsg']+'</span><input type="checkbox" name="keynotemsg[]" style="margin-left: 6px;margin-right: 6px;" value="'+re[i]['id']+'"><br>';
 								begin1=100;
 							}
 							else
 							{
 								if(chapterbegin==1)
 								{
-									inhtml=inhtml+'<br><span style="color: #68729e;">'+re[i]['chaptermsg']+'</span><hr style="margin-top: 4px;margin-bottom: 4px; height:2px;border:none;border-top:1px dotted #185598;" >';
+									inhtml=inhtml+'<br><span style="color: #68729e;">'+re[i]['chaptermsg']+'</span><input type="checkbox" name="keynotemsg[]" style="margin-left: 6px;margin-right: 6px;" value="'+re[i]['id']+'"><br>';
 									chapterbegin=100;
 
 								}
 								else
 								{
-									inhtml=inhtml+'<br><span style="color: #68729e;">'+re[i]['chaptermsg']+'</span><hr style="margin-top: 4px;margin-bottom: 4px; height:2px;border:none;border-top:1px dotted #185598;" >';
+									inhtml=inhtml+'<br><span style="color: #68729e;">'+re[i]['chaptermsg']+'</span><input type="checkbox" name="keynotemsg[]" style="margin-left: 6px;margin-right: 6px;" value="'+re[i]['id']+'"><br>';
 								}
 
 							}
@@ -286,7 +270,7 @@
 						if(re[i]['chapterkind']==3)
 						{
 
-							inhtml=inhtml+'<span style="color: #68729e;">'+re[i]['chaptermsg']+'</span><hr style="margin-top: 4px;margin-bottom: 4px; height:2px;border:none;border-top:1px dotted #185598;" >';
+							inhtml=inhtml+'<span style="color: #68729e;">'+re[i]['chaptermsg']+'</span><input type="checkbox" name="keynotemsg[]" style="margin-left: 6px;margin-right: 6px;" value="'+re[i]['id']+'"><br>';
 							begin1=100;
 
 						}
@@ -313,7 +297,7 @@
 						if(re[i]['chapterkind']==3)
 						{
 
-							inhtml=inhtml+'<span style="color: #68729e;">'+re[i]['chaptermsg']+'</span><hr style="margin-top: 4px;margin-bottom: 4px; height:2px;border:none;border-top:1px dotted #185598;" >';
+							inhtml=inhtml+'<span style="color: #68729e;">'+re[i]['chaptermsg']+'</span><input type="checkbox" name="keynotemsg[]" style="margin-left: 6px;margin-right: 6px;" value="'+re[i]['id']+'"><br>';
 							begin1=100;
 
 						}
@@ -344,12 +328,15 @@
 		var DATE_FORMAT = /^[0-9]{4}-[0-1]?[0-9]{1}-[0-3]?[0-9]{1}$/;
 		var publishtimeid = document.getElementById("publishtimeid").value;
 		if(DATE_FORMAT.test(publishtimeid)){
-//			alert("您输入的日期格式正确");
 		} else {
 			alert("正确格式为2018-01-01");
 		}
 	}
 
+	function selectdata()
+	{
+		 
+	}
 
 
 </script>
