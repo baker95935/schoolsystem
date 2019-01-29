@@ -13,20 +13,7 @@
 	<script src="__PUBLIC__/js/public.js"></script>
 
 	<script language="javascript">
-		function work1(target) {
-			//e.preventDefault();
-			$("#dropdownMenu1").text($(target).text());
-		}
 
-		function work2(target) {
-			//e.preventDefault();
-			$("#dropdownMenu2").text($(target).text());
-		}
-
-		function work3(target) {
-			//e.preventDefault();
-			$("#dropdownMenu3").text($(target).text());
-		}
 	</script>
 </head>
 <body class="background_color">
@@ -47,6 +34,19 @@
 			</select>
 
 		</div>
+          
+        <div class="col-xs-3">
+
+			<select onchange="selectinfo()" name="gradeid" id="gradeid" class="blackselect">
+				<option value="">年级</option>
+              	<option value="23">初一</option>
+              	<option value="24">初二</option>
+              	<option value="25">初三</option>
+			
+			</select>
+		</div>
+          
+          
 		<div class="col-xs-3">
 
 			<select onchange="selectinfo()" name="class" id="class" class="blackselect">
@@ -66,14 +66,6 @@
 				</select>
 			</div>
 
-			<div class="col-xs-3">
-				<select name="operation" id="operation" class="blackselect">
-					<option value ="volvo">操作</option>
-					<option value ="volvo">时间</option>
-					<option value ="saab">标题</option>
-					<option value="opel">年级</option>
-				</select>
-			</div>
 		</div>
 		<div class="row">
 			<div id="contentdiv" class="col-xs-12" style="height: 600px;overflow-y: auto;">
@@ -96,18 +88,27 @@
 
 </body>
 
-<script>
+<script  language="javascript">
 	$(function(){
 		var nowpage=1;
 		var pagelength=$('#pagelength').val();
 		var userid=$('#userid').val();
-		managetestdata(userid,nowpage,pagelength);
+		var subject=$("#subject").val();
+		var classinfo=$("#classinfo").val();
+		var group=$("#group").val();
+		var gradeid=$("#gradeid").val();
+		
+		managetestdata(userid,nowpage,pagelength,subject,classinfo,group,gradeid);
 	});
 	function nextpage(){
 		var nowpage=$('#nowpage').text();
 		var maxnum=$('#pagenum').text();
 		var userid=$('#userid').val();
 		var pagelength=$('#pagelength').val();
+		var subject=$("#subject").val();
+		var classinfo=$("#classinfo").val();
+		var group=$("#group").val();
+		var gradeid=$("#gradeid").val();
 
 		nowpage=nowpage*1+1;
 		if(nowpage>maxnum)
@@ -121,16 +122,16 @@
 
 		$("tr[name='testlisttr']").remove();
 		$('#nowpage').text(nowpage);
-		managetestdata(userid,nowpage,pagelength);
+		managetestdata(userid,nowpage,pagelength,subject,classinfo,group,gradeid);
 		selectele();
 
 
 	}
-	function managetestdata(userid,nowpage,pagelength,subject='',classinfo='',group='')
+	function managetestdata(userid,nowpage,pagelength,subject='',classinfo='',group='',gradeid='')
 	{
 		$.ajax({
 			url:"{:U('phptestmsg0201')}",
-			data:{userid:userid,nowpage:nowpage,pagelength:pagelength,subject:subject,classinfo:classinfo,group:group},
+			data:{userid:userid,nowpage:nowpage,pagelength:pagelength,subject:subject,classinfo:classinfo,group:group,gradeid:gradeid},
 			datatype:'json',
 			type:'post',
 			success:function(re){
@@ -148,7 +149,7 @@
 				for (var i = 0; i < mylength; i++) {
 					j=i+1;
 					testid=testlist[i]['testid'];
-					papername=testlist[i]['num']+'. '+testlist[i]['paper_name']+'（'+testlist[i]['person_sum']+'/'+testlist[i]['classnum']+'）';
+					papername=j+'. '+testlist[i]['paper_name']+'（'+testlist[i]['person_sum']+'/'+testlist[i]['classnum']+'）';
 					var ahtml='/index.php/Home/Headteacher/testmsg0202/testid/'+testid+'/classid/'+classid+'/paper_name/'+testlist[i]['paper_name']+'/userid/'+$('#userid').val()+'/realname/'+$('#realname').val()+'/username/'+$('#username').val()+'.html';
 					addhtmlmsg=addhtmlmsg+'<li><div style="padding-left: 20px;padding-top: 4px;width: 330px;overflow-x:scroll;white-space: nowrap;"><a style="color: #000000;" href="'+ahtml+'">'+papername+'</a><a style="margin-left: 20px;color: #000000;">'+testlist[i]['time']+'</a><br><a style="margin-left: 15px;color: #000000;">Ave：'+testlist[i]['wrong_ratio']+'&nbsp;&nbsp;&nbsp;&nbsp;G1：'+testlist[i]['g1_wrong_ratio']+'&nbsp;&nbsp;&nbsp;&nbsp;G2：'+testlist[i]['g2_wrong_ratio']+'&nbsp;&nbsp;&nbsp;&nbsp;G3：'+testlist[i]['g3_wrong_ratio']+'</a></div></li><hr style="margin-top: 14px; margin-bottom: 10px;">';
 					$('#list1').html(beginhtml + addhtmlmsg);
@@ -162,11 +163,14 @@
 		var subject=$("#subject").val();
 		var classinfo=$("#class").val();
 		var group=$("#group").val();
+		var gradeid=$("#gradeid").val();
 		var nowpage=1;
 		var pagelength=$('#pagelength').val();
 		var userid=$('#userid').val();
 		$('#list1').html('');
-		managetestdata(userid,nowpage,pagelength,subject,classinfo,group);
+		$('#nowpage').text(nowpage);
+
+		managetestdata(userid,nowpage,pagelength,subject,classinfo,group,gradeid);
     }
 </script>
 </html>

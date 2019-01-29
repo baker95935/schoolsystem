@@ -31,7 +31,7 @@
 </head>
 <body class="background_color">
 
-<form class="avatar-form" action="{:U('managestu_addkey0404')}" enctype="multipart/form-data" method="post">
+<form class="avatar-form" action="{:U('managestu_addkey0404')}" enctype="multipart/form-data" method="get">
     <input name="checktestid" type="hidden">
     <input name="checktestkind" type="hidden">
     <input name="checktestmsg" type="hidden">
@@ -197,7 +197,8 @@
 				for (var i = 0; i < mylength; i++) {
 					j=i+1;
 					testid=testlist[i]['testid'];
-					papername=testlist[i]['num']+'. '+testlist[i]['paper_name']+'（'+testlist[i]['person_sum']+'/'+testlist[i]['classnum']+'）';
+        
+					papername=testlist[i]['num']+'. '+testlist[i]['paper_name']+'（'+testlist[i]['paper_ratio']+'）';
 					var ahtml='/index.php/Home/HeadTeacher/managepaperdetail0202/testid/'+testid+'/classid/'+classid+'.html';
 					//addhtmlmsg=addhtmlmsg+'<li><div style="padding-left: 20px;padding-top: 4px;width: 330px;overflow-x:scroll;white-space: nowrap;"><a style="color: #000000;" href="'+ahtml+'">'+papername+'</a><br><a style="margin-left: 20px;color: #000000;">'+testlist[i]['publish_time']+'</a><a style="margin-left: 15px;color: #000000;">Edit：'+testlist[i]['lastreadtime']+'</a></div></li><hr style="margin-top: 14px; margin-bottom: 10px;">';
 					addhtmlmsg=addhtmlmsg+'<li><div style="padding-left: 20px;padding-top: 4px;width: 330px;overflow-x:scroll;white-space: nowrap;"><input  style="font-size: 30px;zoom:130%;margin-top:6px;" onclick="testchicksub()" name="check_test" value="'+testlist[i]['testid']+'"  type="checkbox"> '+j+'.&nbsp;&nbsp;&nbsp;'+testlist[i]['paper_name']+'&nbsp;&nbsp;&nbsp;&nbsp;'+testlist[i]['publish_time']+'&nbsp;&nbsp;&nbsp;&nbsp;'+testlist[i]['paper_ratio']+'&nbsp;&nbsp;&nbsp;&nbsp;'+testlist[i]['w_ratio']+'<hr><span style="margin-left: 16px;">知识点：'+testlist[i]['keynotename']+'</span></div><hr color="#1b6d85"></li>';

@@ -10,7 +10,8 @@ class IndexController extends Controller
     {
 
         //$model->select();
-
+		$flag=$_GET['flag']?$_GET['flag']:1;
+  
         if(IS_POST)
             {
                 $username=$_POST['username'];
@@ -42,6 +43,12 @@ class IndexController extends Controller
 
                 $username=$_GET['username'];
                 $pwd=$_GET['pwd'];
+            	if($flag==1) {
+            		$username=cookie('username');
+         			$pwd=cookie('pwd');
+            	}
+       
+            	
                 $model=M('user_data');
                 $data=$model->where(array('username'=>$username,'pwd'=>$pwd,'kind'=>'1'))->find();
                 $id=$data[id];
