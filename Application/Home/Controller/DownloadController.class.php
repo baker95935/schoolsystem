@@ -21,28 +21,45 @@ class DownloadController extends Controller
      
      $model=M('mytest');
      
-     //未完成习题数和总数
-	 $undownload=$model->where('download=1 and userid='.$userid)->count();
-	 $downloadcont=$model->where('download=2 and userid='.$userid)->count();
-	 $mytesttotalInfo="(".$undownload."|".$downloadcont.")";
- 
-	 //个人班级错题
-	 $stu=M('stumytest');
-	 $stuun=$stu->where('download=1 and userid='.$userid)->count();
-	 $studo=$stu->where('download=2 and userid='.$userid)->count();
-	 $stutotalInfo="(".$stuun."|".$studo.")";
+   	if(!empty($userid)) {
+       
+     
+	     //未完成习题数和总数
+		 $undownload=$model->where('download=1 and userid='.$userid)->count();
+		 $downloadcont=$model->where('download=2 and userid='.$userid)->count();
+		 $mytesttotalInfo="(".$undownload."|".$downloadcont.")";
 	 
-	 //知识点错题
-	 $stumy=M('key_stumytest');
-	 $stumyun=$stumy->where('download=1 and userid='.$userid)->count();
-	 $stumydo=$stumy->where('download=2 and userid='.$userid)->count();
-	 $stumytotalInfo="(".$stumyun."|".$stumydo.")";
-	 
+		 //个人班级错题
+		 $stu=M('stumytest');
+		 $stuun=$stu->where('download=1 and userid='.$userid.' and testkind=0')->count();
+		 $studo=$stu->where('download=2 and userid='.$userid.' and testkind=0')->count();
+		 $stutotalInfo="(".$stuun."|".$studo.")";
+		 
+		 //知识点习题
+		 $stumy=M('key_stumytest');
+		 $stumyun=$stumy->where('download=1 and userid='.$userid.' and kind=0')->count();
+		 $stumydo=$stumy->where('download=2 and userid='.$userid.' and kind=0')->count();
+		 $stumytotalInfo="(".$stumyun."|".$stumydo.")";
+		 
+		 //知识点错题
+		 $stumy=M('key_stumytest');
+		 $unmistakes=$stumy->where('download=1 and userid='.$userid.' and kind=1')->count();
+		 $mistakesdo=$stumy->where('download=2 and userid='.$userid.' and kind=1')->count();
+		 $mistakestotalInfo="(".$unmistakes."|".$mistakesdo.")";
+		 
+		 //个人知识点错题
+		 $stu=M('stumytest');
+		 $peryun=$stu->where('download=1 and userid='.$userid.' and testkind=1')->count();
+		 $perydo=$stu->where('download=2 and userid='.$userid.' and testkind=1')->count();
+		 $pertotalInfo="(".$peryun."|".$perydo.")";
+   	 }
      $this->assign('userid',$userid);
      $this->assign('realname',$realname);
      $this->assign('mytesttotalInfo',$mytesttotalInfo);
      $this->assign('stutotalInfo',$stutotalInfo);
      $this->assign('stumytotalInfo',$stumytotalInfo);
+     $this->assign('mistakestotalInfo',$mistakestotalInfo);
+     $this->assign('pertotalInfo',$pertotalInfo);
      $this->display();
    }
   
@@ -58,6 +75,10 @@ class DownloadController extends Controller
         
       $beginnum=($nowpage-1)*$pagelength+1;
       $beginpagenum=$beginnum-1;
+      
+      if(empty($userid)) {
+      	echo 0;exit;
+      }
       
       //班级原始错题
       if($kind==1) {
@@ -116,6 +137,7 @@ class DownloadController extends Controller
       	
       	$dataarr=array();
 	    $dataarr['userid']=$userid;
+	    $dataarr['testkind']=0;
 	    !empty($download)  && $dataarr['download']=$download;
 	    !empty($newsubjectid) && $dataarr['subjectid']=$newsubjectid;
 		$count=$stu->where($dataarr)->count();
@@ -133,6 +155,7 @@ class DownloadController extends Controller
 	      
 	    $dataarr=array();
 	    $dataarr['userid']=$userid;
+	    $dataarr['kind']=0;
 	    !empty($download)  && $dataarr['download']=$download;
 	
 	    $count=$model->where($dataarr)->count();
@@ -171,6 +194,71 @@ class DownloadController extends Controller
 	      
 	    $data=array_slice($data, 0);
 	      
+      }
+      
+    //知识点错题
+      if($kind==4) {
+	  	$model=M('key_stumytest');
+	    $note=M('onekeynote');
+	      
+	    $dataarr=array();
+	    $dataarr['userid']=$userid;
+	    $dataarr['kind']=1;
+	    !empty($download)  && $dataarr['download']=$download;
+	
+	    $count=$model->where($dataarr)->count();
+	      
+	    if(!empty($newsubjectid) || !empty($grade)) {
+	    	$list=$model->where($dataarr)->order('creatime desc')->select();
+	    	foreach($list as $k=>&$v) {
+		    	$info=$note->find($v['keynote_id']);
+				if(!empty($grade) && $info['gradeid']!=$grade) {
+					unset($list[$k]);
+					continue;
+				}
+				if(!empty($newsubjectid) && $info['subjectid']!=$newsubjectid) {
+				unset($list[$k]);
+				continue;
+				}
+	    	}
+	    	$count=sizeof($list);
+	    }
+	    
+	    $data=$model->where($dataarr)->order('creatime desc')->limit($beginpagenum.','.$pagelength)->select();
+	 
+	    foreach($data as $k=>&$v) {
+	    	$info=$note->find($v['keynote_id']);
+	    	if(!empty($grade) && $info['gradeid']!=$grade) {
+	    		unset($data[$k]);
+	    		continue;
+	    	}
+	    	if(!empty($newsubjectid) && $info['subjectid']!=$newsubjectid) {
+	    		unset($data[$k]);
+	    		continue;
+	    	}
+	    $v['num']=$beginnum;
+	    $beginnum=$beginnum+1;
+	    }
+	      
+	    $data=array_slice($data, 0);
+	      
+      }
+      
+      //个人知识点错题
+      if($kind==5) { 
+      	$stu=M('stumytest');
+      	
+      	$dataarr=array();
+	    $dataarr['userid']=$userid;
+	    $dataarr['testkind']=1;
+	    !empty($download)  && $dataarr['download']=$download;
+	    !empty($newsubjectid) && $dataarr['subjectid']=$newsubjectid;
+		$count=$stu->where($dataarr)->count();
+		$data=$stu->where($dataarr)->order('creatime desc')->limit($beginpagenum.','.$pagelength)->select();
+		foreach($data as $k=>&$v) {
+		 	$v['num']=$beginnum;
+	      	$beginnum=$beginnum+1;
+	    }
       }
   	 
       $data['length']=sizeof($data);

@@ -38,8 +38,8 @@
 					<option value="1">班级原始错题{$mytesttotalInfo}</option> 
 					<option value="2">个人班级错题{$stutotalInfo}</option>
 					<option value="3">知识点习题{$stumytotalInfo}</option>
-                  	<option value="4">知识点错题</option>
-           			<option value="5">个人知识点错题</option>
+                  	<option value="4">知识点错题{$mistakestotalInfo}</option>
+           			<option value="5">个人知识点错题{$pertotalInfo}</option>
           </select>
 		</div>
          <div class="col-xs-3">
@@ -72,7 +72,7 @@
 			<ol id="list1" style="list-style-type:none;font-size: 15px;margin-left:30px;margin-right:30px;padding-top: 10px;">
 			
              </ol>
-          <div id="downdiv1"  style="width: 100%;height: 40px; text-align: center;"><a onclick="prepage();">上一页</a>（<span id="nowpage">1</span>/<span id="pagenum">4</span>）<a onclick="nextpage();">下一页</a></div>
+          <div id="downdiv1"  style="width: 100%;height: 40px; text-align: center;"><a onclick="prepage();">上一页</a>（<span id="nowpage">1</span>/<span id="pagenum">0</span>）<a onclick="nextpage();">下一页</a></div>
 		
 			
          
@@ -100,7 +100,7 @@
 </div>
 	<input type="hidden" value="{$testarr}" id="testarrid">
 	<input type="text" value="0" id="status">
-	<input id="pagelength" type="hidden" value="2">
+	<input id="pagelength" type="hidden" value="10">
 	<input type="hidden" value="{$userid}" id="userid">
 <script>
 
