@@ -122,7 +122,8 @@ class DownloadController extends Controller
 	      		continue;
 	      	 
 	      	}
-	      	$v['paper_name']=$info['paper_name'];
+	      	$v['wrongsum']=substr_count($v['ctbtestid'],',')+1;
+	      	$v['paper_name']=$info['paper_name']."(".$v['wrongsum'].")";
 	      	$v['num']=$beginnum;
 	      	$beginnum=$beginnum+1;
 	      }

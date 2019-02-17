@@ -2135,6 +2135,7 @@ echo 1;
         $paper_name=$_POST['paper_name'];
         $testkind=$_POST['testkind'];
         $typequestion=$_POST['typequestion'];
+      	$subjectid=$_POST['subjectid'];
       
       //	$userid=6;
       //	$testidarr='3,1';
@@ -2191,9 +2192,9 @@ echo 1;
         $oldmidquestionarr=explode(',',$questionarr);
         $oldmidtypearr=explode(',',$typearr);
       
-      print_r($oldmidtypearr);
+      //print_r($oldmidtypearr);
       
- 		echo $typequestion.'<hr>';
+ 		//echo $typequestion.'<hr>';
       
       $k=0;
       
@@ -2269,6 +2270,7 @@ echo 1;
         $array['typeidarr']=$typeidarr;
         $array['lastreadtime']=date('y-m-d h:i:s',time());
         $array['paper_name']=$paper_name;
+      	$array['subjectid']=$subjectid;
       
         //print_r($array);
       
@@ -2286,20 +2288,12 @@ echo 1;
         $paper_name=$_POST['paper_name'];
         $keynote_id=$_POST['keynote_id'];
         
-       // $paper_name='测试排序';
-        //$keynote_id='41';
-        //$userid=152;
-        //$questionsum=38;
-        //$questionid='1323,1324,1325,1322,1321,1318,1319,1320,1326,1327,1333,1334,1335,1332,1331,1328,1329,1330,1317,1316,1304,1305,1306,1303,1302,1298,1300,1301,1307,1308,1313,1314,1315,1312,1311,1309,1310,1299';
-		//$typeidarr='25,23,23,25,25,24,24,25,23,23,25,25,25,23,23,23,23,23,24,24,24,24,24,24,23,23,23,23,24,24,24,24,24,24,24,24,24,23';
-
           
         $questionidarr=explode(',',$questionid);  
         $typeidarr=explode(',',$typeidarr);
         $count=sizeof($questionidarr);    
         
       
-        
         for($i=0;$i<$count;$i++)
         {
           $newdata[$i]['testid']=$questionidarr[$i];
@@ -2309,8 +2303,6 @@ echo 1;
         $newdata=array_sort($newdata,'typeid',1);
         $newdata=array_values($newdata);
         
-        
-      //  print_r($newdata);
         
         $newquestionid='';
         $newtypeid='';
@@ -2669,7 +2661,9 @@ echo 1;
 
      // print_r($newtestdata);
        
-        
+       //更新下载状态
+       $data['download']=2;
+       M('stumytest')->where('id='.$testid)->save($data);
       
       persontestpdf($outkind,$paper_name,$testtime,$newtestdata);
 
@@ -2728,13 +2722,12 @@ echo 1;
       
         $testtime=$_GET['$testtime'];//试卷种类
       
-      	$testid=15;
-        $paper_name='答案测试';
-      	$outkind='I';
+      	//$testid=15;
+        //$paper_name='答案测试';
+      	//$outkind='I';
         $testtime='生成时间：'.date('y-m-d h:i:s',time());
         $data=persontest_to_standtest($testid,'stu');
       
-      //	print_r($data);
       
         persontest_to_answerpdf($data,$paper_name,$outkind);
     }
@@ -2756,7 +2749,18 @@ echo 1;
         {
         $newtestdata=key_persontest_to_standtest($testid);
         }
-       
+        
+        //更新下下载状态
+        if($testkind==0) {
+        	$data['download']=2;
+        	M('mytest')->where('id='.$testid)->save($data);
+        }
+         if($testkind==1) {
+        	$data['download']=2;
+        	M('key_stumytest')->where('id='.$testid)->save($data);
+        }
+        
+ 
         persontestpdf($outkind,$paper_name,$testtime,$newtestdata);
     }
   //phpmykeymanagepaperdetailpdf
@@ -2767,7 +2771,9 @@ echo 1;
         $outkind=$_GET['outkind'];
         $paper_name=$_GET['paper_name'];
         $testtime='生成时间：'.date('y-m-d h:i:s',time());
-      
+        //更新下载状态
+        $data['download']=2;
+        M('key_stumytest')->where('id='.$testid)->save($data);
       
         $newtestdata=mykey_persontest_to_standtest($testid);
         persontestpdf($outkind,$paper_name,$testtime,$newtestdata);
@@ -2786,9 +2792,42 @@ echo 1;
         //$testid=2;
       	//$outkind='D';
       	//$paper_name='wewds';
-     
         $newtestdata=mykey_persontest_to_standtest($testid);
       	persontest_to_answerpdf($newtestdata,$paper_name,$outkind);
+      
+    }
+  
+  
+//个人原始错题试卷生成答案pdf
+    public function php_managepaperanswerpdf()
+    {
+
+        $testid=$_GET['testid'];
+        $outkind=$_GET['outkind'];
+        $testkind=$_GET['testkind'];
+        $paper_name=$_GET['paper_name'].'答案';
+        $testtime=$_GET['$testtime'];//试卷种类
+        $testtime='生成时间：'.date('y-m-d h:i:s',time());
+      
+        //$testid=2;
+      	//$outkind='I';
+      	//$paper_name='wewds';
+     
+        //$newtestdata=persontest_to_standtest($testid);
+        
+        if($testkind==0)
+        {
+           $newtestdata=persontest_to_standtest($testid,'tec');
+        }
+        else
+        {
+        $newtestdata=key_persontest_to_standtest($testid);
+        }
+      
+      	//print_r($newtestdata);
+      	persontest_to_answerpdf($newtestdata,$paper_name,$outkind);
+      
+     // $this->redirect('Student/home');
       
     }
     
