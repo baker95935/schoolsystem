@@ -22,8 +22,8 @@
 	<div>
 		<div class="row title_class">
 			<div class="col-xs-4"><a style="color:white;padding-left:40px;">好助教习题下载页面</a></div>
-			<div class="col-xs-3  title_font_middle " style="text-align:right;" ><input id="username" type="text" placeholder="用户名" autocomplete="off"  style="font-size:13px;border:0px;border-radius:4px;text-align:center;color:#000000;"></div>
-          	<div class="col-xs-3  title_font_middle " style="text-align:left;"  ><input id="pwd" type="password" placeholder="密码" autocomplete="off"  style="font-size:13px;border:0px;border-radius:4px;text-align:center;color:#000000;"></div>
+			<div class="col-xs-3  title_font_middle " style="text-align:right;" ><if condition="empty($realname)"><input id="username" type="text" placeholder="用户名" autocomplete="off"  style="font-size:13px;border:0px;border-radius:4px;text-align:center;color:#000000;"> </if></div>
+          	<div class="col-xs-3  title_font_middle " style="text-align:left;"  ><if condition="empty($realname)"><input id="pwd" type="password" placeholder="密码" autocomplete="off"  style="font-size:13px;border:0px;border-radius:4px;text-align:center;color:#000000;"> </if></div>
 			<div class="col-xs-2">
 			<a id='button1' href="javascript:void(0)" style="color:white;" onclick="loadsub()">
 			<if condition="!empty($realname)"> {$realname} <else /> 登录 </if>
