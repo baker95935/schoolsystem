@@ -78,6 +78,8 @@ class HeadTeacherController extends Controller
            $this->assign('data1',$arraytest);
         }
         $this->assign('subjectid',$subjectid);
+        $defaulttime=date('Y-m-d');
+        $this->assign('defaulttime',$defaulttime);
       $this->display();
     }
 
@@ -109,8 +111,6 @@ class HeadTeacherController extends Controller
        $this->assign('checktestkind',$checktestkind);
        $this->assign('checktestid',$checktestid);
      
-     
-     
       $model_mytest=M('mytest');
       $model_test_public_data=M('test_public_data');
       $model_img_cuted_data=M('img_cuted_data');
@@ -121,20 +121,34 @@ class HeadTeacherController extends Controller
      
       $test_arr='';
      
+     //print_r($checktestid_arr);
+     
+     //echo '<hr>';
+     
+     
       for($i=0;$i<$count;$i++)
       {
-         $test_data=$model_mytest->where('testid='.$checktestid_arr[$i])->find();
+         $test_data=$model_mytest->where('testid='.$checktestid_arr[$i].' and '.'userid='.$stu_id)->find();
          $test_arr=$test_arr.','.$test_data['ctbtestid'];
       }
       
+     //print_r($test_arr);
+     
      $testidarr=ltrim($test_arr, ",");
      $testidarr=explode(',',$testidarr);   
      $count=sizeof($testidarr);
+     
+     
+     //print_r($testidarr);
+     //return;
 
 
         for($i=0;$i<$count;$i++)
         {
             $test_public_data=$model_test_public_data->where('id='.$testidarr[$i])->find();
+          
+          	//print_r($test_public_data);
+          
             $srcid=$test_public_data[srcid];
             $img_cuted_data=$model_img_cuted_data->where('id='.$srcid)->find();
             $src=$img_cuted_data[src];
@@ -166,6 +180,8 @@ class HeadTeacherController extends Controller
             $test[$i][pic2]=usersrc($pic2src);
             $test[$i][pic3]=usersrc($pic3src);
             $test[$i][pic4]=usersrc($pic4src);
+          
+          	//print_r($test);
 
             $sum=0;
             if($pic1src!='')
@@ -198,6 +214,8 @@ class HeadTeacherController extends Controller
             }
         }
 
+     
+     
 
         $mycount=count($test);
         $tsernum=0;
@@ -206,6 +224,8 @@ class HeadTeacherController extends Controller
         $no2=1;
 
 
+     
+     
         for($j=0;$j<$mycount;$j++)
         {
 
@@ -337,6 +357,8 @@ class HeadTeacherController extends Controller
             }
         }
      
+     	//print_r($newtest);
+     
      
        	$count=sizeof($newtest);
      	$m=0;
@@ -386,6 +408,7 @@ class HeadTeacherController extends Controller
 
         }
      
+     	//print_r($choosenewtest);
      
 
         $testarr=$data['ctbtestid'];
@@ -393,12 +416,6 @@ class HeadTeacherController extends Controller
         $this->assign('testarr',$testarr);
         $this->assign('testdata',$choosenewtest);
         $this->assign('testid',$testid);
-     
-
-     
-   
-    
-     
         $this->display();
    }
    
@@ -409,6 +426,7 @@ class HeadTeacherController extends Controller
      //习题类型id
       $checktestkind=$_POST['checktestkind'];
      //习题类型信息
+   	  $stu_id=$_POST['stu_id'];
  
   
       $model_mytest=M('mytest');
@@ -423,13 +441,15 @@ class HeadTeacherController extends Controller
      
       for($i=0;$i<$count;$i++)
       {
-         $test_data=$model_mytest->where('testid='.$checktestid_arr[$i])->find();
+         $test_data=$model_mytest->where('testid='.$checktestid_arr[$i].' and userid='.$stu_id)->find();
          $test_arr=$test_arr.','.$test_data['ctbtestid'];
       }
       
      $testidarr=ltrim($test_arr, ",");
      $testidarr=explode(',',$testidarr);   
      $count=sizeof($testidarr);
+   
+   
 
 
         for($i=0;$i<$count;$i++)
@@ -872,6 +892,12 @@ class HeadTeacherController extends Controller
        // echo $chapter;
 
         $publishtime=$_POST[publishtime];
+        
+        if(strpos($publishtime,':')) {
+        	$publishtime=substr($publishtime,13);
+        	
+        }
+   
         $papername=$_POST[papername];
         $subjectid=$_POST[subjectid];
 
@@ -3074,7 +3100,10 @@ class HeadTeacherController extends Controller
 
     public function dataphpsql0202()
     {
-       $userid=$_POST['userid'];
+      
+      	
+      
+       	$userid=$_POST['userid'];
         $nowpage=$_POST['nowpage'];
         $pagelength=$_POST['pagelength'];
 
@@ -3082,7 +3111,11 @@ class HeadTeacherController extends Controller
         $classid=$_POST['classid'];
         $groupid=$_POST['groupid'];
         $gradeid=$_POST['gradeid'];
-        
+      
+      	
+       // $userid=4;
+       //	$nowpage=1;
+       //	$pagelength=10;
 
 
         $beginnum=($nowpage-1)*$pagelength+1;
@@ -3102,9 +3135,11 @@ class HeadTeacherController extends Controller
 		//通过试卷数据库查询
 
         $count=$model->where($array)->count();
-       $data = $model->where($array)->order('settime desc')->limit($beginpagenum.','.$pagelength)->select();
+        $data = $model->where($array)->order('settime desc')->limit($beginpagenum.','.$pagelength)->select();
       
      // $data = $model->where($array)->order('settime desc')->select();
+      
+      //print_r($data);
 
         for($i=0;$i<sizeof($data);$i++)
         {
@@ -3134,6 +3169,8 @@ class HeadTeacherController extends Controller
             	 $count=$count-1;
             	 continue;
             }
+          
+         // print_r($classidarr);
             
             for($j=0;$j<sizeof($classidarr);$j++)
             {
@@ -3168,7 +3205,7 @@ class HeadTeacherController extends Controller
         $data['count']=$count;
         $data['pagenum']=ceil($count/$pagelength);
 
-       //print_r($data);
+      // print_r($data);
         echo json_encode($data);
     }
 
