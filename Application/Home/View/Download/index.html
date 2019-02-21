@@ -109,7 +109,13 @@
 			var pagelength=$('#pagelength').val();
 			var userid=$('#userid').val();
 			var kind=$('#testkind').val();
-			testdata(userid,nowpage,pagelength,kind);      
+			
+			var finish=$('#finishstatus').val();  
+			var subjectid=$('#subjectid').val();  
+			var grade=$("#grade").val();
+			var download=$("#download").val();
+			
+			testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download);     
 	})
 
 	function nextpage()
@@ -119,6 +125,11 @@
 		var userid=$('#userid').val();
 		var pagelength=$('#pagelength').val();
 		var kind=$('#testkind').val();
+		
+		var finish=$('#finishstatus').val();  
+		var subjectid=$('#subjectid').val();  
+		var grade=$("#grade").val();
+		var download=$("#download").val();
 		
 		nowpage=nowpage*1+1;
 		if(nowpage>maxnum)
@@ -131,7 +142,7 @@
 		}
 		 
 		$('#list1').html('');
-		testdata(userid,nowpage,pagelength,kind);
+		testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download);
 	}
 	
 	function prepage()
@@ -141,6 +152,11 @@
 		var userid=$('#userid').val();
 		var pagelength=$('#pagelength').val();
 		var kind=$('#testkind').val();
+		
+		var finish=$('#finishstatus').val();  
+		var subjectid=$('#subjectid').val();  
+		var grade=$("#grade").val();
+		var download=$("#download").val();
 		
 		nowpage=nowpage*1-1;
 		if(nowpage>maxnum)
@@ -153,7 +169,7 @@
 		}
  
 		$('#list1').html('');
-		testdata(userid,nowpage,pagelength,kind);
+		testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download);
 	}
 
 
@@ -284,7 +300,7 @@
 		testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download);
 	}
 	
-	function testdata(userid,nowpage,pagelength,kind,finish='',subjectid='',grade='',download='')
+	function testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download)
 	{
  		var ckind=kind;
 		$.ajax({
