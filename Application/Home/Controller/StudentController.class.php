@@ -499,7 +499,9 @@ echo 1;
         $this->assign('titlekind','知识点');
       }
 
-
+		$papermod=M('paper_msg_data');
+		$paperinfo=$papermod->find($testid);
+		$this->assign('paperinfo',$paperinfo);
 
         $this->assign('testid',$testid);
         $this->assign('subjectid',$subjectid);
