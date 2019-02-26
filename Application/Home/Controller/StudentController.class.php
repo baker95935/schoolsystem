@@ -2751,7 +2751,7 @@ echo 1;
         {
         $newtestdata=key_persontest_to_standtest($testid);
         }
-        
+ 
         //更新下下载状态
         if($testkind==0) {
         	$data['download']=2;

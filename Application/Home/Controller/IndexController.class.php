@@ -76,6 +76,7 @@ class IndexController extends Controller
          $cookiepwd=cookie('pwd');
          $this->assign('cookieusername',$cookieusername);
           $this->assign('cookiepwd',$cookiepwd);
+          
         $this->display();
 
     }

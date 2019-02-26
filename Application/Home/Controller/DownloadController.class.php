@@ -25,8 +25,8 @@ class DownloadController extends Controller
        
      
 	     //未完成习题数和总数
-		 $undownload=$model->where('download=1 and userid='.$userid)->count();
-		 $downloadcont=$model->where('download=2 and userid='.$userid)->count();
+		 $undownload=$model->where('download=1 and userid='.$userid.' and kind=1')->count();
+		 $downloadcont=$model->where('download=2 and userid='.$userid.' and kind=1')->count();
 		 $mytesttotalInfo="(".$undownload."|".$downloadcont.")";
 	 
 		 //个人班级错题
@@ -87,6 +87,7 @@ class DownloadController extends Controller
 	      
 	      $dataarr=array();
 	      $dataarr['userid']=$userid;
+	      $dataarr['kind']=1;
 	      !empty($download)  && $dataarr['download']=$download;
 	
 	      $count=$model->where($dataarr)->count();
