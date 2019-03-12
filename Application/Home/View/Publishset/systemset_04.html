@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html class="login-bg">
+<head>
+    <title>CTB-Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+    <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/systemset.css"/>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/buildpage.css"/>
+    <script src="__PUBLIC__/js/testtitle.js"></script>
+    <script src="__PUBLIC__/js/sys_public.js"></script>
+    <script src="__PUBLIC__/js/public.js"></script>
+<style type="text/css">
+  .input_css{
+  	border-bottom: 1px solid #3c3c3c;
+	border-top: 0px solid #3c3c3c;
+	border-left: 0px solid #3c3c3c;
+	border-right: 0px solid #3c3c3c;
+    text-align:center;
+    width:60px;
+  
+  }
+</style>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body >
+<div class="contain">
+    <div class="row" style="height: 45px;"></div>
+    <div class="row">
+        <div class="col-xs-4" style="padding-left:45px;">
+            <b> <span id="bigtitle" style="font-size: 18px;">出版社系统设置</span></b>
+        </div>
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4">
+            <div class="admin_bt_div">
+                <table>
+                    <tr>
+                        <td>
+                            <div  class="admin_div_unchicked">
+                                <a href="{:U('systemset_01')}">出版公司</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="admin_div_unchicked">
+                                <a href="{:U('systemset_02')}">习题册</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div   class="admin_div_unchicked">
+                                <a  href="{:U('systemset_03')}">知识点</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="color: #c0b9c8"  class="admin_div_unchicked">
+                                图片内容
+                            </div>
+                        </td>
+                        <td>
+                            <div class="admin_div_unchicked admin_list">
+                                <a href="{:U('adminindex/index')}">返回</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <div class="row" style="height: 43px;"></div>
+    <div class="row framelist" style="min-height: 26px;border: 1px solid #eaf0f2;text-align: right;font-size: 12px;padding-top: 4px;padding-bottom: 4px;padding-right: 28px;">
+       <input id="chapter_part1" name="chapter_part" type="radio" value="part"  checked="checked"><span>试卷（2/6）</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><input id="chapter_part2" type="radio"  name="chapter_part"  value="chapter"  ><span>知识点（3/20）</span>
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </div>
+    <div class="row" style="height: 15px;"></div>
+    <div class="row">
+        <div class="col-xs-6" style="height: 340px;border-right:1px solid #C3C3C3;">
+            <div style="font-size: 16px;margin-left: 8%;"><b style="float: left;">习题 上传预览</b><input id="file_exercise" style="margin-left: 300px;" type="file" multiple="multiple" name="img[]" onchange="previewFiles()"></div>
+            <hr style="margin-left: 6%;">
+            <div class="row" style="background-color: #C3C3C3;height: 260px; overflow-x: scroll;white-space: nowrap;padding-left: 4px;padding-right: 4px;" id="preview_div">
+            </div>
+        </div>
+
+        <div class="col-xs-6" style="height: 340px;border-right:1px solid #C3C3C3;">
+            <div style="font-size: 16px;margin-left: 8%;"><b style="float: left;">答案  上传预览</b><input id="file_answer" style="margin-left: 350px;" type="file" multiple="multiple" name="img_answer[]" onchange="previewFilesAnswer()"></div>
+            <hr style="margin-left: 6%;">
+            <div class="row" style="background-color: #C3C3C3;border-left:1px solid #FFFFFF;height: 260px; overflow-x: scroll;white-space: nowrap;padding-left: 4px;padding-right: 4px;" id="preview_answer_div">
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row"style="border-top:1px solid #C3C3C3;padding-top: 15px;">
+        <div class="col-xs-6" style="height: 330px;border-right:1px solid #C3C3C3;padding-top: 20px;">
+            <div class="row sysset_blue" style="clear: left;"><span  id="chapter_part_msg" style="font-size: 16px;margin-left: 8%;"><b>1.试卷选择列表/知识点选择</b></span><input  type="text" placeholder="出版社" class="input_css" style="margin-left:200px;"> <input   type="text" placeholder="习题册"  class="input_css"> <input   type="text" placeholder="知识点"  class="input_css"></div>
+            <hr style="margin-left: 6%;">
+            <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
+               
+         <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
+            <tr>
+                <th>序号</th><th>习题册</th><th>出版社</th><th>试卷数</th><th>时间</th><th>过程</th>
+            </tr>
+            <tr class="change">
+                <td >1<input type="hidden" value="{$testdata.id}"></td><td >习题册</td><td>出版社</td><td>试卷数</td><td>2019-01-12 12:20</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">2/12</a></td>
+            </tr>
+        </table>
+              
+              
+                <input id="part_begin" type="hidden" value="1">
+                <div id="part_page_a" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="pre_sub('part')" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="part_begin_page">1</span>/<span id="part_page_sum">4</span></a><a style="margin-left: 4px;" onclick="next_sub('part')" href="javascript:void(0)">下一页</a></div></div>
+
+            <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
+            <tr>
+                <th>序号</th><th>知识点</th><th>习题册</th><th>出版社</th><th>时间</th><th>过程</th>
+            </tr>
+            <tr class="change">
+                <td >1<input type="hidden" value="{$testdata.id}"></td><td >知识点</td><td>习题册</td><td>出版社</td><td>2019-01-12 12:20</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">2/12</a></td>
+            </tr>
+        </table>
+                <input id="chaptermsg_begin" type="hidden" value="1">
+                <div id="chaptermsg_page_a" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="pre_sub('chaptermsg')" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="chaptermsg_begin_page">1</span>/<span id="chaptermsg_page_sum">4</span></a><a style="margin-left: 4px;" onclick="next_sub('chaptermsg')" href="javascript:void(0)">下一页</a></div></div>
+
+
+            </div>
+        </div>
+
+        <div class="col-xs-6" style="height: 330px;border-right:1px solid #C3C3C3;padding-top: 20px;">
+            <div class="row" style="font-size: 16px;margin-left: 8%;">
+                <div class="col-xs-5"><b>操作：上传知识点原始试卷</b></div>
+                <div class="col-xs-4">
+                    <div name="aprogressdiv">
+                        <progress id="ap" value="0" style="width: 50%;float:left;"></progress><span id="aprogress" style="margin-left: 2px;"></span>
+                    </div>
+                </div>
+                <div class="col-xs-3"><input id="input_bt" type="button" value="上传" style="margin-left:20px;background-color: transparent;border: 0px;color: red;font-size: 14px;"></div>
+            </div>
+            <hr style="margin-left: 6%;">
+            <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
+                <div class="col-xs-3" style="height: 250px;">
+                      <div  class="row" >
+                        <input type="text" value="" placeholder="知识点"  style="font-size:13px;width: 100px;text-align: center;">
+                    </div>
+                    <div  class="row"  style="margin-top: 10px;" >
+                        <input type="text" value="" placeholder="试卷名称"  style="font-size:13px;width: 100px;text-align: center;">
+                    </div>
+                    <div id="test_kind_select" class="row"  style="margin-top: 10px;" >
+                        <input  type="text" value="" placeholder="出版社"  style="font-size:13px;width: 100px;text-align: center;">
+                    </div>
+                    <div class="row"  style="margin-top: 10px;">
+                        <input  type="text" value="" placeholder="习题册"  style="font-size:13px;width: 100px;text-align: center;">
+                    </div>
+                    <div class="row"  style="margin-top: 10px;">
+                      <span   >顺序：</span>
+                               <select id="levelmsg">
+                                <option value ="1000">0</option>
+                                <option value ="1">1</option>
+                                <option value ="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                    </div>
+                  
+                    <div class="row"  style="margin-top: 10px;">
+                      <span   >操作：</span>
+                               <select id="levelmsg">
+                                <option value ="1000">信息和图片</option>
+                                <option value ="1">图片</option>
+                                <option value ="2">信息</option>
+                            </select>
+                    </div>
+                  
+                     <div class="row"  style="margin-top: 10px;">
+                    <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button"  value="添加/更新">
+                    </div>
+                  
+                 
+                </div>
+                <div id="keynote_div" class="col-xs-9" style="border-left:1px solid #000000;height: 250px; overflow-y: auto;">
+         <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
+            <tr>
+                <th>序号</th><th>试卷名称</th><th>时间</th><th>习题图片</th><th>答案图片</th><th>状态</th><th>操作</th>
+            </tr>
+            <tr class="change">
+                <td >1<input type="hidden" value="{$testdata.id}"></td><td >试卷名称</td><td>2019-01-12</td><td><a>12</a></td><td><a>10</a></td><td><a>完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td>
+            </tr>
+        </table>
+                  
+                   <input id="chaptermsg_begin" type="hidden" value="1">
+                <div id="chaptermsg_page_a" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="pre_sub('chaptermsg')" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="chaptermsg_begin_page">1</span>/<span id="chaptermsg_page_sum">4</span></a><a style="margin-left: 4px;" onclick="next_sub('chaptermsg')" href="javascript:void(0)">下一页</a></div></div>
+
+
+                  
+          <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
+            <tr>
+                <th>序号</th><th>试卷名称</th><th>习题图片</th><th>答案图片</th><th>过程</th><th>操作</th>
+            </tr>
+            <tr class="change">
+                <td >1<input type="hidden" value="{$testdata.id}"></td><td >试卷名称</td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td>
+            </tr>
+        </table>
+                  
+                   <input id="chaptermsg_begin" type="hidden" value="1">
+                <div id="chaptermsg_page_a" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="pre_sub('chaptermsg')" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="chaptermsg_begin_page">1</span>/<span id="chaptermsg_page_sum">4</span></a><a style="margin-left: 4px;" onclick="next_sub('chaptermsg')" href="javascript:void(0)">下一页</a></div></div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <input type="hidden" id="edit_status" value="add">
+
+</div>
+
+</body>
+<script type="text/javascript">
+
+    function selectkeynote()
+    {
+        var subjectmsg_val=$('#subjectmsg_select').find("option:selected").val();
+        var grademsg_val=$('#grademsg_select').find("option:selected").val();
+        var keynote_input=$('#keynote_input').val();
+        // alert(subjectmsg_val+','+grademsg_val+','+keynote_input);
+        $.ajax({
+            url: "{:U('php_selectkeynote')}",
+            type: 'POST',
+            data: {subjectid:subjectmsg_val,gradeid:grademsg_val,keynote:keynote_input},
+            dataType: 'json',
+            success: function (re) {
+                var count=re['count'];
+                var ihtml='';
+                var i;
+                for(i=0;i<count;i++)
+                {
+                    ihtml=ihtml+'<label style="margin-right: 10px;"><input value="'+re[i]['id']+'" name="keynoteid" type="checkbox" ><span>'+re[i]['keynotemsg']+'</span></label>';
+                }
+                $('#keynote_div').html(ihtml);
+            }
+        });
+    }
+
+    $("#input_bt").click(function(){
+        var formData = new FormData();
+        for(var i=0; i<$('#file_exercise')[0].files.length;i++){
+            formData.append('file_exercise[]', $('#file_exercise')[0].files[i]);
+        }
+
+        for(var i=0; i<$('#file_answer')[0].files.length;i++){
+            formData.append('file_answer[]', $('#file_answer')[0].files[i]);
+        }
+
+
+        obj=document.getElementsByName("keynoteid");
+        check_val=[];
+
+        var mylength=$("input[name='keynoteid']:checked").length;
+
+        if(mylength!=0) {
+            for (k in obj) {
+                if (obj[k].checked)
+                    check_val.push(obj[k].value);
+            }
+        }
+
+        var paper_name=$('#datetime_input').val();
+        var test_kind_select=$("input[name='kind_select']:checked").val();
+        var keynote_id=check_val;
+        var subjectid=$('#subjectmsg_select').find("option:selected").val();
+        var schoolname=$('#schoolname_select').find("option:selected").val();
+        var keynote_input=$('#keynote_input').val();
+        var filesernum=createfilesernum('system');
+        var gradeid=$('#grademsg_select').find("option:selected").val();
+
+
+        if(checkDate(paper_name)==0)
+        {
+            alert('试卷名称必须是日期格式！！');
+            return;
+        }
+
+        if(subjectid==0)
+        {
+            alert('请选择科目！！');
+            return;
+        }
+
+        formData.append('paper_name', paper_name);
+        formData.append('test_kind', test_kind_select);
+        formData.append('keynote_id', keynote_id);
+        formData.append('subjectid', subjectid);
+        formData.append('schoolname', schoolname);
+        formData.append('keynote_input', keynote_input);
+        formData.append('filesernum', filesernum);
+        formData.append('gradeid', gradeid);
+
+//    alert(paper_name+'|'+test_kind_select+'|'+keynote_id+'|'+subjectid+'|'+schoolname+'|'+keynote_input+'|'+filesernum+'|'+gradeid);
+//    return;
+
+        $.ajax({
+            url: "{:U('Systemset/upload')}",
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: formData,
+            xhr: function(){ //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数
+                myXhr = $.ajaxSettings.xhr();
+                if(myXhr.upload){ //检查upload属性是否存在
+                    //绑定progress事件的回调函数
+                    myXhr.upload.addEventListener('progress',aprogressHandlingFunction, false);
+                }
+                return myXhr; //xhr对象返回给jQuery使用
+            },
+            success: function(d){
+                if(d==1) {
+                    $('#ap').val(0);
+                    $('#aprogress').html('');
+                    $('#preview_div').html('');
+                    $('#preview_answer_div').html('');
+                    alert('上传成功');
+                    //$('#preview').html('上传成功');
+                }
+            }
+        });
+
+    });
+
+    //上传进度回调函数：
+    function aprogressHandlingFunction(e) {
+        if (e.lengthComputable) {
+            $('#ap').attr({value : e.loaded, max : e.total}); //更新数据到进度条
+            var percent = e.loaded/e.total*100;
+            $('#aprogress').html(percent.toFixed(2) + "%");
+        }
+    }
+
+    function previewFiles() {
+        var preview = document.querySelector('#preview_div');
+        var files = document.querySelector('input[id=file_exercise]').files;
+
+        function readAndPreview(file) {
+
+            // Make sure `file.name` matches our extensions criteria
+            if (/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                var reader = new FileReader();
+
+                reader.addEventListener("load", function() {
+                    var image = new Image();
+                    image.title = file.name;
+                    image.src = this.result;
+                    //image.width='190';
+                    image.height='260';
+
+                    preview.appendChild(image);
+                }, false);
+
+                reader.readAsDataURL(file);
+            }
+
+        }
+
+        if (files) {
+            $('#preview_div').html(' ');
+            [].forEach.call(files, readAndPreview);
+        }
+
+    }
+
+    function previewFilesAnswer() {
+        var preview = document.querySelector('#preview_answer_div');
+        var files = document.querySelector('input[id=file_answer]').files;
+
+        function readAndPreview(file) {
+
+            // Make sure `file.name` matches our extensions criteria
+            if (/\.(jpe?g|png|gif)$/i.test(file.name)) {
+                var reader = new FileReader();
+
+                reader.addEventListener("load", function() {
+                    var image = new Image();
+                    image.title = file.name;
+                    image.src = this.result;
+                    //image.width='190';
+                    image.height='260';
+
+                    preview.appendChild(image);
+                }, false);
+
+                reader.readAsDataURL(file);
+            }
+
+        }
+
+        if (files) {
+            $('#preview_answer_div').html(' ');
+            [].forEach.call(files, readAndPreview);
+        }
+
+    }
+
+</script>
+</html>
