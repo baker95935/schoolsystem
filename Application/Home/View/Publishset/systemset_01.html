@@ -3,14 +3,11 @@
 <head>
     <title>CTB-Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="__PUBLIC__/jquery/jquery.min.js"></script>
-    <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+	<script src="__PUBLIC__/jquery/jquery.min.js"></script>
+	<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/systemset.css"/>
-    <script src="__PUBLIC__/js/testtitle.js"></script>
-
-
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body >
@@ -69,27 +66,13 @@
             <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
 
                
-          <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
-            <tr>
-                <th>序号</th><th>出版社名称</th><th>联系人</th><th>状态</th><th>时间</th><th>操作</th>
-            </tr>
-          
-            <tr class="change">
-                <td >1<input type="hidden" value="{$testdata.id}"></td><td >出版社名称</td><td>联系人</td><td>状态</td><td>2019-01-12 12:20</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">冻结/启动</a></td>
-            </tr>
-        
+          <table id="list1" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
         </table>
                   
          
-                <input id="admin_begin" type="hidden" value="1">
-                <div id="admin_page_a" class="row" style="display: block;"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="pre_sub('admin')" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="admin_begin_page">1</span>/<span id="admin_page_sum">4</span></a><a style="margin-left: 4px;" onclick="next_sub('admin')" href="javascript:void(0)">下一页</a></div></div>
-
-
-
-
-
-
-            </div>
+               
+                <div id="admin_page_a" class="row" style="display: block;"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div></div>
+             </div>
 
         </div>
 
@@ -97,7 +80,6 @@
             <div class="row sysset_blue" style="clear: left;"><span style="font-size: 16px;margin-left: 8%;"><b>添加出版社</b></span></div>
             <hr style="margin-left: 6%;">
             <div class="row" style="height:600px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
-          	<form method="post" action="{:U('Publishset/addpublish')}">
                 <div class="sysset_msgli" id="tec_msgli">
                     <ol>
                         <li >
@@ -115,12 +97,11 @@
                       
 
                         <li>
-                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="submit"  value="确认">
-                           <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="submit"  value="取消">
+                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" onclick="addpublish();" type="button"  value="确认">
+                           <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button"  value="取消">
                         </li>
                     </ol>
                 </div>
-            </form>
             </div>
 
         </div>
@@ -129,195 +110,137 @@
 
 </div>
 
-
+	<input id="pagelength" name="pagelength" type="hidden" value="6">
+ 
 
 </body>
 <script type="text/javascript">
 
-    var beginhtml='<tr><th style="text-align: center;"  >序号</th><th>用户名</th><th>真实姓名</th><th>注册时间</th><th>身份</th><th>学校</th><th>操作</th></tr>';
 
     $(function(){
 
-
-        person_sql("admin",beginhtml);
-        person_sql("tec",beginhtml);
-        person_sql("stu",beginhtml);
-        person_sql("pare",beginhtml);
-
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	person_sql_publish(nowpage,pagelength);
     })
 
+ 
+ function nextpage()
+	{
+		var nowpage=$('#nowpage').text();
+		var maxnum=$('#pagenum').text();
+		var pagelength=$('#pagelength').val();
+		 
+		
+		nowpage=nowpage*1+1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+		 
+		$('#list1').html('');
+		person_sql_publish(nowpage,pagelength)
+	}
+	
+	function prepage()
+	{
+		var nowpage=$('#nowpage').text();
+		var maxnum=$('#pagenum').text();
+		var pagelength=$('#pagelength').val();
+		
+		nowpage=nowpage*1-1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+ 
+		$('#list1').html('');
+		person_sql_publish(nowpage,pagelength)
+	}
 
-    function person_sql(kind,beginhtml)
+ 
+
+    function addpublish()
     {
-        var length=6;
-        var begin;
-        var htmlmsg;
-        var contentmsg;
-
-//        alert(123);
-
-         if(kind=='admin')
-         {
-             begin=$('#admin_begin').val();
-         }
-        if(kind=='tec')
+    	var name=$('#name').val();
+    	var username=$('#username').val();
+    	var phone=$('#phone').val();
+    	var address=$('#address').val();
+    	
+        if(name=='')
         {
-            begin=$('#tec_begin').val();
+            alert('出版社名称不能为空！！');
+            return;
         }
-        if(kind=='stu')
+        if(username=='')
         {
-            begin=$('#stu_begin').val();
+            alert('联系人不能为空！！');
+            return;
         }
-        if(kind=='pare')
-        {
-            begin=$('#pare_begin').val();
-        }
-
+        
         $.ajax({
-                    url: "{:U('php_person_sql')}",
-                    type: 'POST',
-                    data: {kind:kind,begin:begin,length:length},
-                    dataType: 'json',
-                    success: function (re) {
-
-                        var begin_page='#'+kind+'_begin_page';
-                        var page_sum='#'+kind+'_page_sum';
-                        $(begin_page).text(re['admin_begin_page']);
-                        $(page_sum).text(re['admin_page_sum']);
-
-                        length=re['admin_count'];
-                      
-
-                        for(var i=0;i<length;i++)
-                        {
-
-                            contentmsg=contentmsg+'<tr"><td style="text-align: center;" class="sysset_per5">'+re[i]['id']+'</td><td class="sysset_per10">'+re[i]['username']+'</td><td class="sysset_per5">'+re[i]['realname']+'</td><td  class="sysset_per10">'+re[i]['regtime']+'</td><td class="sysset_per5">'+re[i]['status']+'</td><td  class="sysset_per15">'+re[i]['schoolname']+'</td><td class="sysset_per5"><a id="'+re[i]['id']+'" name="'+kind+'" href="javascript:void(0);" onclick="editsub(this.id)">重置</a><a id="'+re[i]['id']+'" name="'+kind+'" href="javascript:void(0);" onclick="delsub(this.id)">删除</a></td></tr>';
-                        }
-
-                        var tablemsg='#table_'+kind;
-                        $(tablemsg).html(beginhtml+contentmsg);
-                    }
-                }
-        )
-    }
-
-    function div_list_sub(kind)
-    {
-
-        if(kind!='admin')
-        {
-            return;
-        }
-
-//        alert(kind);
-//        return;
-        if( $('#admin_a').html()=='New')
-        {
-            $('#table_admin').css('display','none');
-            $('#admin_page_a').css('display','none');
-            $('#admin_a').html('List');
-            $('#admin_ok').css('display','');
-            $('#admin_msgli').css('display','');
-
-
-            var myDate = new Date();
-            var mytime=myDate.toLocaleString( );
-
-            $('#admin_regtime').val(mytime);
-
-        }
-        else
-        {
-            $('#table_admin').css('display','');
-            $('#admin_page_a').css('display','');
-            $('#admin_a').html('New');
-            $('#admin_ok').css('display','none');
-            $('#admin_msgli').css('display','none');
-        }
-
-    }
-
-    function pre_sub(kind)
-    {
-        var beginele='#'+kind+'_begin';
-        var nowpage=$(beginele).val();
-
-        if(nowpage==1)
-        {
-            return;
-        }
-        else
-        {
-            $(beginele).val(parseInt(nowpage)-1);
-            person_sql(kind,beginhtml);
-        }
-    }
-
-    function next_sub(kind)
-    {
-        var beginele='#'+kind+'_begin';
-        var nowpage=$(beginele).val();
-        var sumele='#'+kind+'_page_sum';
-
-        if(nowpage==$(sumele).text())
-        {
-            return;
-        }
-        else
-        {
-            $(beginele).val(parseInt(nowpage)+1);
-            person_sql(kind,beginhtml);
-        }
-
-    }
-
-    function newdata(kind)
-    {
-
-
-        var admin_username=$('#admin_username').val();
-        var admin_realname=$('#admin_realname').val();
-        var admin_status=$('#admin_status').val();
-        var admin_pwd=$('#admin_pwd').val();
-
-
-        if(admin_username=='')
-        {
-            alert('用户名不能为空！！');
-            return;
-        }
-        if(admin_pwd=='')
-        {
-            alert('密码不能为空！！');
-            return;
-        }
-
-        $.ajax({
-            url: "{:U('php_newdata_sql')}",
+            url: "{:U('addpublish')}",
             type: 'POST',
-            data: {kind:kind,admin_username: admin_username, admin_realname: admin_realname, admin_status: 100,admin_pwd:admin_pwd},
+            data: {name:name,username: username, phone: phone,address:address},
             dataType: 'json',
             success: function (re) {
-                $('#admin_username').val('');
-                $('#admin_relname').val('');
-                $('#admin_pwd').val('');
-                div_list_sub('admin');
+            	 if(re>=1) {
+                	 alert('添加成功');
+                 	 $('#name').val('');
+                	 $('#username').val('');
+                	 $('#phone').val('');
+                	 $('#address').val('');
+                	 location.reload();
+                 }
             }
         })
-
-    }
-    function detailsub(id,kind)
-    {
-        alert(id);
-        var myname=$('#'+id).attr('name');
-        alert(myname);
     }
     
-    function delsub(id,kind)
+    function person_sql_publish(nowpage,pagelength)
+    {
+
+        $.ajax({
+	        url:"{:U('php_publish_sql')}",
+	        type: 'POST',
+	        data: {nowpage:nowpage,pagelength:pagelength},
+	        dataType: 'json',
+	        success: function(re) {
+	        	var testlist=re;
+				var addhtmlmsg = '<tr><th>序号</th><th>出版社名称</th><th>联系人</th><th>状态</th><th>时间</th><th>操作</th></tr>';
+				var beginhtml = $('#list1').html();
+				var mylength = testlist['length'];
+				var pagenum=testlist['pagenum'];
+				
+				$('#pagenum').text(pagenum);
+				$('#nowpage').text(nowpage);
+	
+				for (var i = 0; i<mylength; i++) 
+	            {
+					j=i+1;
+					addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td >'+testlist[i]['name']+'</td><td>'+testlist[i]['username']+'</td><td>'+testlist[i]['status']+'</td><td>'+testlist[i]['createtime']+'</td><td><a href="#" onclick="delpublish('+testlist[i]['id']+');">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editpublish('+testlist[i]['id']+','+testlist[i]['newstatus']+');" href="#}">冻结/启动</a></td></tr>';
+					$('#list1').html(beginhtml + addhtmlmsg);
+					j++;
+	            }
+	
+	           
+	        }
+	    });
+    }
+    
+    
+    function delpublish(id)
     {
     	if(id) {
 	    	 $.ajax({
-	             url: "{:U('delUserInfo')}",
+	             url: "{:U('delpublish')}",
 	             type: 'POST',
 	             data: {id:id},
 	             dataType: 'json',
@@ -331,20 +254,19 @@
    		}
     }
     
-    function editsub(id,kind)
+    function editpublish(id,status)
     {
     	if(id) {
 	    	 $.ajax({
-	             url: "{:U('editUserInfo')}",
+	             url: "{:U('editpublish')}",
 	             type: 'POST',
-	             data: {id:id},
+	             data: {id:id,status:status},
 	             dataType: 'json',
 	             success: function (re) {
 	                 if(re==1) {
-	                	 alert('重置密码成功');
-	                 } else {
-	                	 alert('密码已重置');
-	                 }
+	                	 alert('操作成功');
+	                	 location.reload();
+	                 } 
 	             }
 	         })
     	}

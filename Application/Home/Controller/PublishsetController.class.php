@@ -58,15 +58,65 @@ class PublishsetController extends Controller
     	$data['username']=$_POST['username'];
     	$data['phone']=$_POST['phone'];
     	$data['address']=$_POST['address'];
-    	var_dump($data);exit;
+    	$data['createtime']=time();
+     
     	$result=$model->add($data);
-    	if($result) {
-    		$this->redirect('Publishset/systemset_01');
-    	}
+    	echo $result ;
+    }
+    
+    public function delpublish()
+    {
+    	$model=M('publish_name');
+        $msg['id']=$_POST[id];
+        $mm=$model->where($msg)->delete();
+        echo $mm;
+    }
+    
+    public function editpublish()
+    {
+    	$model=M('publish_name');
+        $data['id']=$_POST[id];
+        $data['status']=$_POST[status];
+        $mm=$model->where('id='.$data['id'])->save($data);
+        echo $mm;
+    }
+
+    public function php_publish_sql()
+    {
+    	$nowpage=$_POST['nowpage'];
+	    $pagelength=$_POST['pagelength'];
+ 
+	        
+	    $beginnum=($nowpage-1)*$pagelength+1;
+	    $beginpagenum=$beginnum-1;
+      
+      	$model=M('publish_name');
+      	
+      	$dataarr=array();
+	  
+		$count=$model->where($dataarr)->count();
+		$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
+		foreach($data as $k=>&$v) {
+		 	$v['num']=$beginnum;
+	      	$beginnum=$beginnum+1;
+	      	!empty($v['createtime']) && $v['createtime']=date("Y-m-d H:i:s");
+	      	$v['status']==1 && $v['newstatus']=2;
+	      	$v['status']==2 && $v['newstatus']=1;	
+	      	$v['status']==1 && $v['status']='启动';
+	      	$v['status']==2 && $v['status']='冻结';
+	      	 
+	    }
+  
+  	 
+      $data['length']=sizeof($data);
+      $data['pagelength']=$pagelength;
+      $data['count']=$count;
+   
+      $data['pagenum']=ceil($count/$pagelength);
+      echo json_encode($data);
     	
     	
     }
-
     public function php_person_sql()
     {
         $begin = $_POST[begin];
