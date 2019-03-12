@@ -48,6 +48,24 @@ class PublishsetController extends Controller
         $this->display();
 
     }
+    
+    //添加出版社
+    public function addpublish()
+    {
+    	$model=M('publish_name');
+    	$data=array();
+    	$data['name']=$_POST['name'];
+    	$data['username']=$_POST['username'];
+    	$data['phone']=$_POST['phone'];
+    	$data['address']=$_POST['address'];
+    	var_dump($data);exit;
+    	$result=$model->add($data);
+    	if($result) {
+    		$this->redirect('Publishset/systemset_01');
+    	}
+    	
+    	
+    }
 
     public function php_person_sql()
     {

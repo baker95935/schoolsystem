@@ -97,7 +97,7 @@
             <div class="row sysset_blue" style="clear: left;"><span style="font-size: 16px;margin-left: 8%;"><b>添加出版社</b></span></div>
             <hr style="margin-left: 6%;">
             <div class="row" style="height:600px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
-          	<form method="get" action="{:U('keystatistic'}">
+          	<form method="post" action="{:U('Publishset/addpublish')}">
                 <div class="sysset_msgli" id="tec_msgli">
                     <ol>
                         <li >
@@ -115,8 +115,8 @@
                       
 
                         <li>
-                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button"  value="确认">
-                           <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button"  value="取消">
+                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="submit"  value="确认">
+                           <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="submit"  value="取消">
                         </li>
                     </ol>
                 </div>
