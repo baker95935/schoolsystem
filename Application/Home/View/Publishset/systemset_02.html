@@ -10,6 +10,15 @@
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/systemset.css"/>
     <script src="__PUBLIC__/js/testtitle.js"></script>
     <script src="__PUBLIC__/js/sys_public.js"></script>
+    <script src="__PUBLIC__/datapickercss/js/test.js"></script>
+    
+    <link href="__PUBLIC__/datapickercss/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="__PUBLIC__/datapickercss/css/test.css" rel="stylesheet" />
+
+<script src="__PUBLIC__/datapickercss/bootstrap/js/bootstrap.js"></script>
+<link href="__PUBLIC__/datapickercss/datapicker/css/bootstrap-datepicker3.css" rel="stylesheet">
+<script src="__PUBLIC__/datapickercss/datapicker/js/bootstrap-datepicker.js"></script>
+<script src="__PUBLIC__/datapickercss/datapicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
 
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -78,24 +87,15 @@
     <div class="row" style="height: 15px;"></div>
     <div class="row">
         <div class="col-xs-6" style="height: 660px;border-right:1px solid #C3C3C3;">
-            <div class="row sysset_blue" style="clear: left;"><span style="font-size: 16px;margin-left: 8%;"><b>图书练习册列表</b></span> <input  type="text" placeholder="出版社名称" class="input_css" style="margin-left:200px;"> <input   type="text" placeholder="习题册名称"  class="input_css"></div>
+            <div class="row sysset_blue" style="clear: left;"><span style="font-size: 16px;margin-left: 8%;"><b>图书练习册列表</b></span> <input onblur="searchexercise();" name="publishname" id="publishname" type="text" placeholder="出版社名称" class="input_css" style="margin-left:200px;"> <input name="keywords" onblur="searchexercise();" id="keywords" type="text" placeholder="习题册名称"  class="input_css"></div>
             <hr style="margin-left: 6%;">
             <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
 
-                         <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
-            <tr>
-                <th>序号</th><th>习题册</th><th>出版社</th><th>试卷数</th><th>时间</th><th>操作</th>
-            </tr>
-          
-            <tr class="change">
-                <td >1<input type="hidden" value="{$testdata.id}"></td><td >习题册</td><td>出版社</td><td>试卷数</td><td>2019-01-12 12:20</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">冻结/启动</a></td>
-            </tr>
+                         <table id="list1" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
         
         </table>
                 <input id="school_begin" type="hidden" value="1">
-                <div id="school_page_a" class="row" style="display: block;"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="pre_sub('school')" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="school_begin_page">1</span>/<span id="school_page_sum">4</span></a><a style="margin-left: 4px;" onclick="next_sub('school')" href="javascript:void(0)">下一页</a></div></div>
-
-
+                <div id="school_page_a" class="row" style="display: block;"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div></div>
 
                
             </div>
@@ -114,30 +114,30 @@
                         <li >
                             <span class="sysset_marginleft28">出版社：</span>
                             <select id="publishid">
-                                <option value ="1000">未选择</option>
-                                <option value ="1">北京交大出版社</option>
-                                <option value ="2">北大出版社</option>
-                                <option value="3">清华出版社</option>
+                                <option value ="0">未选择</option>
+                                <foreach name="publishlist" item="item">
+                                <option value="{$item.id}">{$item.name}</option>
+                                </foreach>
                             </select>
                           <input  required="required" name="publishname" id="publishname" type="text" placeholder="出版社名称">
                         </li>
                         <li>
-                             <span class="sysset_marginleft28" >书号：</span>   <input id="booknumber" name="booknumber"  required="required"  type="text">
+                             <span class="sysset_marginleft28" >书号：</span>   <input id="booknumber" name="booknumber"   type="text">
                         </li>
                         <li>
                             <span  class="sysset_marginleft28" >分类：</span> 
                           <select id="classify">
-                                <option value ="1000">未选择</option>
-                                <option value ="1">北京交大出版社</option>
-                                <option value ="2">北大出版社</option>
-                                <option value="3">清华出版社</option>
+                                <option value ="0">未选择</option>
+                                <foreach name="classlist" item="item">
+                                <option value="{$item.id}">{$item.name}</option>
+                                </foreach>
                             </select>
                         </li>
                         <li>
-                            <span >开始时间：</span>  <input id="starttime"  type="text"  placeholder="2018-02-12">
+                            <span >开始时间：</span>  <input class="date-picker" id="starttime"  type="text"  placeholder="2018-02-12">
                         </li>
                         <li>
-                            <span >结束时间：</span>  <input id="endtime"  type="text" placeholder="2018-02-12">
+                            <span >结束时间：</span>  <input class="date-picker" id="endtime"  type="text" placeholder="2018-02-12">
                         </li>
                         <li >
 
@@ -149,15 +149,16 @@
                            </select>
                         </li>
                         <li >
-                            <span  class="sysset_marginleft28">费用：</span> <input id="price" name="price"  required="required"  type="text" value="">
+                            <span  class="sysset_marginleft28">费用：</span> <input id="price" name="price"    type="text" value="">
                         </li>
          
                         <li >
-                            <span >其他说明：</span> <input id="other" name="other"  required="required"  type="text" value="">
+                            <span >其他说明：</span> <input id="other" name="other"   type="text" value="">
+                            <input id="bid" name="bid"   type="hidden" value="0">
                         </li>
                         <li>
-                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button"  value="确认">
-                           <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button"  value="取消">
+                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" onclick="addexercise();" type="button"  value="确认">
+                           <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button" onclick="click();"  value="取消">
                         </li>
                        
                     </ol>
@@ -172,11 +173,228 @@
 
 </div>
 
-
+<input id="pagelength" name="pagelength" type="hidden" value="6">
 
 </body>
 <script type="text/javascript">
 
+
+$(function(){
+
+	var nowpage=1;
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#keywords").val();
+	var publishname=$("#publishname").val();
+	person_sql_exercise(nowpage,pagelength,keywords,publishname);
+})
+
+function searchexercise()
+{
+   	var nowpage=1;
+   	var pagelength=$('#pagelength').val();
+   	var keywords=$("#keywords").val();
+   	var publishname=$("#publishname").val();
+   	
+   	$('#list1').html('');
+   	person_sql_exercise(nowpage,pagelength,keywords,publishname);
+}
+
+
+function nextpage()
+{
+	var nowpage=$('#nowpage').text();
+	var maxnum=$('#pagenum').text();
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#keywords").val();
+	var publishname=$("#publishname").val();
+	
+	nowpage=nowpage*1+1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	 
+	$('#list1').html('');
+	
+	person_sql_exercise(nowpage,pagelength,keywords,publishname);
+}
+
+function prepage()
+{
+	var nowpage=$('#nowpage').text();
+	var maxnum=$('#pagenum').text();
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#keywords").val();
+	var publishname=$("#publishname").val();
+	
+	nowpage=nowpage*1-1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+
+	$('#list1').html('');
+	person_sql_exercise(nowpage,pagelength,keywords,publishname);
+}
+
+
+function addexercise()
+{
+	var name=$('#name').val();
+	var publishid=$('#publishid').val();
+	var booknumber=$('#booknumber').val();
+	var classify=$('#classify').val();
+	var starttime=$("#starttime").val();
+	var endtime=$("#endtime").val();
+	var charge=$("#charge").val();
+	var price=$("#price").val();
+	var other=$("#other").val();
+	
+    if(name=='')
+    {
+        alert('习题册名称不能为空！！');
+        return;
+    }
  
+    
+    $.ajax({
+        url: "{:U('addexercise')}",
+        type: 'POST',
+        data: {name:name,publishid: publishid, booknumber: booknumber,classify:classify,starttime:starttime,endtime:endtime,charge:charge,price:price,other:other},
+        dataType: 'json',
+        success: function (re) {
+        	 if(re>=1) {
+            	 alert('操作成功');
+             	 $('#name').val('');
+            	 $('#publishid').val('');
+            	 $('#booknumber').val('');
+            	 $('#classify').val('');
+            	 $('#starttime').val('');
+            	 $('#endtime').val('');
+            	 $('#charge').val('');
+            	 $('#price').val('');
+            	 $('#other').val('');
+            	 location.reload();
+             }
+        	 if(re==-1) {
+        		 alert('习题册名称重复请重试');
+        		 return;
+        	 }
+        }
+    })
+}
+ 
+ 
+function person_sql_exercise(nowpage,pagelength,keywords,publishname)
+{
+
+    $.ajax({
+        url:"{:U('php_exercise_sql')}",
+        type: 'POST',
+        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishname:publishname},
+        dataType: 'json',
+        success: function(re) {
+        	var testlist=re;
+			var addhtmlmsg = '<tr><th>序号</th><th>习题册</th><th>出版社</th><th>状态</th><th>时间</th><th>操作</th></tr>';
+			var beginhtml = $('#list1').html();
+			var mylength = testlist['length'];
+			var pagenum=testlist['pagenum'];
+			
+			$('#pagenum').text(pagenum);
+			$('#nowpage').text(nowpage);
+
+			for (var i = 0; i<mylength; i++) 
+            {
+				j=i+1;
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailexercise('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['status']+'</td><td>'+testlist[i]['createtime']+'</td><td><a href="#" onclick="delexercise('+testlist[i]['id']+');">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editexercise('+testlist[i]['id']+','+testlist[i]['newstatus']+');" href="#}">'+testlist[i]['nstatus']+'</a></td></tr>';
+				$('#list1').html(beginhtml + addhtmlmsg);
+				j++;
+            }
+
+           
+        }
+    });
+}
+
+function delexercise(id)
+{
+	if(id) {
+    	 $.ajax({
+             url: "{:U('delexercise')}",
+             type: 'POST',
+             data: {id:id},
+             dataType: 'json',
+             success: function (re) {
+                 if(re==1) {
+                	 alert('删除成功');
+                	 location.reload();
+                 }
+             }
+         })
+		}
+}
+
+function editexercise(id,status)
+{
+	if(id) {
+    	 $.ajax({
+             url: "{:U('editexercise')}",
+             type: 'POST',
+             data: {id:id,status:status},
+             dataType: 'json',
+             success: function (re) {
+                 if(re==1) {
+                	 alert('操作成功');
+                	 location.reload();
+                 } 
+             }
+         })
+	}
+}
+
+function detailexercise(id)
+{
+	if(id) {
+    	 $.ajax({
+             url: "{:U('detailexercise')}",
+             type: 'POST',
+             data: {id:id},
+             dataType: 'json',
+             success: function (re) {
+             	$("#name").val(re.name);
+             	$("#publishid").val(re.publishid);
+             	$("#booknumber").val(re.booknumber);
+             	$("#classify").val(re.classify);
+             	$("#starttime").val(re.starttime);
+             	$("#endtime").val(re.endtime);
+             	$("#charge").val(re.charge);
+             	$("#price").val(re.price);
+             	$("#other").val(re.other);
+             	$("#bid").val(re.id);
+             }
+         })
+		}
+}
+
+function cancle()
+{
+	$('#name').val('');
+	$('#publishid').val('');
+	$('#booknumber').val('');
+	$('#classify').val('');
+	$('#starttime').val('');
+	$('#endtime').val('');
+	$('#charge').val('');
+	$('#price').val('');
+	$('#other').val('');
+}
 </script>
 </html>

@@ -143,9 +143,139 @@ class PublishsetController extends Controller
    
       $data['pagenum']=ceil($count/$pagelength);
       echo json_encode($data);
-    	
-    	
     }
+    
+    //习题册
+    public function systemset_02()
+    {
+    	//出版社列表
+    	$publish=M('publish_name');
+    	$publishlist=$publish->where('status=1')->select();
+    	//分类列表
+    	$classify=M('book_classify');
+    	$classlist=$classify->select();
+    	
+    	$this->assign('publishlist',$publishlist);
+    	$this->assign('classlist',$classlist);
+    	$this->display();
+    }
+    
+   //添加习题册
+    public function addexercise()
+    {
+    	$model=M('book_exercises');
+    	$data=array();
+    	$data['name']=$_POST['name'];
+    	$data['publishid']=$_POST['publishid'];
+    	$data['booknumber']=$_POST['booknumber'];
+    	$data['classify']=$_POST['classify'];
+    	$data['starttime']=strtotime($_POST['starttime']);
+    	$data['endtime']=strtotime($_POST['endtime']);
+    	$data['charge']=$_POST['charge'];
+    	$data['price']=$_POST['price'];
+    	$data['other']=$_POST['other'];
+    	$data['createtime']=time();
+    	!empty($_POST['bid']) && $data['id']=$_POST['bid'];
+     
+    	$result=0;
+    	//校验下是否重复
+    	if(!empty($_POST['bid'])) {
+    		$count=$model->where("name='".$data['name']."' and id!=".$_POST['bid'])->count();
+    	} else {
+    		$count=$model->where("name='".$data['name']."'")->count();
+    	}
+    	
+    	if($count>0) {
+    		$result=-1;
+    	} else  {
+    		if(empty($_POST['bid'])) {
+    			$result=$model->add($data);
+    		} else {
+    			$result=$model->save($data);
+    		}
+    	}
+    	echo $result ;
+    }
+    
+ 	public function php_exercise_sql()
+    {
+    	$nowpage=$_POST['nowpage'];
+	    $pagelength=$_POST['pagelength'];
+	    $keywords=$_POST['keywords'];
+	    $publishname=$_POST['publishname'];
+ 
+	        
+	    $beginnum=($nowpage-1)*$pagelength+1;
+	    $beginpagenum=$beginnum-1;
+      
+      	$model=M('book_exercises');
+      	$publish=M('publish_name');
+      	
+      	//查找出版社的名字
+      	$publishinfo=array();
+      	$publishinfo=$publish->where("name='".$publishname."'")->find();
+      	
+      	$dataarr=array();
+	  	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
+	  	!empty($publishname) && $dataarr['publishid']=$publishinfo['id'];
+		$count=$model->where($dataarr)->count();
+		$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
+		foreach($data as $k=>&$v) {
+		 	$v['num']=$beginnum;
+	      	$beginnum=$beginnum+1;
+	      	!empty($v['createtime']) && $v['createtime']=date("Y-m-d H:i:s",$v['createtime']);
+	      	$v['status']==1 && $v['newstatus']=2;
+	      	$v['status']==2 && $v['newstatus']=1;
+	      	
+	      	$v['status']==1 && $v['nstatus']='冻结';
+	      	$v['status']==2 && $v['nstatus']='启动';
+	      		
+	      	$v['status']==1 && $v['status']='启动';
+	      	$v['status']==2 && $v['status']='冻结';
+	      	
+	      	//获取出版社数据
+	      	if($v['publishid']) {
+	      		$tmp=$publish->find($v['publishid']);
+	      		$v['publishname']=$tmp['name'];
+	      	}
+	      	
+	    }
+  
+  	 
+      $data['length']=sizeof($data);
+      $data['pagelength']=$pagelength;
+      $data['count']=$count;
+   
+      $data['pagenum']=ceil($count/$pagelength);
+      echo json_encode($data);
+    }
+    
+    
+    public function delexercise()
+    {
+    	$model=M('book_exercises');
+        $msg['id']=$_POST[id];
+        $mm=$model->where($msg)->delete();
+        echo $mm;
+    }
+    
+    public function detailexercise()
+    {
+    	$model=M('book_exercises');
+    	$msg['id']=$_POST[id];
+    	$info=$model->find($msg['id']);
+    	echo json_encode($info);
+    }
+    
+    public function editexercise()
+    {
+    	$model=M('book_exercises');
+        $data['id']=$_POST[id];
+        $data['status']=$_POST[status];
+        $mm=$model->where('id='.$data['id'])->save($data);
+        echo $mm;
+    }
+    
     public function php_person_sql()
     {
         $begin = $_POST[begin];
