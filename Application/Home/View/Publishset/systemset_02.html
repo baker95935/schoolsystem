@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="login-bg">
 <head>
-    <title>CTB-Panel</title>
+    <title>习题册系统设置</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="__PUBLIC__/jquery/jquery.min.js"></script>
     <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -32,7 +32,7 @@
     <div class="row" style="height: 45px;"></div>
     <div class="row">
         <div class="col-xs-4" style="padding-left:45px;">
-            <b> <span id="bigtitle" style="font-size: 18px;">出版社系统设置</span></b>
+            <b> <span id="bigtitle" style="font-size: 18px;">习题册系统设置</span></b>
         </div>
         <div class="col-xs-4"></div>
         <div class="col-xs-4">
@@ -109,24 +109,24 @@
            <div class="sysset_msgli" id="school_msgli">
                     <ol>
                         <li >
-                           <span >习题册名称：</span> <input id="schoolname"   type="text">
+                           <span >习题册名称：</span> <input id="name" name="name"   type="text">
                         </li>
                         <li >
                             <span class="sysset_marginleft28">出版社：</span>
-                            <select id="levelmsg">
+                            <select id="publishid">
                                 <option value ="1000">未选择</option>
                                 <option value ="1">北京交大出版社</option>
                                 <option value ="2">北大出版社</option>
                                 <option value="3">清华出版社</option>
                             </select>
-                          <input  required="required"  type="text" placeholder="出版社名称">
+                          <input  required="required" name="publishname" id="publishname" type="text" placeholder="出版社名称">
                         </li>
                         <li>
-                             <span class="sysset_marginleft28" >书号：</span>   <input id="linkman"  required="required"  type="text">
+                             <span class="sysset_marginleft28" >书号：</span>   <input id="booknumber" name="booknumber"  required="required"  type="text">
                         </li>
                         <li>
                             <span  class="sysset_marginleft28" >分类：</span> 
-                          <select id="levelmsg">
+                          <select id="classify">
                                 <option value ="1000">未选择</option>
                                 <option value ="1">北京交大出版社</option>
                                 <option value ="2">北大出版社</option>
@@ -142,18 +142,18 @@
                         <li >
 
                             <span >收费方式：</span>
-                            <select id="moneycount">
-                            <option value ="1000">免费</option>
-                            <option value ="3">收费</option>
-                            <option value ="4">支付码</option>
+                            <select id="charge">
+                            <option value ="0">免费</option>
+                            <option value ="1">收费</option>
+                            <option value ="2">支付码</option>
                            </select>
                         </li>
                         <li >
-                            <span  class="sysset_marginleft28">费用：</span> <input id="classcount"  required="required"  type="text" value="">
+                            <span  class="sysset_marginleft28">费用：</span> <input id="price" name="price"  required="required"  type="text" value="">
                         </li>
          
                         <li >
-                            <span >其他说明：</span> <input id="classcount"  required="required"  type="text" value="">
+                            <span >其他说明：</span> <input id="other" name="other"  required="required"  type="text" value="">
                         </li>
                         <li>
                            <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button"  value="确认">
@@ -177,290 +177,6 @@
 </body>
 <script type="text/javascript">
 
-    var beginhtml='<tr><th style="text-align: center;"  >序号</th><th>学校名称</th><th>类型</th><th>班级数量</th><th>电话</th><th>到期时间</th><th>操作</th></tr>';
-
-    $(function(){
-
-
-        school_sql("school",beginhtml);
-//        person_sql("tec",beginhtml);
-//        person_sql("stu",beginhtml);
-//        person_sql("pare",beginhtml);
-
-    })
-
-
-    function school_sql(kind,beginhtml)
-    {
-        var length=6;
-        var begin;
-        var htmlmsg;
-        var contentmsg;
-
-//        alert(123);
-
-         if(kind=='school')
-         {
-             begin=$('#school_begin').val();
-         }
-
-        $.ajax({
-                    url: "{:U('php_school_sql')}",
-                    type: 'POST',
-                    data: {kind:kind,begin:begin,length:length},
-                    dataType: 'json',
-                    success: function (re) {
-
-                        var begin_page='#'+kind+'_begin_page';
-                        var page_sum='#'+kind+'_page_sum';
-                        $(begin_page).text(re['school_begin_page']);
-                        $(page_sum).text(re['school_page_sum']);
-
-                        length=re['school_count'];
-
-                        for(var i=0;i<length;i++)
-                        {
-                            contentmsg=contentmsg+'<tr"><td style="text-align: center;" class="sysset_per5">'+re[i]['school_id']+'</td><td class="sysset_per15">'+re[i]['schoolname']+'</td><td class="sysset_per5">'+re[i]['levelmsg']+'</td><td  class="sysset_per10">'+re[i]['classcount']+'</td><td class="sysset_per15">'+re[i]['phone']+'</td><td  class="sysset_per15">'+re[i]['endtime']+'</td><td class="sysset_per15"><a id='+re[i]['school_id']+' name="'+kind+'" href="javascript:void(0);" onclick="div_list_sub(\'edit\','+re[i]['school_id']+')">编辑</a><a id='+re[i]['school_id']+' name="'+kind+'" href="javascript:void(0);" onclick="delsub('+re[i]['school_id']+')">删除</a></td></tr>';
-                        }
-
-                        var tablemsg='#table_'+kind;
-                        $(tablemsg).html(beginhtml+contentmsg);
-                    }
-                }
-        )
-    }
-
-    function div_list_sub(kind,id)
-    {
-
  
-//        return;
-        if(kind=='New')
-        {
-        	$('#schoolname').val('');
-            $('#levelmsg').val(1000);
-            $('#linkman').val('');
-            $('#phone').val('');
-            $('#starttime').val('');
-            $('#endtime').val('');
-            $('#gradecount').val(1000);
-            $('#classcount').val('');
-            $('#school_id').val('');
-              
-              
-            $('#table_school').css('display','none');
-            $('#school_page_a').css('display','none');
-            $('#school_a').html('List');
-            $('#school_ok').css('display','');
-            $('#school_msgli').css('display','');
-
-
-            var myDate = new Date();
-            var mytime=myDate.toLocaleString( );
-
-            $('#school_regtime').val(mytime);
-
-        }else{
-        	if(id) {
-       		   $.ajax({
-       	            url: "{:U('editSchoolData')}",
-       	            type: 'POST',
-       	            data: {id:id},
-       	            dataType: 'json',
-       	            success: function (re) {
-
-       	                $('#schoolname').val(re.schoolname);
-       	                
-       	                $('#linkman').val(re.linkman);
-       	                $('#phone').val(re.phone);
-       	                $('#starttime').val(re.starttime);
-       	                $('#endtime').val(re.endtime);
-       	                $('#classcount').val(re.classcount);
-       	                $('#school_id').val(re.school_id);
-       	                
-       	             	$("#levelmsg").find("option[value = '"+re.levelnum+"']").attr("selected","selected");
-       	             	$("#gradecount").find("option[value = '"+re.gradecount+"']").attr("selected","selected");
-       	    
-       	                
-	       	            $('#table_school').css('display','none');
-	       	            $('#school_page_a').css('display','none');
-	       	            $('#school_a').html('List');
-	       	            $('#school_ok').css('display','');
-	       	            $('#school_msgli').css('display','');
-       	            }
-       	        });
-        	}	 
-    
-        }
-
-    }
-
-    function pre_sub(kind)
-    {
-        var beginele='#'+kind+'_begin';
-        var nowpage=$(beginele).val();
-
-        if(nowpage==1)
-        {
-            return;
-        }
-        else
-        {
-            $(beginele).val(parseInt(nowpage)-1);
-            school_sql(kind,beginhtml);
-        }
-    }
-
-    function next_sub(kind)
-    {
-        var beginele='#'+kind+'_begin';
-        var nowpage=$(beginele).val();
-        var sumele='#'+kind+'_page_sum';
-
-        if(nowpage==$(sumele).text())
-        {
-
-            return;
-        }
-        else
-        {
-            $(beginele).val(parseInt(nowpage)+1);
-           school_sql(kind,beginhtml);
-        }
-
-    }
-
-    function newschooldata(kind)
-    {
-        var schoolname=$('#schoolname').val();
-        var levelnum=$('#levelmsg').val();
-        var linkman=$('#linkman').val();
-        var phone=$('#phone').val();
-        var starttime=$('#starttime').val();
-        var endtime=$('#endtime').val();
-        var gradecount=$('#gradecount').val();
-        var classcount=$('#classcount').val();
-        var school_id=$('#school_id').val();
-
-        if(schoolname=='')
-        {
-            alert('学校名称不能为空！！');
-            return;
-        }
-        if(levelnum==1000)
-        {
-            alert('请选择类型！！');
-            return;
-        }
-        if(linkman=='')
-        {
-            alert('填写联系人！！');
-            return;
-        }
-        if(phone=='')
-        {
-            alert('请填写联系电话！！');
-            return;
-        }
-
-        if(starttime=='')
-        {
-            alert('请填写开始时间！！');
-            return;
-        }
-        else
-        {
-           var val=checkDate(starttime);
-
-            if(val==0)
-            {
-                alert("请填写正确的开始时间！！");
-                return;
-            }
-        }
-
-        if(endtime=='')
-        {
-            alert('请填写结束时间！！');
-            return;
-        }
-        else
-        {
-            var val=checkDate(endtime);
-
-            if(val==0)
-            {
-                alert("请填写正确的结束时间！！");
-                return;
-            }
-        }
-        if(gradecount==1000)
-        {
-            alert('请选择年级数量！！');
-            return;
-        }
-        if(classcount=='')
-        {
-            alert('请填写班级数量！！');
-            return;
-        }
-
-
-
-        $.ajax({
-            url: "{:U('php_newschool_data_sql')}",
-            type: 'POST',
-            data: {schoolname:schoolname,linkman: linkman, phone: phone, starttime: starttime,endtime:endtime,areaid:0,levelnum:levelnum,gradecount:gradecount,classcount:classcount,school_id:school_id},
-            dataType: 'text',
-            success: function (re) {
-				if(re==1) {
-					 alert('编辑成功');
-                	 location.reload();
-				} else  {
-					alert('添加成功');
-					location.reload();
-	                school_sql('school',beginhtml);
-	                $('#schoolname').val('');
-	                $('#levelmsg').val(1000);
-	                $('#linkman').val('');
-	                $('#phone').val('');
-	                $('#starttime').val('');
-	                $('#endtime').val('');
-	                $('#gradecount').val(1000);
-	                $('#classcount').val('');
-				}
-            }
-        })
-
-    }
-
-    function levelmsgsub()
-    {
-      //  alert(123);
-    }
-    function detailsub(id,kind)
-    {
-       // alert(id);
-//        var myname=$('#'+id).attr('name');
-//        alert(myname);
-    }
-    
-    function delsub(id,kind)
-    {
-    	if(id) {
-	    	 $.ajax({
-	             url: "{:U('delSchoolInfo')}",
-	             type: 'POST',
-	             data: {id:id},
-	             dataType: 'json',
-	             success: function (re) {
-	                 if(re==1) {
-	                	 alert('删除成功');
-	                	 location.reload();
-	                 }
-	             }
-	         })
-   		}
-    }
 </script>
 </html>
