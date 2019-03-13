@@ -59,8 +59,25 @@ class PublishsetController extends Controller
     	$data['phone']=$_POST['phone'];
     	$data['address']=$_POST['address'];
     	$data['createtime']=time();
+    	!empty($_POST['publishid']) && $data['id']=$_POST['publishid'];
      
-    	$result=$model->add($data);
+    	$result=0;
+    	//校验下是否重复
+    	if(!empty($_POST['publishid'])) {
+    		$count=$model->where("name='".$data['name']."' and id!=".$_POST['publishid'])->count();
+    	} else {
+    		$count=$model->where("name='".$data['name']."'")->count();
+    	}
+    	
+    	if($count>0) {
+    		$result=-1;
+    	} else  {
+    		if(empty($_POST['publishid'])) {
+    			$result=$model->add($data);
+    		} else {
+    			$result=$model->save($data);
+    		}
+    	}
     	echo $result ;
     }
     
@@ -70,6 +87,14 @@ class PublishsetController extends Controller
         $msg['id']=$_POST[id];
         $mm=$model->where($msg)->delete();
         echo $mm;
+    }
+    
+    public function detailpublish()
+    {
+    	$model=M('publish_name');
+    	$msg['id']=$_POST[id];
+    	$info=$model->find($msg['id']);
+    	echo json_encode($info);
     }
     
     public function editpublish()
@@ -85,6 +110,7 @@ class PublishsetController extends Controller
     {
     	$nowpage=$_POST['nowpage'];
 	    $pagelength=$_POST['pagelength'];
+	    $keywords=$_POST['keywords'];
  
 	        
 	    $beginnum=($nowpage-1)*$pagelength+1;
@@ -93,7 +119,7 @@ class PublishsetController extends Controller
       	$model=M('publish_name');
       	
       	$dataarr=array();
-	  
+	  	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
 		$count=$model->where($dataarr)->count();
 		$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
 		foreach($data as $k=>&$v) {
@@ -101,10 +127,13 @@ class PublishsetController extends Controller
 	      	$beginnum=$beginnum+1;
 	      	!empty($v['createtime']) && $v['createtime']=date("Y-m-d H:i:s");
 	      	$v['status']==1 && $v['newstatus']=2;
-	      	$v['status']==2 && $v['newstatus']=1;	
+	      	$v['status']==2 && $v['newstatus']=1;
+	      	
+	      	$v['status']==1 && $v['nstatus']='冻结';
+	      	$v['status']==2 && $v['nstatus']='启动';
+	      		
 	      	$v['status']==1 && $v['status']='启动';
 	      	$v['status']==2 && $v['status']='冻结';
-	      	 
 	    }
   
   	 

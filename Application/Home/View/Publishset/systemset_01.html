@@ -9,6 +9,17 @@
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/systemset.css"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+  .input_css{
+  	border-bottom: 1px solid #3c3c3c;
+	border-top: 0px solid #3c3c3c;
+	border-left: 0px solid #3c3c3c;
+	border-right: 0px solid #3c3c3c;
+    text-align:center;
+    width:100px;
+  
+  }
+</style>
 </head>
 <body >
 <div class="contain" style="width: 100%">
@@ -61,7 +72,7 @@
     <div class="row" style="height: 15px;"></div>
     <div class="row">
         <div class="col-xs-6" style="height: 660px;border-right:1px solid #C3C3C3;">
-            <div class="row sysset_blue" style="clear: left;"><span style="font-size: 16px;margin-left: 8%;"><b>出版社列表</b></span></div>
+            <div class="row sysset_blue" style="clear: left;"><span style="font-size: 16px;margin-left: 8%;"><b>出版社列表</b></span> <input onblur="searchpublish()" id="keywords" name="keywords"  type="text" placeholder="出版社名称" style="margin-left:300px;"  class="input_css"></div>
             <hr style="margin-left: 6%;">
             <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
 
@@ -94,7 +105,7 @@
                         <li>
                             <span class="sysset_marginleft28" >地址：</span>   <input type="text" name="address" id="address">
                         </li>
-                      
+                      <input type="hidden" name="publishid" id="publishid" value="0">
 
                         <li>
                            <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" onclick="addpublish();" type="button"  value="确认">
@@ -121,16 +132,25 @@
 
     	var nowpage=1;
     	var pagelength=$('#pagelength').val();
-    	person_sql_publish(nowpage,pagelength);
+    	var keywords=$("#keywords").val();
+    	person_sql_publish(nowpage,pagelength,keywords);
     })
 
+	function searchpublish()
+    {
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	var keywords=$("#keywords").val();
+    	$('#list1').html('');
+    	person_sql_publish(nowpage,pagelength,keywords);
+    }
  
- function nextpage()
+ 	function nextpage()
 	{
 		var nowpage=$('#nowpage').text();
 		var maxnum=$('#pagenum').text();
 		var pagelength=$('#pagelength').val();
-		 
+		var keywords=$("#keywords").val();
 		
 		nowpage=nowpage*1+1;
 		if(nowpage>maxnum)
@@ -143,7 +163,8 @@
 		}
 		 
 		$('#list1').html('');
-		person_sql_publish(nowpage,pagelength)
+		
+    	person_sql_publish(nowpage,pagelength,keywords);
 	}
 	
 	function prepage()
@@ -151,6 +172,7 @@
 		var nowpage=$('#nowpage').text();
 		var maxnum=$('#pagenum').text();
 		var pagelength=$('#pagelength').val();
+		var keywords=$("#keywords").val();
 		
 		nowpage=nowpage*1-1;
 		if(nowpage>maxnum)
@@ -163,7 +185,7 @@
 		}
  
 		$('#list1').html('');
-		person_sql_publish(nowpage,pagelength)
+		person_sql_publish(nowpage,pagelength,keywords)
 	}
 
  
@@ -174,6 +196,7 @@
     	var username=$('#username').val();
     	var phone=$('#phone').val();
     	var address=$('#address').val();
+    	var publishid=$("#publishid").val();
     	
         if(name=='')
         {
@@ -189,28 +212,32 @@
         $.ajax({
             url: "{:U('addpublish')}",
             type: 'POST',
-            data: {name:name,username: username, phone: phone,address:address},
+            data: {name:name,username: username, phone: phone,address:address,publishid:publishid},
             dataType: 'json',
             success: function (re) {
             	 if(re>=1) {
-                	 alert('添加成功');
+                	 alert('操作成功');
                  	 $('#name').val('');
                 	 $('#username').val('');
                 	 $('#phone').val('');
                 	 $('#address').val('');
                 	 location.reload();
                  }
+            	 if(re==-1) {
+            		 alert('出版社名称重复请重试');
+            		 return;
+            	 }
             }
         })
     }
     
-    function person_sql_publish(nowpage,pagelength)
+    function person_sql_publish(nowpage,pagelength,keywords)
     {
 
         $.ajax({
 	        url:"{:U('php_publish_sql')}",
 	        type: 'POST',
-	        data: {nowpage:nowpage,pagelength:pagelength},
+	        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords},
 	        dataType: 'json',
 	        success: function(re) {
 	        	var testlist=re;
@@ -225,7 +252,7 @@
 				for (var i = 0; i<mylength; i++) 
 	            {
 					j=i+1;
-					addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td >'+testlist[i]['name']+'</td><td>'+testlist[i]['username']+'</td><td>'+testlist[i]['status']+'</td><td>'+testlist[i]['createtime']+'</td><td><a href="#" onclick="delpublish('+testlist[i]['id']+');">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editpublish('+testlist[i]['id']+','+testlist[i]['newstatus']+');" href="#}">冻结/启动</a></td></tr>';
+					addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailpublish('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['username']+'</td><td>'+testlist[i]['status']+'</td><td>'+testlist[i]['createtime']+'</td><td><a href="#" onclick="delpublish('+testlist[i]['id']+');">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editpublish('+testlist[i]['id']+','+testlist[i]['newstatus']+');" href="#}">'+testlist[i]['nstatus']+'</a></td></tr>';
 					$('#list1').html(beginhtml + addhtmlmsg);
 					j++;
 	            }
@@ -270,6 +297,25 @@
 	             }
 	         })
     	}
+    }
+    
+    function detailpublish(id)
+    {
+    	if(id) {
+	    	 $.ajax({
+	             url: "{:U('detailpublish')}",
+	             type: 'POST',
+	             data: {id:id,status:status},
+	             dataType: 'json',
+	             success: function (re) {
+	             	$("#name").val(re.name);
+	             	$("#username").val(re.username);
+	             	$("#phone").val(re.phone);
+	             	$("#address").val(re.address);
+	             	$("#publishid").val(re.id);
+	             }
+	         })
+   	}
     }
 </script>
 </html>
