@@ -75,22 +75,17 @@
     <div class="row" style="height: 15px;"></div>
     <div class="row">
         <div class="col-xs-6" style="height: 660px;border-right:1px solid #C3C3C3;">
-            <div class="row sysset_blue" style="clear: left;"><span  id="chapter_part_msg" style="font-size: 16px;margin-left: 8%;"><b>知识点列表</b></span>><input  type="text" placeholder="出版社名称" class="input_css" style="margin-left:200px;"> <input   type="text" placeholder="习题册名称"  class="input_css"> <input   type="text" placeholder="知识点"  class="input_css"></div>
+            <div class="row sysset_blue" style="clear: left;"><span  id="chapter_part_msg" style="font-size: 16px;margin-left: 8%;"><b>知识点列表</b></span>><input onblur="searchkpoint();" name="publishname" id="publishname"  type="text" placeholder="出版社名称" class="input_css" style="margin-left:200px;"> <input onblur="searchkpoint();" name="exercisename" id="exercisename"   type="text" placeholder="习题册名称"  class="input_css"> <input onblur="searchkpoint();" name="keywords" id="keywords"   type="text" placeholder="知识点"  class="input_css"></div>
             <hr style="margin-left: 6%;">
             <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
                
-            <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
-            <tr>
-                <th>序号</th><th>知识点</th><th>出版社</th><th>习题册</th><th>时间</th><th>操作</th>
-            </tr>
-            <tr class="change">
-                <td >1<input type="hidden" value="{$testdata.id}"></td><td >知识点</td><td>出版社</td><td>习题册</td><td>2019-01-12 12:20</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">冻结/启动</a></td>
-            </tr>
+            <table id="list1" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
+          
         	</table>
               
               
                 <input id="part_begin" type="hidden" value="1">
-                <div id="part_page_a" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="pre_sub('part')" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="part_begin_page">1</span>/<span id="part_page_sum">4</span></a><a style="margin-left: 4px;" onclick="next_sub('part')" href="javascript:void(0)">下一页</a></div></div>
+                <div id="part_page_a" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div></div>
    
                
             </div>
@@ -98,14 +93,14 @@
         </div>
 
         <div class="col-xs-6" style="height: 660px;border-right:1px solid #C3C3C3;">
-            <div class="row sysset_blue" style="clear: left;"><span style="font-size: 16px;margin-left: 8%;"><b>添加新知识点</b></span><span style="margin-left: 62%"></span><a id="questiontypes_ok" onclick="newquestiontypesdata('questiontypes')"  href="javascript:void(0)">Add</a></div>
+            <div class="row sysset_blue" style="clear: left;"><span style="font-size: 16px;margin-left: 8%;"><b>添加新知识点<span id="kpointstatus">(添加)</span></b></span><span style="margin-left: 62%"></span><a id="questiontypes_ok" onclick="newquestiontypesdata('questiontypes')"  href="javascript:void(0)">Add</a></div>
             <hr style="margin-left: 6%;">
             <div class="row" style="height: 600px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
 
                 <div class="sysset_msgli" id="questiontypes_msgli" >
                       <ol>
                         <li >
-                           <span >习题册名称：</span> <input id="name" id="name"   type="text">
+                           <span >知识点名称：</span> <input id="name" id="name"   type="text">
                         </li>
                         <li >
                             <span class="sysset_marginleft28">出版社：</span>
@@ -139,14 +134,14 @@
                         <li >
 
                             <span >收费方式：</span>
-                            <select id="moneycount">
+                            <select onchange="changeprice();" id="charge">
                             <option value ="0">免费</option>
                             <option value ="1">收费</option>
                             <option value ="2">支付码</option>
                            </select>
                         </li>
                         <li >
-                            <span  class="sysset_marginleft28">费用：</span> <input id="price" name="price"  required="required"  type="text" value="">
+                            <span  class="sysset_marginleft28">费用：</span> <input id="price" name="price"     type="number" value="0">
                         </li>
                       <li >
 
@@ -158,11 +153,12 @@
                            </select>
                         </li>
                         <li >
-                            <span >其他说明：</span> <input id="other" id="other"  required="required"  type="text" value="">
+                            <span >其他说明：</span> <input id="other" id="other"     type="text" value="">
+                            <input id="kid" name="kid"   type="hidden" value="0">
                         </li>
                         <li>
-                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button"  value="确认">
-                           <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button"  value="取消">
+                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" onclick="addkpoint();" type="button"  value="确认">
+                           <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" onclick="cancle();" type="button"  value="取消">
                         </li>
                        
                     </ol>
@@ -175,11 +171,251 @@
 
 
 </div>
-
+<input id="pagelength" name="pagelength" type="hidden" value="6">
 
 </body>
 <script type="text/javascript">
 
+$(function(){
+
+	var nowpage=1;
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#keywords").val();
+	var publishname=$("#publishname").val();
+	var exercisename=$("#exercisename").val();
+	
+	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
+})
+
+function searchkpoint()
+{
+   	var nowpage=1;
+   	var pagelength=$('#pagelength').val();
+   	var keywords=$("#keywords").val();
+   	var publishname=$("#publishname").val();
+   	var exercisename=$("#exercisename").val();
+   	
+   	$('#list1').html('');
+   	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
+}
+
+
+function nextpage()
+{
+	var nowpage=$('#nowpage').text();
+	var maxnum=$('#pagenum').text();
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#keywords").val();
+	var publishname=$("#publishname").val();
+	var exercisename=$("#exercisename").val();
+	
+	nowpage=nowpage*1+1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	 
+	$('#list1').html('');
+	
+	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
+}
+
+function prepage()
+{
+	var nowpage=$('#nowpage').text();
+	var maxnum=$('#pagenum').text();
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#keywords").val();
+	var publishname=$("#publishname").val();
+	var exercisename=$("#exercisename").val();
+	
+	nowpage=nowpage*1-1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+
+	$('#list1').html('');
+	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
+}
+
+
+function addkpoint()
+{
+	var name=$('#name').val();
+	var publishid=$('#publishid').val();
+	var exerciseid=$('#exerciseid').val();
+	var classify=$('#classify').val();
+	var charge=$("#charge").val();
+	var price=$("#price").val();
+	var other=$("#other").val();
+	var kid=$("#kid").val();
+	var method=$("#method").val();
+	
+    if(name=='')
+    {
+        alert('知识名称不能为空！！');
+        return;
+    }
+ 
+    if(publishid==0)
+    {
+        alert('请选择出版社！！');
+        return;
+    }
+    
+    $.ajax({
+        url: "{:U('addkpoint')}",
+        type: 'POST',
+        data: {name:name,publishid: publishid, exerciseid: exerciseid,classify:classify,charge:charge,price:price,other:other,kid:kid,method:method},
+        dataType: 'json',
+        success: function (re) {
+        	 if(re>=0) {
+            	 alert('操作成功');
+             	 $('#name').val('');
+            	 $('#publishid').val(0);
+            	 $('#exerciseid').val(0);
+            	 $('#booknumber').val('');
+            	 $('#classify').val('');
+             
+            	 $('#charge').val('');
+            	 $('#price').val('');
+            	 $('#other').val('');
+            	 $("#kid").val();
+            	 location.reload();
+             }
+        	 if(re==-1) {
+        		 alert('知识名称重复请重试');
+        		 return;
+        	 }
+        }
+    })
+}
+ 
+ 
+function person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename)
+{
+
+    $.ajax({
+        url:"{:U('php_kpoint_sql')}",
+        type: 'POST',
+        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishname:publishname,exercisename:exercisename},
+        dataType: 'json',
+        success: function(re) {
+        	var testlist=re;
+			var addhtmlmsg = '<tr><th>序号</th><th>知识点</th><th>习题册</th><th>出版社</th><th>状态</th><th>时间</th><th>操作</th></tr>';
+			var beginhtml = $('#list1').html();
+			var mylength = testlist['length'];
+			var pagenum=testlist['pagenum'];
+			
+			$('#pagenum').text(pagenum);
+			$('#nowpage').text(nowpage);
+
+			for (var i = 0; i<mylength; i++) 
+            {
+				j=i+1;
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailkpoint('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['status']+'</td><td>'+testlist[i]['createtime']+'</td><td><a href="#" onclick="delkpoint('+testlist[i]['id']+');">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editkpoint('+testlist[i]['id']+','+testlist[i]['newstatus']+');" href="#}">'+testlist[i]['nstatus']+'</a></td></tr>';
+				$('#list1').html(beginhtml + addhtmlmsg);
+				j++;
+            }
+
+           
+        }
+    });
+}
+
+function delkpoint(id)
+{
+	if(id) {
+    	 $.ajax({
+             url: "{:U('delkpoint')}",
+             type: 'POST',
+             data: {id:id},
+             dataType: 'json',
+             success: function (re) {
+                 if(re==1) {
+                	 alert('删除成功');
+                	 location.reload();
+                 }
+             }
+         })
+		}
+}
+
+function editkpoint(id,status)
+{
+	if(id) {
+    	 $.ajax({
+             url: "{:U('editkpoint')}",
+             type: 'POST',
+             data: {id:id,status:status},
+             dataType: 'json',
+             success: function (re) {
+                 if(re==1) {
+                	 alert('操作成功');
+                	 location.reload();
+                 } 
+             }
+         })
+	}
+}
+
+function detailkpoint(id)
+{
+	if(id) {
+    	 $.ajax({
+             url: "{:U('detailkpoint')}",
+             type: 'POST',
+             data: {id:id},
+             dataType: 'json',
+             success: function (re) {
+            	$("#kpointstatus").html('(修改)')
+             	$("#name").val(re.name);
+             	$("#publishid").val(re.publishid);
+             	$("#method").val(re.method);
+             	$("#classify").val(re.classify);
+             	
+             	$("#exerciseid").val(re.exerciseid);
+             	$("#charge").val(re.charge);
+             	$("#price").val(re.price);
+             	$("#other").val(re.other);
+             	$("#kid").val(re.id);
+             }
+         })
+		}
+}
+
+function cancle()
+{
+	$('#name').val('');
+	$('#publishid').val(0);
+	$('#exerciseid').val(0);
+	$('#classify').val(0);
+	$('#charge').val(0);
+	$('#price').val('');
+	$('#other').val('');
+	$('#kid').val(0);
+	$('#method').val(0);
+	$("#kpointstatus").html('(添加)')
+}
+
+function changeprice()
+{
+	var charge=$("#charge").val();
+	if(charge==1) {
+		$("#price").val('');
+	} else {
+		$("#price").val(0);
+	}
+}
      
 
 </script>

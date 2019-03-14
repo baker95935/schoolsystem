@@ -212,15 +212,27 @@ class PublishsetController extends Controller
       	$model=M('book_exercises');
       	$publish=M('publish_name');
       	
+      	$dataarr=array();
+      	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
+      	
       	//查找出版社的名字
       	$publishinfo=array();
       	if($publishname) {
-	      	$publishinfo=$publish->where("name like '%".$publishname."%'")->field('id')->select();
+	      	$publishlist=$publish->where("name like '%".$publishname."%'")->field('id')->select();
+	      	if(!empty($publishlist)) {
+	      		foreach($publishlist as $k=>$v) {
+	      			$publishinfo[]=$v['id'];
+	      		}
+	      	}
+	      	
+	      	if(!empty($publishinfo)){
+	      		$dataarr['publishid']=array('in',$publishinfo);
+	      	} else {
+	      		$dataarr['publishid']=0;
+	      	}
       	}
  
-      	$dataarr=array();
-	  	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
-	  	!empty($publishinfo[0]) && $dataarr['publishid']=array('in',$publishinfo[0]);
+	
 		$count=$model->where($dataarr)->count();
 		$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
 		foreach($data as $k=>&$v) {
@@ -730,6 +742,7 @@ class PublishsetController extends Controller
 
     }
 
+    //知识点
     public function systemset_03()
     {
        	//出版社列表
@@ -748,8 +761,162 @@ class PublishsetController extends Controller
     	$this->assign('exerciselist',$exerciselist);
     	$this->display();
     }
+    
+    //添加知识点
+    public function addkpoint()
+    {
+    	$model=M('exercise_kpoint');
+    	$data=array();
+    	$data['name']=$_POST['name'];
+    	$data['publishid']=$_POST['publishid'];
+    	$data['exerciseid']=$_POST['exerciseid'];
+    	
+    	$data['method']=$_POST['method'];
+    	$data['classify']=$_POST['classify'];
+    	$data['charge']=$_POST['charge'];
+    	$data['price']=$_POST['price'];
+    	$data['other']=$_POST['other'];
+    	$data['createtime']=time();
+    	!empty($_POST['kid']) && $data['id']=$_POST['kid'];
+    	 
+    	$result=0;
+    	//校验下是否重复
+    	if(!empty($_POST['kid'])) {
+    		$count=$model->where("name='".$data['name']."' and id!=".$_POST['kid'])->count();
+    	} else {
+    		$count=$model->where("name='".$data['name']."'")->count();
+    	}
+    	 
+    	if($count>0) {
+    		$result=-1;
+    	} else  {
+    		if(empty($_POST['kid'])) {
+    			$result=$model->add($data);
+    		} else {
+    			unset($data['createtime']);
+    			$result=$model->save($data);
+    		}
+     
+    	}
+    	echo $result ;
+    }
 
+    //数据获取分页
+    public function php_kpoint_sql()
+    {
+    	$nowpage=$_POST['nowpage'];
+    	$pagelength=$_POST['pagelength'];
+    	$keywords=$_POST['keywords'];
+    	$publishname=$_POST['publishname'];
+    	$exercisename=$_POST['exercisename'];
+    
+    	$beginnum=($nowpage-1)*$pagelength+1;
+    	$beginpagenum=$beginnum-1;
+    
+    	$model=M('exercise_kpoint');
+    	$publish=M('publish_name');
+    	$exercise=M('book_exercises');
+    	 
+    	$dataarr=array();
+    	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
+    	 
+    	//查找出版社的名字
+    	$publishinfo=array();
+    	if($publishname) {
+    		$publishlist=$publish->where("name like '%".$publishname."%'")->field('id')->select();
+    		if(!empty($publishlist)) {
+    			foreach($publishlist as $k=>$v) {
+    				$publishinfo[]=$v['id'];
+    			}
+    		}
+    
+    		if(!empty($publishinfo)){
+    			$dataarr['publishid']=array('in',$publishinfo);
+    		} else {
+    			$dataarr['publishid']=0;
+    		}
+    	}
+    	
+    	//查找习题册的名字
+    	$exerciseinfo=array();
+    	if($exercisename) {
+    		$exerciselist=$exercise->where("name like '%".$exercisename."%'")->field('id')->select();
+    		if(!empty($exerciselist)) {
+    			foreach($exerciselist as $k=>$v) {
+    				$exerciseinfo[]=$v['id'];
+    			}
+    		}
+    	
+    		if(!empty($exerciseinfo)){
+    			$dataarr['exerciseid']=array('in',$exerciseinfo);
+    		} else {
+    			$dataarr['exerciseid']=0;
+    		}
+    	}
+    
+    
+    	$count=$model->where($dataarr)->count();
+    	$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
+    	foreach($data as $k=>&$v) {
+    		$v['num']=$beginnum;
+    		$beginnum=$beginnum+1;
+    		!empty($v['createtime']) && $v['createtime']=date("Y-m-d H:i:s",$v['createtime']);
+    		$v['status']==1 && $v['newstatus']=2;
+    		$v['status']==2 && $v['newstatus']=1;
+    
+    		$v['status']==1 && $v['nstatus']='冻结';
+    		$v['status']==2 && $v['nstatus']='启动';
+    		 
+    		$v['status']==1 && $v['status']='启动';
+    		$v['status']==2 && $v['status']='冻结';
+    
+    		//获取出版社数据
+    		if($v['publishid']) {
+    			$tmp=$publish->find($v['publishid']);
+    			$v['publishname']=$tmp['name'];
+    		}
+    		//获取习题册的数据
+    		if($v['exerciseid']) {
+    			$tmp=$exercise->find($v['exerciseid']);
+    			$v['exercisename']=$tmp['name'];
+    		}
+    
+    	}
+    
+    
+    	$data['length']=sizeof($data);
+    	$data['pagelength']=$pagelength;
+    	$data['count']=$count;
+    	 
+    	$data['pagenum']=ceil($count/$pagelength);
+    	echo json_encode($data);
+    }
 
+    public function delkpoint()
+    {
+    	$model=M('exercise_kpoint');
+    	$msg['id']=$_POST[id];
+    	$mm=$model->where($msg)->delete();
+    	echo $mm;
+    }
+    
+    public function detailkpoint()
+    {
+    	$model=M('exercise_kpoint');
+    	$msg['id']=$_POST[id];
+    	$info=$model->find($msg['id']);
+    	echo json_encode($info);
+    }
+    
+    public function editkpoint()
+    {
+    	$model=M('exercise_kpoint');
+    	$data['id']=$_POST[id];
+    	$data['status']=$_POST[status];
+    	$mm=$model->where('id='.$data['id'])->save($data);
+    	echo $mm;
+    }
+    
     public function php_newkeynote_data_sql(){
 
         //2,化学方程式

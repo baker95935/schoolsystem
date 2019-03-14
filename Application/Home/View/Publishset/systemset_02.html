@@ -142,14 +142,14 @@
                         <li >
 
                             <span >收费方式：</span>
-                            <select id="charge">
+                            <select onchange="changeprice();" id="charge">
                             <option value ="0">免费</option>
                             <option value ="1">收费</option>
                             <option value ="2">支付码</option>
                            </select>
                         </li>
                         <li >
-                            <span  class="sysset_marginleft28">费用：</span> <input id="price" name="price"    type="number" value="">
+                            <span  class="sysset_marginleft28">费用：</span> <input id="price" name="price"    type="number" value="0">
                         </li>
          
                         <li >
@@ -262,6 +262,24 @@ function addexercise()
     if(name=='')
     {
         alert('习题册名称不能为空！！');
+        return;
+    }
+ 
+    if(publishid==0)
+    {
+        alert('请选择出版社！！');
+        return;
+    }
+    
+    if(starttime=='')
+    {
+        alert('请选择开始时间！！');
+        return;
+    }
+    
+    if(endtime=='')
+    {
+        alert('请选择结束时间！！');
         return;
     }
  
@@ -399,6 +417,16 @@ function cancle()
 	$('#other').val('');
 	$('#bid').val(0);
 	$("#exercisestatus").html('(添加)')
+}
+
+function changeprice()
+{
+	var charge=$("#charge").val();
+	if(charge==1) {
+		$("#price").val('');
+	} else {
+		$("#price").val(0);
+	}
 }
 </script>
 </html>
