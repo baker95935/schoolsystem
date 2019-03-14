@@ -104,7 +104,7 @@
 
         <div class="col-xs-6" style="height: 660px;">
 
-          <b> <span  style="font-size:14px;">添加习题册</span></b>
+          <b> <span  style="font-size:14px;">添加习题册</span><span id="exercisestatus">(添加)</span></b>
             <hr style="margin-left: 6%;">
            <div class="sysset_msgli" id="school_msgli">
                     <ol>
@@ -119,7 +119,7 @@
                                 <option value="{$item.id}">{$item.name}</option>
                                 </foreach>
                             </select>
-                          <input  required="required" name="publishname" id="publishname" type="text" placeholder="出版社名称">
+                          <input style="display:none;"  required="required" name="publishname" id="publishname" type="text" placeholder="出版社名称">
                         </li>
                         <li>
                              <span class="sysset_marginleft28" >书号：</span>   <input id="booknumber" name="booknumber"   type="text">
@@ -149,7 +149,7 @@
                            </select>
                         </li>
                         <li >
-                            <span  class="sysset_marginleft28">费用：</span> <input id="price" name="price"    type="text" value="">
+                            <span  class="sysset_marginleft28">费用：</span> <input id="price" name="price"    type="number" value="">
                         </li>
          
                         <li >
@@ -257,6 +257,7 @@ function addexercise()
 	var charge=$("#charge").val();
 	var price=$("#price").val();
 	var other=$("#other").val();
+	var bid=$("#bid").val();
 	
     if(name=='')
     {
@@ -268,7 +269,7 @@ function addexercise()
     $.ajax({
         url: "{:U('addexercise')}",
         type: 'POST',
-        data: {name:name,publishid: publishid, booknumber: booknumber,classify:classify,starttime:starttime,endtime:endtime,charge:charge,price:price,other:other},
+        data: {name:name,publishid: publishid, booknumber: booknumber,classify:classify,starttime:starttime,endtime:endtime,charge:charge,price:price,other:other,bid:bid},
         dataType: 'json',
         success: function (re) {
         	 if(re>=1) {
@@ -369,6 +370,7 @@ function detailexercise(id)
              data: {id:id},
              dataType: 'json',
              success: function (re) {
+            	$("#exercisestatus").html('(修改)')
              	$("#name").val(re.name);
              	$("#publishid").val(re.publishid);
              	$("#booknumber").val(re.booknumber);
@@ -387,14 +389,16 @@ function detailexercise(id)
 function cancle()
 {
 	$('#name').val('');
-	$('#publishid').val('');
+	$('#publishid').val(0);
 	$('#booknumber').val('');
-	$('#classify').val('');
+	$('#classify').val(0);
 	$('#starttime').val('');
 	$('#endtime').val('');
-	$('#charge').val('');
+	$('#charge').val(0);
 	$('#price').val('');
 	$('#other').val('');
+	$('#bid').val(0);
+	$("#exercisestatus").html('(添加)')
 }
 </script>
 </html>

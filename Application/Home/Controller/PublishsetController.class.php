@@ -184,13 +184,14 @@ class PublishsetController extends Controller
     	} else {
     		$count=$model->where("name='".$data['name']."'")->count();
     	}
-    	
+     
     	if($count>0) {
     		$result=-1;
     	} else  {
     		if(empty($_POST['bid'])) {
     			$result=$model->add($data);
     		} else {
+    			unset($data['createtime']);
     			$result=$model->save($data);
     		}
     	}
@@ -213,11 +214,13 @@ class PublishsetController extends Controller
       	
       	//查找出版社的名字
       	$publishinfo=array();
-      	$publishinfo=$publish->where("name='".$publishname."'")->find();
-      	
+      	if($publishname) {
+	      	$publishinfo=$publish->where("name like '%".$publishname."%'")->field('id')->select();
+      	}
+ 
       	$dataarr=array();
 	  	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
-	  	!empty($publishname) && $dataarr['publishid']=$publishinfo['id'];
+	  	!empty($publishinfo[0]) && $dataarr['publishid']=array('in',$publishinfo[0]);
 		$count=$model->where($dataarr)->count();
 		$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
 		foreach($data as $k=>&$v) {
@@ -264,6 +267,8 @@ class PublishsetController extends Controller
     	$model=M('book_exercises');
     	$msg['id']=$_POST[id];
     	$info=$model->find($msg['id']);
+    	!empty($info['starttime']) && $info['starttime']=date('Y-m-d',$info['starttime']);
+    	!empty($info['endtime']) && $info['endtime']=date('Y-m-d',$info['endtime']);
     	echo json_encode($info);
     }
     
