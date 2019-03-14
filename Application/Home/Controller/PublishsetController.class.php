@@ -732,18 +732,21 @@ class PublishsetController extends Controller
 
     public function systemset_03()
     {
-        $model_subject = M('subject_data');
-
-        $questiontypesdata=$model_subject->select();
-
-
-        $this->assign('questiontypes',$questiontypesdata);
-      // print_r($questiontypesdata);
-
-        $this->display();
-
-
-
+       	//出版社列表
+    	$publish=M('publish_name');
+    	$publishlist=$publish->where('status=1')->select();
+    	//分类列表
+    	$classify=M('book_classify');
+    	$classlist=$classify->select();
+    	
+    	//习题册
+    	$exercise=M('book_exercises');
+    	$exerciselist=$exercise->where('status=1')->select();
+    	
+    	$this->assign('publishlist',$publishlist);
+    	$this->assign('classlist',$classlist);
+    	$this->assign('exerciselist',$exerciselist);
+    	$this->display();
     }
 
 
