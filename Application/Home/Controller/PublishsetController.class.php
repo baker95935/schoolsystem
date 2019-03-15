@@ -1393,4 +1393,18 @@ class PublishsetController extends Controller
     	}
     	echo $res;
     }
+    
+    
+    public function addkeypaper()
+    {
+    	$paper=M('key_paper_msg_data');
+    	$data=array();
+    	$data['paper_name']=$_POST['examname'];
+    	$data['keynote_id']=$_POST['kpointid'];
+    	$data['filesernum']=$_POST['filesernum'];
+    	$data['creat_time']=date('Y-m-d H:i:s');
+    	$insertid=$paper->add($data);
+    	 
+    	echo $insertid;
+    }
 }

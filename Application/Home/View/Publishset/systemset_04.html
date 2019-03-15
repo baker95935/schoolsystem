@@ -139,12 +139,13 @@
             <hr style="margin-left: 6%;">
             <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
                 <div class="col-xs-3" style="height: 250px;">
-                      <div  class="row" >
-                        <input name="kpointname" id="kpointname" type="text" value="" placeholder="知识点"  style="font-size:13px;width: 100px;text-align: center;">
-                    </div>
-                    <div  class="row"  style="margin-top: 10px;" >
+                     <div  class="row" >
                         <input name="examname" id="examname" type="text" value="" placeholder="试卷名称"  style="font-size:13px;width: 100px;text-align: center;">
                     </div>
+                      <div  class="row" style="margin-top: 10px;" >
+                        <input name="kpointname" id="kpointname" type="text" value="" placeholder="知识点"  style="font-size:13px;width: 100px;text-align: center;">
+                    </div>
+
                     <div id="test_kind_select" class="row"  style="margin-top: 10px;" >
                         <input name="newpublishname" id="newpublishname"   type="text" value="" placeholder="出版社"  style="font-size:13px;width: 100px;text-align: center;">
                     </div>
@@ -159,9 +160,11 @@
                                 <option value ="2">信息</option>
                             </select>
                     </div>
-                  
+                    <input type="hidden" name="kpointid" id="kpointid" value=0>
+                    <input type="hidden" name="exerciseid" id="exerciseid" value=0>
+                    <input type="hidden" name="filesernum" id="filesernum" value=0>
                      <div class="row"  style="margin-top: 10px;">
-                    <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button"  value="添加/更新">
+                    <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button" onclick="addkeypaper();"  value="添加/更新">
                     </div>
                   
                  
@@ -176,24 +179,15 @@
             </tr>
         </table>
                   
-                   <input id="chaptermsg_begin" type="hidden" value="1">
-                <div id="exerciselistpagediv" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="pre_sub('chaptermsg')" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="chaptermsg_begin_page">1</span>/<span id="chaptermsg_page_sum">4</span></a><a style="margin-left: 4px;" onclick="next_sub('chaptermsg')" href="javascript:void(0)">下一页</a></div></div>
-
-
                   
           <table id="kpointlistdiv" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
-            <tr>
-                <th>序号</th><th>知识点名称</th><th>习题图片</th><th>答案图片</th><th>过程</th><th>操作</th>
+            <tr id="kpointlistdivtr">
+                <th>序号</th><th>试卷名称</th><th>习题图片</th><th>答案图片</th><th>过程</th><th>操作</th>
             </tr>
-            <tr class="change">
-                <td >1<input type="hidden" value="{$testdata.id}"></td><td >试卷名称</td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td>
-            </tr>
+
+            <input type="hidden" name="kpointnum" id="kpointnum" value=0>
         </table>
                   
-                   <input id="chaptermsg_begin" type="hidden" value="1">
-                <div id="kpointlistpagediv" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="pre_sub('chaptermsg')" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="chaptermsg_begin_page">1</span>/<span id="chaptermsg_page_sum">4</span></a><a style="margin-left: 4px;" onclick="next_sub('chaptermsg')" href="javascript:void(0)">下一页</a></div></div>
-
-
                 </div>
 
             </div>
@@ -363,27 +357,23 @@ function detailexercise(id)
             }
         }
 
-        var paper_name=$('#datetime_input').val();
+        var paper_name=$('#examname').val();
         var test_kind_select=$("input[name='kind_select']:checked").val();
-        var keynote_id=check_val;
+        var keynote_id=$("#kpointid").val();
         var subjectid=$('#subjectmsg_select').find("option:selected").val();
         var schoolname=$('#schoolname_select').find("option:selected").val();
         var keynote_input=$('#keynote_input').val();
         var filesernum=createfilesernum('system');
         var gradeid=$('#grademsg_select').find("option:selected").val();
 
-
-        if(checkDate(paper_name)==0)
+        $('#filesernum').val(filesernum);
+        if(paper_name==0)
         {
             alert('试卷名称必须是日期格式！！');
             return;
         }
 
-        if(subjectid==0)
-        {
-            alert('请选择科目！！');
-            return;
-        }
+  
 
         formData.append('paper_name', paper_name);
         formData.append('test_kind', test_kind_select);
@@ -511,9 +501,7 @@ function detailexercise(id)
     		
     		//右侧习题列表和分页
     		$("#exerciselistdiv").show();
-    		$("#exerciselistpagediv").show();
     		$("#kpointlistdiv").hide();
-    		$("#kpointlistpagediv").hide();
     		
     		//习题的搜索框
     		$("#searchexercisediv").show();
@@ -541,9 +529,7 @@ function detailexercise(id)
     		
     		//右侧知识点列表和分页
     		$("#exerciselistdiv").hide();
-    		$("#exerciselistpagediv").hide();
     		$("#kpointlistdiv").show();
-    		$("#kpointlistpagediv").show();
     		
     		//搜索框
     		$("#searchkpointdiv").show();
@@ -668,9 +654,37 @@ function detailexercise(id)
                  	$("#newexercisename").val(re.exercisename);
                     $("#newpublishname").val(re.publishname);
                     $("#kpointname").val(re.name);
+                    $("#kpointid").val(re.id);
                  }
-             })
-    		}
+             });
+    	}
+    }
+    
+    function addkeypaper()
+    {
+    	var examname=$("#examname").val();
+    	var kpointid=$("#kpointid").val();
+    	var filesernum=$("#filesernum").val();
+    	
+    	if(examname && kpointid) {
+	       	$.ajax({
+	             url: "{:U('addkeypaper')}",
+	             type: 'POST',
+	             data: {examname:examname,kpointid:kpointid,filesernum:filesernum},
+	             dataType: 'json',
+	             success: function (re) {
+	            	 
+	            		alert('添加成功');
+	            		oldnum=$("#kpointnum").val();
+	            		num=parseInt(oldnum)+1;
+	            		var appendhtml="<tr class='change'><td>"+num+"</td><td>"+re.paper_name+"</td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+	            		$("#kpointlistdiv").append(appendhtml);
+	            		$("#kpointnum").val(num);
+	            	 
+	              
+	             }
+	         });
+    	}
     }
 </script>
 </html>
