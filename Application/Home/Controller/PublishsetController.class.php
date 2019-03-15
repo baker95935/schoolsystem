@@ -277,8 +277,14 @@ class PublishsetController extends Controller
     public function detailexercise()
     {
     	$model=M('book_exercises');
+    	$publish=M('publish_name');
     	$msg['id']=$_POST[id];
     	$info=$model->find($msg['id']);
+    	if($info['publishid']) {
+	    	$tmp=$publish->find($info['publishid']);
+	    	$info['publishname']=$tmp['name'];
+    	}
+    	
     	!empty($info['starttime']) && $info['starttime']=date('Y-m-d',$info['starttime']);
     	!empty($info['endtime']) && $info['endtime']=date('Y-m-d',$info['endtime']);
     	echo json_encode($info);
@@ -903,8 +909,23 @@ class PublishsetController extends Controller
     public function detailkpoint()
     {
     	$model=M('exercise_kpoint');
+    	$publish=M('publish_name');
+    	$exercise=M('book_exercises');
     	$msg['id']=$_POST[id];
     	$info=$model->find($msg['id']);
+    	
+    	//获取出版社和习题册的名字
+    	if(!empty($info['publishid'])) {
+    		$tmp=$publish->find($info['publishid']);
+    		$info['publishname']=$tmp['name'];
+    	}
+    	
+    	if(!empty($info['exerciseid'])) {
+    		$tmp=$exercise->find($info['exerciseid']);
+    		$info['exercisename']=$tmp['name'];
+    	}
+    	
+    	
     	echo json_encode($info);
     }
     
