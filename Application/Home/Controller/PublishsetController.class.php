@@ -1236,106 +1236,7 @@ class PublishsetController extends Controller
 
 
     }
-
-    public function upload()
-    {
-
-
-        $upload = new \Think\Upload();// 实例化上传类
-        $upload->maxSize=3145728 ;// 设置附件上传大小
-        $upload->exts=array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
-        $upload->rootPath='./uploads/inittestimg/'; // 设置附件上传根目录
-
-        $upload->savePath=''; // 设置附件上传（子）目录
-        // 上传文件
-        $info=$upload->upload();
  
-        $paper_name=$_POST["paper_name"];
-        $test_kind=$_POST["test_kind"];
-        $keynote_id=$_POST["keynote_id"];
-        $subjectid=$_POST["subjectid"];
-        $schoolname=$_POST["schoolname"];
-        $filesernum=$_POST["filesernum"];
-        $gradeid=$_POST["gradeid"];
- 
-        $model_key_paper=M('key_paper_msg_data');
-        $model_paper_img_data=M('paper_img_data');
-
-        $key_arr['paper_name']=$paper_name;
-        $data=$model_key_paper->where($key_arr)->find();
-        $count=sizeof($data);
-      
-        $keynote_arr=explode(',',$keynote_id);
-        $keynote_count=sizeof($keynote_arr);
- 
-        if($count==0)
-        {
-            $key_arr['keynote_id']=$keynote_id;
-            $key_arr['subjectid']=$subjectid;
-            $key_arr['gradeid']=$gradeid;
-            $key_arr['filesernum']=$filesernum;
-            $key_arr['userid']=$schoolname;
-//            $key_arr['kind']=$test_kind;
-            $paper_id=$model_key_paper->add($key_arr);   
-			$max_in_ser=0;
-        }else{
-            $filesernum=$data['filesernum'];
-            $arr['filesernum']=$filesernum;
-            $max_in_ser=$model_paper_img_data->where($arr)->max('in_ser');
-            $max_in_ser=$max_in_ser+1;
-            $paper_id=$data['id'];
-        }
-
-
-
-        $model_onekeynote=M('onekeynote');
-        for($i=0;$i<$keynote_count;$i++)
-        {
-            $onkey_arr['id']=$keynote_arr[$i];
-            $onekeynote_data=$model_onekeynote->where($onkey_arr)->find();
-            $paper_id_msg=$onekeynote_data['testid_arr'];
-            $paper_id_arr=explode(',',$paper_id_msg);
-
-            if(ctb_in_array($paper_id,$paper_id_arr)==-1)
-            {
-                if($paper_id_msg=='')
-                {
-                    $paper_id_msg=$paper_id;
-                }else
-                {
-                    $paper_id_msg=$paper_id_msg.','.$paper_id;
-                }
-
-                $newdata['testid_arr']=$paper_id_msg;
-
-                $model_onekeynote->where($onkey_arr)->save($newdata);
-            }
-           // 进行修改
-        }
-        //paper_name+'|'+test_kind_select+'|'+keynote_id+'|'+subjectid+'|'+schoolname+'|'+keynote_input+'|'+filesernum+'|'+gradeid
-        if(!$info) {// 上传错误提示错误信息
-            $this->error($upload->getError());
-        }else{// 上传成功 获取上传文件信息
-            foreach($info as $file){
-                $model_paper_img_data = M('paper_img_data');
-                $paper_arr['paper_name']=$_POST['paper_name'];
-                $paper_arr['filesernum']=$filesernum;
-                $paper_arr['src_pic']='./uploads/inittestimg/'.$file['savepath'].$file['savename'];
-                $paper_arr['img_kind']=1;
-                if($file['key']=='file_answer') {
-                	$paper_arr['img_kind']=2;
-                }
-                //$paper_arr['img_kind']=$test_kind;
-                $paper_arr['in_ser']=$max_in_ser;
-                $paper_arr['img_reg']=0;
-                $paper_arr['img_status']=0;
-                $max_in_ser=$max_in_ser+1;
-                $model_paper_img_data->add($paper_arr);
-            }
-          
-            echo 1;
-        }
-    }
 
     public function test12()
     {
@@ -1394,7 +1295,7 @@ class PublishsetController extends Controller
     	echo $res;
     }
     
-    
+    //更新
     public function addkeypaper()
     {
     	$paper=M('key_paper_msg_data');
@@ -1402,9 +1303,157 @@ class PublishsetController extends Controller
     	$data['paper_name']=$_POST['examname'];
     	$data['keynote_id']=$_POST['kpointid'];
     	$data['filesernum']=$_POST['filesernum'];
-    	$data['creat_time']=date('Y-m-d H:i:s');
-    	$insertid=$paper->add($data);
-    	 
-    	echo $insertid;
+    	$data['id']=$_POST['kpaperid'];
+    	$paper->where('id='.$data['id'])->save($data);
+    	
+    	$publish=M('publish_name');
+    	$exercise=M('book_exercises');
+    	$koint=M('exercise_kpoint');
+    	
+    	$info=$paper->find($data['id']);
+    	if($info['keynote_id']) {
+	    	$tmp=$koint->find($info['keynote_id']);
+	    	$info['kpointname']=$tmp['name'];
+	    	
+    		//获取出版社和习题册的名字
+	    	if(!empty($tmp['publishid'])) {
+	    		$atmp=$publish->find($tmp['publishid']);
+	    		$info['publishname']=$atmp['name'];
+	    	}
+	    	
+	    	if(!empty($tmp['exerciseid'])) {
+	    		$tmp=$exercise->find($tmp['exerciseid']);
+	    		$info['exercisename']=$tmp['name'];
+	    	}
+    	}
+    	echo json_encode($info);
+    }
+    
+    public function detailkpointpaper()
+    {
+    	$paper=M('key_paper_msg_data');
+    	$publish=M('publish_name');
+    	$exercise=M('book_exercises');
+    	$koint=M('exercise_kpoint');
+    	
+    	$msg['id']=$_POST[id];
+    	$info=$paper->find($msg['id']);
+    	if($info['keynote_id']) {
+	    	$tmp=$koint->find($info['keynote_id']);
+	    	$info['kpointname']=$tmp['name'];
+	    	
+    		//获取出版社和习题册的名字
+	    	if(!empty($tmp['publishid'])) {
+	    		$atmp=$publish->find($tmp['publishid']);
+	    		$info['publishname']=$atmp['name'];
+	    	}
+	    	
+	    	if(!empty($tmp['exerciseid'])) {
+	    		$tmp=$exercise->find($tmp['exerciseid']);
+	    		$info['exercisename']=$tmp['name'];
+	    	}
+    	}
+    	echo json_encode($info);
+    }
+    
+ 	public function upload()
+    {
+
+
+        $upload = new \Think\Upload();// 实例化上传类
+        $upload->maxSize=3145728 ;// 设置附件上传大小
+        $upload->exts=array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+        $upload->rootPath='./uploads/inittestimg/'; // 设置附件上传根目录
+
+        $upload->savePath=''; // 设置附件上传（子）目录
+        // 上传文件
+        $info=$upload->upload();
+ 
+        $paper_name=$_POST["paper_name"];
+        $test_kind=$_POST["test_kind"];
+        $keynote_id=$_POST["keynote_id"];
+        $subjectid=$_POST["subjectid"];
+        $schoolname=$_POST["schoolname"];
+        $filesernum=$_POST["filesernum"];
+        $gradeid=$_POST["gradeid"];
+ 
+        $model_key_paper=M('key_paper_msg_data');
+        $model_paper_img_data=M('paper_img_data');
+
+        $key_arr['paper_name']=$paper_name;
+        $data=$model_key_paper->where($key_arr)->find();
+        $count=sizeof($data);
+      
+        $keynote_arr=explode(',',$keynote_id);
+        $keynote_count=sizeof($keynote_arr);
+ 
+        if($count==0)
+        {
+            $key_arr['keynote_id']=$keynote_id;
+            $key_arr['subjectid']=$subjectid;
+            $key_arr['gradeid']=$gradeid;
+            $key_arr['filesernum']=$filesernum;
+            $key_arr['userid']=$schoolname;
+            $key_arr['creat_time']=date('Y-m-d H:i:s');
+            $paper_id=$model_key_paper->add($key_arr);   
+			$max_in_ser=0;
+        }else{
+            $filesernum=$data['filesernum'];
+            $arr['filesernum']=$filesernum;
+            $max_in_ser=$model_paper_img_data->where($arr)->max('in_ser');
+            $max_in_ser=$max_in_ser+1;
+            $paper_id=$data['id'];
+        }
+
+
+
+        $model_onekeynote=M('onekeynote');
+        for($i=0;$i<$keynote_count;$i++)
+        {
+            $onkey_arr['id']=$keynote_arr[$i];
+            $onekeynote_data=$model_onekeynote->where($onkey_arr)->find();
+            $paper_id_msg=$onekeynote_data['testid_arr'];
+            $paper_id_arr=explode(',',$paper_id_msg);
+
+            if(ctb_in_array($paper_id,$paper_id_arr)==-1)
+            {
+                if($paper_id_msg=='')
+                {
+                    $paper_id_msg=$paper_id;
+                }else
+                {
+                    $paper_id_msg=$paper_id_msg.','.$paper_id;
+                }
+
+                $newdata['testid_arr']=$paper_id_msg;
+
+                $model_onekeynote->where($onkey_arr)->save($newdata);
+            }
+           // 进行修改
+        }
+         
+        if(!$info) {// 上传错误提示错误信息
+            $this->error($upload->getError());
+        }else{// 上传成功 获取上传文件信息
+            foreach($info as $file){
+                $model_paper_img_data = M('paper_img_data');
+                $paper_arr['paper_name']=$_POST['paper_name'];
+                $paper_arr['filesernum']=$filesernum;
+                $paper_arr['src_pic']='./uploads/inittestimg/'.$file['savepath'].$file['savename'];
+                $paper_arr['img_kind']=1;
+                if($file['key']=='file_answer') {
+                	$paper_arr['img_kind']=2;
+                }
+                //$paper_arr['img_kind']=$test_kind;
+                $paper_arr['in_ser']=$max_in_ser;
+                $paper_arr['img_reg']=0;
+                $paper_arr['img_status']=0;
+                $max_in_ser=$max_in_ser+1;
+                $model_paper_img_data->add($paper_arr);
+            }
+          
+            $info=$model_key_paper->find($paper_id); 
+            echo json_encode($info);
+        }
     }
 }

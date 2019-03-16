@@ -134,7 +134,7 @@
                         <progress id="ap" value="0" style="width: 50%;float:left;"></progress><span id="aprogress" style="margin-left: 2px;"></span>
                     </div>
                 </div>
-                <div class="col-xs-3"><input id="input_bt" type="button" value="上传" style="margin-left:20px;background-color: transparent;border: 0px;color: red;font-size: 14px;"></div>
+                <div class="col-xs-3"> </div>
             </div>
             <hr style="margin-left: 6%;">
             <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
@@ -161,10 +161,12 @@
                             </select>
                     </div>
                     <input type="hidden" name="kpointid" id="kpointid" value=0>
+                    <input type="hidden" name="kpaperid" id="kpaperid" value=0>
                     <input type="hidden" name="exerciseid" id="exerciseid" value=0>
                     <input type="hidden" name="filesernum" id="filesernum" value=0>
                      <div class="row"  style="margin-top: 10px;">
-                    <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" type="button" onclick="addkeypaper();"  value="添加/更新">
+                    <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" id="input_bt" type="button"    value="添加">
+                     <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;"  type="button" onclick="addkeypaper();"  value="更新">
                     </div>
                   
                  
@@ -358,6 +360,7 @@ function detailexercise(id)
         }
 
         var paper_name=$('#examname').val();
+        
         var test_kind_select=$("input[name='kind_select']:checked").val();
         var keynote_id=$("#kpointid").val();
         var subjectid=$('#subjectmsg_select').find("option:selected").val();
@@ -365,7 +368,7 @@ function detailexercise(id)
         var keynote_input=$('#keynote_input').val();
         var filesernum=createfilesernum('system');
         var gradeid=$('#grademsg_select').find("option:selected").val();
-
+  
         $('#filesernum').val(filesernum);
         if(paper_name==0)
         {
@@ -388,11 +391,12 @@ function detailexercise(id)
 //    return;
 
         $.ajax({
-            url: "{:U('Systemset/upload')}",
+            url: "{:U('Publishset/upload')}",
             type: "POST",
             processData: false,
             contentType: false,
             data: formData,
+            dataType: 'json',
             xhr: function(){ //获取ajaxSettings中的xhr对象，为它的upload属性绑定progress事件的处理函数
                 myXhr = $.ajaxSettings.xhr();
                 if(myXhr.upload){ //检查upload属性是否存在
@@ -401,15 +405,26 @@ function detailexercise(id)
                 }
                 return myXhr; //xhr对象返回给jQuery使用
             },
-            success: function(d){
-                if(d==1) {
-                    $('#ap').val(0);
-                    $('#aprogress').html('');
-                    $('#preview_div').html('');
-                    $('#preview_answer_div').html('');
-                    alert('上传成功');
-                    //$('#preview').html('上传成功');
-                }
+            success: function(re){
+                $('#ap').val(0);
+                $('#aprogress').html('');
+                $('#preview_div').html('');
+                $('#preview_answer_div').html('');
+                alert('上传成功');
+                
+                //添加到右侧列表
+           		oldnum=$("#kpointnum").val();
+           		num=parseInt(oldnum)+1;
+           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+           		$("#kpointlistdiv").append(appendhtml);
+           		$("#kpointnum").val(num);
+           		
+           		//清空输入框的数据
+           		$("#newexercisename").val('');
+                $("#newpublishname").val('');
+                $("#kpointname").val('');
+                $("#kpointid").val('');
+                $("#examname").val('');
             }
         });
 
@@ -660,24 +675,44 @@ function detailexercise(id)
     	}
     }
     
+    function detailkpointpaper(id)
+    {
+    	if(id) {
+        	 $.ajax({
+                 url: "{:U('detailkpointpaper')}",
+                 type: 'POST',
+                 data: {id:id},
+                 dataType: 'json',
+                 success: function (re) {
+                 	$("#newexercisename").val(re.exercisename);
+                    $("#newpublishname").val(re.publishname);
+                    $("#kpointname").val(re.kpointname);
+                    $("#kpaperid").val(re.id);
+                    $("#examname").val(re.paper_name);
+                 }
+             });
+    	}
+    }
+    
     function addkeypaper()
     {
     	var examname=$("#examname").val();
     	var kpointid=$("#kpointid").val();
     	var filesernum=$("#filesernum").val();
-    	
-    	if(examname && kpointid) {
+    	var kpaperid=$("#kpaperid").val();
+ 
+    	if(examname && kpaperid) {
 	       	$.ajax({
 	             url: "{:U('addkeypaper')}",
 	             type: 'POST',
-	             data: {examname:examname,kpointid:kpointid,filesernum:filesernum},
+	             data: {examname:examname,kpointid:kpointid,filesernum:filesernum,kpaperid:kpaperid},
 	             dataType: 'json',
 	             success: function (re) {
 	            	 
-	            		alert('添加成功');
-	            		oldnum=$("#kpointnum").val();
-	            		num=parseInt(oldnum)+1;
-	            		var appendhtml="<tr class='change'><td>"+num+"</td><td>"+re.paper_name+"</td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+	            		alert('处理成功');
+	            		num=$("#kpointnum").val();
+	            		$("#paper"+re.id).hide();
+	            		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
 	            		$("#kpointlistdiv").append(appendhtml);
 	            		$("#kpointnum").val(num);
 	            	 
