@@ -287,6 +287,14 @@ class PublishsetController extends Controller
     	
     	!empty($info['starttime']) && $info['starttime']=date('Y-m-d',$info['starttime']);
     	!empty($info['endtime']) && $info['endtime']=date('Y-m-d',$info['endtime']);
+    	
+    	  	
+    	//获取知识点对应的试卷
+    	$paper=M('paper_msg_data');
+    	$list=$paper->where('exerciseid='.$msg['id'])->select();
+    	!empty($list) && $info['list']=$list;
+    	!empty($list) && $info['count']=count($list);
+    	
     	echo json_encode($info);
     }
     
@@ -925,7 +933,11 @@ class PublishsetController extends Controller
     		$info['exercisename']=$tmp['name'];
     	}
     	
-    	
+    	//获取知识点对应的试卷
+    	$keynote=M('key_paper_msg_data');
+    	$list=$keynote->where('keynote_id='.$msg['id'])->select();
+    	!empty($list) && $info['list']=$list;
+    	!empty($list) && $info['count']=count($list);
     	echo json_encode($info);
     }
     
@@ -1298,34 +1310,71 @@ class PublishsetController extends Controller
     //更新
     public function addkeypaper()
     {
-    	$paper=M('key_paper_msg_data');
+    	
     	$data=array();
-    	$data['paper_name']=$_POST['examname'];
-    	$data['keynote_id']=$_POST['kpointid'];
-    	$data['filesernum']=$_POST['filesernum'];
-    	$data['id']=$_POST['kpaperid'];
-    	$paper->where('id='.$data['id'])->save($data);
     	
-    	$publish=M('publish_name');
-    	$exercise=M('book_exercises');
-    	$koint=M('exercise_kpoint');
-    	
-    	$info=$paper->find($data['id']);
-    	if($info['keynote_id']) {
-	    	$tmp=$koint->find($info['keynote_id']);
-	    	$info['kpointname']=$tmp['name'];
+    	$kind=$_POST['kind'];
+    	if($kind==2) {
+    		$paper=M('key_paper_msg_data');
+	    	$data['paper_name']=$_POST['examname'];
+	    	$data['keynote_id']=$_POST['kpointid'];
+	    	$data['filesernum']=$_POST['filesernum'];
+	    	$data['id']=$_POST['kpaperid'];
 	    	
-    		//获取出版社和习题册的名字
-	    	if(!empty($tmp['publishid'])) {
-	    		$atmp=$publish->find($tmp['publishid']);
-	    		$info['publishname']=$atmp['name'];
-	    	}
+	    	$paper->where('id='.$data['id'])->save($data);
 	    	
-	    	if(!empty($tmp['exerciseid'])) {
-	    		$tmp=$exercise->find($tmp['exerciseid']);
-	    		$info['exercisename']=$tmp['name'];
+    	   	$publish=M('publish_name');
+	    	$exercise=M('book_exercises');
+	    	$koint=M('exercise_kpoint');
+	    	
+	    	$info=$paper->find($data['id']);
+	    	if($info['keynote_id']) {
+		    	$tmp=$koint->find($info['keynote_id']);
+		    	$info['kpointname']=$tmp['name'];
+		    	
+	    		//获取出版社和习题册的名字
+		    	if(!empty($tmp['publishid'])) {
+		    		$atmp=$publish->find($tmp['publishid']);
+		    		$info['publishname']=$atmp['name'];
+		    	}
+		    	
+		    	if(!empty($tmp['exerciseid'])) {
+		    		$tmp=$exercise->find($tmp['exerciseid']);
+		    		$info['exercisename']=$tmp['name'];
+		    	}
 	    	}
     	}
+    	
+        if($kind==1) {
+        	$paper=M('paper_msg_data');
+	    	$data['paper_name']=$_POST['examname'];
+	    	$data['exerciseid']=$_POST['kpointid'];
+	    	$data['filesernum']=$_POST['filesernum'];
+	    	$data['id']=$_POST['kpaperid'];
+	    	
+	    	$paper->where('id='.$data['id'])->save($data);
+	    	
+    	   	$publish=M('publish_name');
+	    	$exercise=M('book_exercises');
+	     
+	    	$info=$paper->find($data['id']);
+	    	if($info['exerciseid']) {
+		     
+	    		if(!empty($info['exerciseid'])) {
+		    		$tmp=$exercise->find($info['exerciseid']);
+		    		$info['exercisename']=$tmp['name'];
+		    	}
+	    		//获取出版社和习题册的名字
+		    	if(!empty($tmp['publishid'])) {
+		    		$atmp=$publish->find($tmp['publishid']);
+		    		$info['publishname']=$atmp['name'];
+		    	}
+		    	
+		    
+	    	}
+    	}
+    	
+ 
     	echo json_encode($info);
     }
     
@@ -1356,6 +1405,30 @@ class PublishsetController extends Controller
     	echo json_encode($info);
     }
     
+    public function detailexercisepaper()
+    {
+    	$paper=M('paper_msg_data');
+    	$publish=M('publish_name');
+    	$exercise=M('book_exercises');
+    	
+    	$msg['id']=$_POST[id];
+    	$info=$paper->find($msg['id']);
+    	if($info['exerciseid']) {
+	  
+	    	if(!empty($info['exerciseid'])) {
+	    		$tmp=$exercise->find($info['exerciseid']);
+	    		$info['exercisename']=$tmp['name'];
+	    	}
+	    	
+    		//获取出版社和习题册的名字
+	    	if(!empty($tmp['publishid'])) {
+	    		$atmp=$publish->find($tmp['publishid']);
+	    		$info['publishname']=$atmp['name'];
+	    	}
+    	}
+    	echo json_encode($info);
+    }
+    
  	public function upload()
     {
 
@@ -1376,35 +1449,81 @@ class PublishsetController extends Controller
         $schoolname=$_POST["schoolname"];
         $filesernum=$_POST["filesernum"];
         $gradeid=$_POST["gradeid"];
+        $kpaperid=$_POST['kpaperid'];
+        $kind=$_POST['kind'];
+        $exerciseid=$_POST['exerciseid'];
  
         $model_key_paper=M('key_paper_msg_data');
         $model_paper_img_data=M('paper_img_data');
+        $paper=M('paper_msg_data');
 
         $key_arr['paper_name']=$paper_name;
-        $data=$model_key_paper->where($key_arr)->find();
-        $count=sizeof($data);
-      
-        $keynote_arr=explode(',',$keynote_id);
-        $keynote_count=sizeof($keynote_arr);
- 
-        if($count==0)
-        {
-            $key_arr['keynote_id']=$keynote_id;
-            $key_arr['subjectid']=$subjectid;
-            $key_arr['gradeid']=$gradeid;
-            $key_arr['filesernum']=$filesernum;
-            $key_arr['userid']=$schoolname;
-            $key_arr['creat_time']=date('Y-m-d H:i:s');
-            $paper_id=$model_key_paper->add($key_arr);   
-			$max_in_ser=0;
-        }else{
-            $filesernum=$data['filesernum'];
-            $arr['filesernum']=$filesernum;
-            $max_in_ser=$model_paper_img_data->where($arr)->max('in_ser');
-            $max_in_ser=$max_in_ser+1;
-            $paper_id=$data['id'];
+        
+        //区分 试卷和知识点
+        if($kind==1) {
+        	$data=$paper->where($key_arr)->find();
+	        $count=sizeof($data);
+	        
+         	if($count==0)
+	        {
+	            $key_arr['filesernum']=$filesernum;
+	            $key_arr['exerciseid']=$exerciseid;
+	            $key_arr['creat_time']=date('Y-m-d H:i:s');
+	            $paper_id=$paper->add($key_arr);   
+				$max_in_ser=0;
+	        }else{
+	        	
+	        	//更新
+	        	$data=array();
+		    	$data['paper_name']=$paper_name;
+		    	$data['filesernum']=$_POST['filesernum'];
+		    	$data['exerciseid']=$exerciseid;
+		    	$data['id']=$_POST['kpaperid'];
+		    	$model_key_paper->where('id='.$data['id'])->save($data);
+	    	
+	            $filesernum=$data['filesernum'];
+	            $arr['filesernum']=$filesernum;
+	            $max_in_ser=$model_paper_img_data->where($arr)->max('in_ser');
+	            $max_in_ser=$max_in_ser+1;
+	            $paper_id=$data['id'];
+	        }
         }
-
+        
+        if($kind==2) {
+	        $data=$model_key_paper->where($key_arr)->find();
+	        $count=sizeof($data);
+	      
+	        $keynote_arr=explode(',',$keynote_id);
+	        $keynote_count=sizeof($keynote_arr);
+	 
+	        if($count==0)
+	        {
+	            $key_arr['keynote_id']=$keynote_id;
+	            $key_arr['subjectid']=$subjectid;
+	            $key_arr['gradeid']=$gradeid;
+	            $key_arr['filesernum']=$filesernum;
+	            $key_arr['userid']=$schoolname;
+	            $key_arr['creat_time']=date('Y-m-d H:i:s');
+	            $paper_id=$model_key_paper->add($key_arr);   
+				$max_in_ser=0;
+	        }else{
+	        	
+	        	//更新
+	        	$data=array();
+		    	$data['paper_name']=$paper_name;
+		    	$data['keynote_id']=$keynote_id;
+		    	$data['filesernum']=$_POST['filesernum'];
+		    	$data['id']=$_POST['kpaperid'];
+		    	$model_key_paper->where('id='.$data['id'])->save($data);
+	    	
+	            $filesernum=$data['filesernum'];
+	            $arr['filesernum']=$filesernum;
+	            $max_in_ser=$model_paper_img_data->where($arr)->max('in_ser');
+	            $max_in_ser=$max_in_ser+1;
+	            $paper_id=$data['id'];
+	        }
+		
+        }
 
 
         $model_onekeynote=M('onekeynote');
@@ -1451,8 +1570,8 @@ class PublishsetController extends Controller
                 $max_in_ser=$max_in_ser+1;
                 $model_paper_img_data->add($paper_arr);
             }
-          
-            $info=$model_key_paper->find($paper_id); 
+            $kind==2 && $info=$model_key_paper->find($paper_id); 
+            $kind==1 && $info=$paper->find($paper_id); 
             echo json_encode($info);
         }
     }
