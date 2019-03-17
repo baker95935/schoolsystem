@@ -1486,6 +1486,7 @@ class PublishsetController extends Controller
 
         $key_arr['paper_name']=$paper_name;
         
+        $action='add';
         //区分 试卷和知识点
         if($kind==1) {
         	$data=$paper->where($key_arr)->find();
@@ -1513,6 +1514,8 @@ class PublishsetController extends Controller
 	            $max_in_ser=$model_paper_img_data->where($arr)->max('in_ser');
 	            $max_in_ser=$max_in_ser+1;
 	            $paper_id=$data['id'];
+	            
+	            $action='edit';
 	        }
         }
         
@@ -1548,6 +1551,8 @@ class PublishsetController extends Controller
 	            $max_in_ser=$model_paper_img_data->where($arr)->max('in_ser');
 	            $max_in_ser=$max_in_ser+1;
 	            $paper_id=$data['id'];
+	            
+	            $action='edit';
 	        }
 		
         }
@@ -1609,6 +1614,7 @@ class PublishsetController extends Controller
     				}
     			}	
     		}
+    		$info['action']=$action;
             echo json_encode($info);
         }
     }

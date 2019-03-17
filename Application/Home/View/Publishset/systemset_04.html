@@ -306,7 +306,7 @@ function detailexercise(id)
     			for (var i = 0; i<mylength; i++) 
                 {
     				j=i+1;
-    				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailexercisepaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td>"+testlist[i]['creat_time']+"</td><td><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+    				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailexercisepaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td>"+testlist[i]['creat_time']+"</td><td id='examimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td id='answerimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
     				j++;
                 }
     			$("#exerciselistdiv").append(appendhtml);
@@ -423,19 +423,43 @@ function detailexercise(id)
                 
                 //添加到右侧列表  知识点和试卷
                 if(kind==2) {
-	           		oldnum=$("#kpointnum").val();
-	           		num=parseInt(oldnum)+1;
-	           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td id='papername"+re.id+"'> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td><td><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td><td><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
-	           		$("#kpointlistdiv").append(appendhtml);
-	           		$("#kpointnum").val(num);
+                	if(re.action=='add') { 
+		           		oldnum=$("#kpointnum").val();
+		           		num=parseInt(oldnum)+1;
+		           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td id='papername"+re.id+"'> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td><td id='examimg"+re.id+"'><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td><td id='answerimg"+re.id+"'><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+		           		$("#kpointlistdiv").append(appendhtml);
+		           		$("#kpointnum").val(num);
+                	} else {
+                		//标题替换
+                		var appendhtml="<td id='papername"+re.id+"'> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td>";
+	            		$("#papername"+re.id).html(appendhtml);
+                		//试题替换
+                		var examhtml="<td id='examimg"+re.id+"'><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td>";
+                		$("#examimg"+re.id).html(examhtml);
+                		//答案替换
+                		var answerhtml="<td id='answer"+re.id+"'><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td>";
+                		$("#answerimg"+re.id).html(answerhtml);
+                	}
                 }
                 
                 if(kind==1) {
-	           		oldnum=$("#kpointnum").val();
-	           		num=parseInt(oldnum)+1;
-	           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td id='papername"+re.id+"'> <a href=# onclick='detailexercisepaper("+re.id+")'>"+re.paper_name+"</a></td><td>"+re.creat_time+"</td><td><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td><td><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
-	           		$("#exerciselistdiv").append(appendhtml);
-	           		$("#kpointnum").val(num);
+                	if(re.action=='add') { 
+		           		oldnum=$("#kpointnum").val();
+		           		num=parseInt(oldnum)+1;
+		           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td id='papername"+re.id+"'> <a href=# onclick='detailexercisepaper("+re.id+")'>"+re.paper_name+"</a></td><td>"+re.creat_time+"</td><td id='examimg"+re.id+"'><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td><td id='answerimg"+re.id+"'><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+		           		$("#exerciselistdiv").append(appendhtml);
+		           		$("#kpointnum").val(num);
+                	} else {
+                		//标题替换
+                		var appendhtml="<td id='papername"+re.id+"'> <a href=# onclick='detailexercisepaper("+re.id+")'>"+re.paper_name+"</a></td>";
+    	           		$("#papername"+re.id).html(appendhtml);
+                		//试题替换
+                		var examhtml="<td id='examimg"+re.id+"'><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td>";
+                		$("#examimg"+re.id).html(examhtml);
+                		//答案替换
+                		var answerhtml="<td id='answer"+re.id+"'><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td>";
+                		$("#answerimg"+re.id).html(answerhtml);
+                	}
                 }
            		
            		//清空输入框的数据
@@ -702,7 +726,7 @@ function detailexercise(id)
         			for (var i = 0; i<mylength; i++) 
                     {
         				j=i+1;
-        				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailkpointpaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+        				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailkpointpaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td id='examimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td id='answerimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
         				j++;
                     }
         			$("#kpointlistdiv").append(appendhtml);
