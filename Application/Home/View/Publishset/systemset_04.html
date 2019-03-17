@@ -140,7 +140,7 @@
             <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
                 <div class="col-xs-3" style="height: 250px;">
                      <div  class="row" >
-                        <input name="examname" id="examname" type="text" value="" placeholder="试卷名称"  style="font-size:13px;width: 100px;text-align: center;">
+                        <input name="examname" id="examname"  required="required" type="text" value="" placeholder="试卷名称"  style="font-size:13px;width: 100px;text-align: center;">
                     </div>
                       <div  class="row" style="margin-top: 10px;" >
                         <input name="kpointname" id="kpointname" type="text" value="" placeholder="知识点"  style="font-size:13px;width: 100px;text-align: center;">
@@ -177,17 +177,16 @@
             <tr id="kpointlistdivtr">
                 <th>序号</th><th>试卷名称</th><th>习题图片</th><th>答案图片</th><th>过程</th><th>操作</th>
             </tr>
-
-            <input type="hidden" name="kpointnum" id="kpointnum" value=0>
+           
         </table>
-                  
+             <input type="hidden" name="kpointnum" id="kpointnum" value=0>      
                 </div>
 
             </div>
         </div>
 
     </div>
-
+	
     <input type="hidden" id="edit_status" value="add">
 
 <input id="pagelength" name="pagelength" type="hidden" value="6">
@@ -298,6 +297,7 @@ function detailexercise(id)
              	$("#newexercisename").val(re.name);
              	$("#newpublishname").val(re.publishname);
              	$("#exerciseid").val(re.id);
+             	$("#kpointnum").val(re.count);
              	  
                 $("#exerciselistdiv").html('<tr id="kpointlistdivtr"><th>序号</th><th>试卷名称</th><th>时间</th><th>习题图片</th><th>答案图片</th><th>操作</th></tr>');
                 testlist=re['list'];
@@ -306,7 +306,7 @@ function detailexercise(id)
     			for (var i = 0; i<mylength; i++) 
                 {
     				j=i+1;
-    				var appendhtml=appendhtml+"<tr id='paper"+re.id+"' class='change'><td>"+j+"</td><td> <a href=# onclick='detailexercisepaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+    				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailexercisepaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td>"+testlist[i]['creat_time']+"</td><td><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
     				j++;
                 }
     			$("#exerciselistdiv").append(appendhtml);
@@ -425,7 +425,7 @@ function detailexercise(id)
                 if(kind==2) {
 	           		oldnum=$("#kpointnum").val();
 	           		num=parseInt(oldnum)+1;
-	           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+	           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td id='papername"+re.id+"'> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td><td><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td><td><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
 	           		$("#kpointlistdiv").append(appendhtml);
 	           		$("#kpointnum").val(num);
                 }
@@ -433,18 +433,13 @@ function detailexercise(id)
                 if(kind==1) {
 	           		oldnum=$("#kpointnum").val();
 	           		num=parseInt(oldnum)+1;
-	           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td> <a href=# onclick='detailexercisepaper("+re.id+")'>"+re.paper_name+"</a></td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+	           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td id='papername"+re.id+"'> <a href=# onclick='detailexercisepaper("+re.id+")'>"+re.paper_name+"</a></td><td>"+re.creat_time+"</td><td><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td><td><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
 	           		$("#exerciselistdiv").append(appendhtml);
 	           		$("#kpointnum").val(num);
                 }
            		
            		//清空输入框的数据
-           		$("#newexercisename").val('');
-                $("#newpublishname").val('');
-                $("#kpointname").val('');
-                $("#kpointid").val('');
-                $("#examname").val('');
-                $("#exerciseid").val('');
+                emptyform();
             }
         });
 
@@ -539,7 +534,7 @@ function detailexercise(id)
     		$("#kpointlistdiv").hide();
     		
     		//习题的搜索框
-    		$("#searchexercisediv").show();
+    		$("#searchexexcisediv").show();
     		$("#searchkpointdiv").hide();
     		$("#examname").show();
     		
@@ -697,6 +692,8 @@ function detailexercise(id)
                     $("#newpublishname").val(re.publishname);
                     $("#kpointname").val(re.name);
                     $("#kpointid").val(re.id);
+                    $("#kpointnum").val(re.count);
+                    
                     
                     $("#kpointlistdiv").html('<tr id="kpointlistdivtr"><th>序号</th><th>试卷名称</th><th>习题图片</th><th>答案图片</th><th>过程</th><th>操作</th></tr>');
                     testlist=re['list'];
@@ -705,7 +702,7 @@ function detailexercise(id)
         			for (var i = 0; i<mylength; i++) 
                     {
         				j=i+1;
-        				var appendhtml=appendhtml+"<tr id='paper"+re.id+"' class='change'><td>"+j+"</td><td> <a href=# onclick='detailkpointpaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+        				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailkpointpaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
         				j++;
                     }
         			$("#kpointlistdiv").append(appendhtml);
@@ -773,23 +770,32 @@ function detailexercise(id)
 	            	 
 	           		alert('处理成功');
 	           		if(kind==2) {
-	            		num=$("#kpointnum").val();
-	            		$("#paper"+re.id).hide();
-	            		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
-	            		$("#kpointlistdiv").append(appendhtml);
-	            		$("#kpointnum").val(num);
+	            		var appendhtml="<td id='papername"+re.id+"'> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td>";
+	            		$("#papername"+re.id).html(appendhtml);
+	            		//清空下输入框的数据
+	            		emptyform();
 	           		}
 	            	 
                     if(kind==1) {
-    	           		oldnum=$("#kpointnum").val();
-    	           		num=parseInt(oldnum)+1;
-    	           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td> <a href=# onclick='detailexercisepaper("+re.id+")'>"+re.paper_name+"</a></td><td>12</td><td>12</td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
-    	           		$("#exerciselistdiv").append(appendhtml);
-    	           		$("#kpointnum").val(num);
+    	           		var appendhtml="<td id='papername"+re.id+"'> <a href=# onclick='detailexercisepaper("+re.id+")'>"+re.paper_name+"</a></td>";
+    	           		$("#papername"+re.id).html(appendhtml);
+    	           		//清空下输入框的数据
+	            		emptyform();
                     }
 	             }
 	         });
     	}
+    }
+    
+    function emptyform()
+    {
+    	//清空输入框的数据
+   		$("#newexercisename").val('');
+        $("#newpublishname").val('');
+        $("#kpointname").val('');
+        $("#kpointid").val('');
+        $("#examname").val('');
+        $("#exerciseid").val('');
     }
 </script>
 </html>

@@ -291,7 +291,21 @@ class PublishsetController extends Controller
     	  	
     	//获取知识点对应的试卷
     	$paper=M('paper_msg_data');
+    	$img=M("paper_img_data");
     	$list=$paper->where('exerciseid='.$msg['id'])->select();
+    	foreach($list as $k=>&$v) {
+    		//获取试卷和答案
+    		if(!empty($v['filesernum'])) {
+    			$imglist=$img->where("filesernum='".$v['filesernum']."'")->select();
+    			if(!empty($imglist)) {
+    				foreach($imglist as $kk=>$vv) {
+    					$vv['src_pic']=substr_replace($vv['src_pic'],"",strpos($vv['src_pic'],'.'),1);
+    					$vv['img_kind']==1 && $v['examimg']=$vv['src_pic'];
+    					$vv['img_kind']==2 && $v['answerimg']=$vv['src_pic'];
+    				}
+    			}	
+    		}
+    	}
     	!empty($list) && $info['list']=$list;
     	!empty($list) && $info['count']=count($list);
     	
@@ -935,7 +949,20 @@ class PublishsetController extends Controller
     	
     	//获取知识点对应的试卷
     	$keynote=M('key_paper_msg_data');
+    	$img=M('paper_img_data');
     	$list=$keynote->where('keynote_id='.$msg['id'])->select();
+    	foreach($list as $k=>&$v) {
+    		if(!empty($v['filesernum'])) {
+    			$imglist=$img->where("filesernum='".$v['filesernum']."'")->select();
+    			if(!empty($imglist)) {
+    				foreach($imglist as $kk=>$vv) {
+    					$vv['src_pic']=substr_replace($vv['src_pic'],"",strpos($vv['src_pic'],'.'),1);
+    					$vv['img_kind']==1 && $v['examimg']=$vv['src_pic'];
+    					$vv['img_kind']==2 && $v['answerimg']=$vv['src_pic'];
+    				}
+    			}	
+    		}
+    	}
     	!empty($list) && $info['list']=$list;
     	!empty($list) && $info['count']=count($list);
     	echo json_encode($info);
@@ -1348,7 +1375,7 @@ class PublishsetController extends Controller
         if($kind==1) {
         	$paper=M('paper_msg_data');
 	    	$data['paper_name']=$_POST['examname'];
-	    	$data['exerciseid']=$_POST['kpointid'];
+	    	$data['exerciseid']=$_POST['exerciseid'];
 	    	$data['filesernum']=$_POST['filesernum'];
 	    	$data['id']=$_POST['kpaperid'];
 	    	
@@ -1572,6 +1599,16 @@ class PublishsetController extends Controller
             }
             $kind==2 && $info=$model_key_paper->find($paper_id); 
             $kind==1 && $info=$paper->find($paper_id); 
+        	if(!empty($filesernum)) {
+    			$imglist=$model_paper_img_data->where("filesernum='".$filesernum."'")->select();
+    			if(!empty($imglist)) {
+    				foreach($imglist as $kk=>$vv) {
+    					$vv['src_pic']=substr_replace($vv['src_pic'],"",strpos($vv['src_pic'],'.'),1);
+    					$vv['img_kind']==1 && $info['examimg']=$vv['src_pic'];
+    					$vv['img_kind']==2 && $info['answerimg']=$vv['src_pic'];
+    				}
+    			}	
+    		}
             echo json_encode($info);
         }
     }
