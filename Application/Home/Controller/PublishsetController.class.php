@@ -292,7 +292,7 @@ class PublishsetController extends Controller
     	//获取知识点对应的试卷
     	$paper=M('paper_msg_data');
     	$img=M("paper_img_data");
-    	$list=$paper->where('exerciseid='.$msg['id'])->select();
+    	$list=$paper->where('exerciseid='.$msg['id'])->order('orderid asc,creat_time asc')->select();
     	foreach($list as $k=>&$v) {
     		//获取试卷和答案
     		if(!empty($v['filesernum'])) {
@@ -305,8 +305,12 @@ class PublishsetController extends Controller
     				}
     			}	
     		}
+    		$v['preid']=$v['nextid']=0;
+    		isset($list[$k-1]['id']) && $v['preid']=$list[$k-1]['id'];
+    		isset($list[$k+1]['id']) && $v['nextid']=$list[$k+1]['id'];
     	}
     	!empty($list) && $info['list']=$list;
+    	$info['count']=0;
     	!empty($list) && $info['count']=count($list);
     	
     	echo json_encode($info);
@@ -950,7 +954,7 @@ class PublishsetController extends Controller
     	//获取知识点对应的试卷
     	$keynote=M('key_paper_msg_data');
     	$img=M('paper_img_data');
-    	$list=$keynote->where('keynote_id='.$msg['id'])->select();
+    	$list=$keynote->where('keynote_id='.$msg['id'])->order('orderid asc,creat_time asc')->select();
     	foreach($list as $k=>&$v) {
     		if(!empty($v['filesernum'])) {
     			$imglist=$img->where("filesernum='".$v['filesernum']."'")->select();
@@ -962,8 +966,12 @@ class PublishsetController extends Controller
     				}
     			}	
     		}
+    		$v['preid']=$v['nextid']=0;
+    		isset($list[$k-1]['id']) && $v['preid']=$list[$k-1]['id'];
+    		isset($list[$k+1]['id']) && $v['nextid']=$list[$k+1]['id'];
     	}
     	!empty($list) && $info['list']=$list;
+    	$info['count']=0;
     	!empty($list) && $info['count']=count($list);
     	echo json_encode($info);
     }
@@ -1497,6 +1505,9 @@ class PublishsetController extends Controller
 	            $key_arr['filesernum']=$filesernum;
 	            $key_arr['exerciseid']=$exerciseid;
 	            $key_arr['creat_time']=date('Y-m-d H:i:s');
+	            //查找最大的orderid 如果为空 那么写1
+	            $maxorderid=$paper->max('orderid');
+	            $key_arr['orderid']=$maxorderid+1;
 	            $paper_id=$paper->add($key_arr);   
 				$max_in_ser=0;
 	        }else{
@@ -1534,6 +1545,9 @@ class PublishsetController extends Controller
 	            $key_arr['filesernum']=$filesernum;
 	            $key_arr['userid']=$schoolname;
 	            $key_arr['creat_time']=date('Y-m-d H:i:s');
+	            //查找最大的orderid 如果为空 那么写1
+	            $maxorderid=$paper->max('orderid');
+	            $key_arr['orderid']=$model_key_paper+1;
 	            $paper_id=$model_key_paper->add($key_arr);   
 				$max_in_ser=0;
 	        }else{
@@ -1617,5 +1631,57 @@ class PublishsetController extends Controller
     		$info['action']=$action;
             echo json_encode($info);
         }
+    }
+    
+    
+    //删除
+    public function deletekeypaper()
+    {
+    	$id=$_POST['id'];
+    	$kind=$_POST['kind'];
+    	
+    	$paper=M('paper_msg_data');
+    	$keypaper=M('key_paper_msg_data');
+    	
+    	if($kind==1) {
+    		$paper->where('id='.$id)->delete();
+    	}
+    	
+        if($kind==2) {
+    		$keypaper->where('id='.$id)->delete();
+    	}
+    	echo 1;
+    }
+    
+    public function orderkeypaper()
+    {
+    	$id=$_POST['id'];
+    	$iid=$_POST['iid'];
+    	$kind=$_POST['kind'];
+    	
+    	if($kind==2) {
+    		$keypaper=M('key_paper_msg_data');
+    		$info=$keypaper->find($id);
+    		$infon=$keypaper->find($iid);
+    		$data=$ndata=array();
+    		$data['orderid']=$infon['orderid'];
+    		$ndata['orderid']=$info['orderid'];
+    		$keypaper->where('id='.$id)->save($data);
+    		$keypaper->where('id='.$iid)->save($ndata);
+    	}
+    	
+        if($kind==1) {
+    		$keypaper=M('paper_msg_data');
+    		$info=$keypaper->find($id);
+    		$infon=$keypaper->find($iid);
+    		$data=$ndata=array();
+    		$data['orderid']=$infon['orderid'];
+    		$ndata['orderid']=$info['orderid'];
+    		$keypaper->where('id='.$id)->save($data);
+ 
+    		$keypaper->where('id='.$iid)->save($ndata);
+     
+    	}
+    	echo 1;
     }
 }

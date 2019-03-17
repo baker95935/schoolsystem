@@ -179,14 +179,14 @@
             </tr>
            
         </table>
-             <input type="hidden" name="kpointnum" id="kpointnum" value=0>      
+             
                 </div>
 
             </div>
         </div>
 
     </div>
-	
+	 <input type="hidden" name="kpointnum" id="kpointnum" value="0">     
     <input type="hidden" id="edit_status" value="add">
 
 <input id="pagelength" name="pagelength" type="hidden" value="6">
@@ -298,6 +298,7 @@ function detailexercise(id)
              	$("#newpublishname").val(re.publishname);
              	$("#exerciseid").val(re.id);
              	$("#kpointnum").val(re.count);
+             	$("#examname").val('');
              	  
                 $("#exerciselistdiv").html('<tr id="kpointlistdivtr"><th>序号</th><th>试卷名称</th><th>时间</th><th>习题图片</th><th>答案图片</th><th>操作</th></tr>');
                 testlist=re['list'];
@@ -306,7 +307,7 @@ function detailexercise(id)
     			for (var i = 0; i<mylength; i++) 
                 {
     				j=i+1;
-    				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailexercisepaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td>"+testlist[i]['creat_time']+"</td><td id='examimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td id='answerimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+    				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailexercisepaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td>"+testlist[i]['creat_time']+"</td><td id='examimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td id='answerimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a onclick='orderkeypaper("+testlist[i]['id']+","+testlist[i]['preid']+",1,1)'>向上</a><a onclick='orderkeypaper("+testlist[i]['id']+","+testlist[i]['nextid']+",2,1)'>向下</a><a onclick='deletekeypaper("+testlist[i]['id']+",1)'>删除</a></td></tr>";
     				j++;
                 }
     			$("#exerciselistdiv").append(appendhtml);
@@ -340,6 +341,7 @@ function detailexercise(id)
     }
 
     $("#input_bt").click(function(){
+   
         var formData = new FormData();
         for(var i=0; i<$('#file_exercise')[0].files.length;i++){
             formData.append('file_exercise[]', $('#file_exercise')[0].files[i]);
@@ -423,43 +425,11 @@ function detailexercise(id)
                 
                 //添加到右侧列表  知识点和试卷
                 if(kind==2) {
-                	if(re.action=='add') { 
-		           		oldnum=$("#kpointnum").val();
-		           		num=parseInt(oldnum)+1;
-		           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td id='papername"+re.id+"'> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td><td id='examimg"+re.id+"'><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td><td id='answerimg"+re.id+"'><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
-		           		$("#kpointlistdiv").append(appendhtml);
-		           		$("#kpointnum").val(num);
-                	} else {
-                		//标题替换
-                		var appendhtml="<td id='papername"+re.id+"'> <a href=# onclick='detailkpointpaper("+re.id+")'>"+re.paper_name+"</a></td>";
-	            		$("#papername"+re.id).html(appendhtml);
-                		//试题替换
-                		var examhtml="<td id='examimg"+re.id+"'><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td>";
-                		$("#examimg"+re.id).html(examhtml);
-                		//答案替换
-                		var answerhtml="<td id='answer"+re.id+"'><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td>";
-                		$("#answerimg"+re.id).html(answerhtml);
-                	}
+                	detailkpoint(keynote_id);
                 }
                 
                 if(kind==1) {
-                	if(re.action=='add') { 
-		           		oldnum=$("#kpointnum").val();
-		           		num=parseInt(oldnum)+1;
-		           		var appendhtml="<tr id='paper"+re.id+"' class='change'><td>"+num+"</td><td id='papername"+re.id+"'> <a href=# onclick='detailexercisepaper("+re.id+")'>"+re.paper_name+"</a></td><td>"+re.creat_time+"</td><td id='examimg"+re.id+"'><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td><td id='answerimg"+re.id+"'><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
-		           		$("#exerciselistdiv").append(appendhtml);
-		           		$("#kpointnum").val(num);
-                	} else {
-                		//标题替换
-                		var appendhtml="<td id='papername"+re.id+"'> <a href=# onclick='detailexercisepaper("+re.id+")'>"+re.paper_name+"</a></td>";
-    	           		$("#papername"+re.id).html(appendhtml);
-                		//试题替换
-                		var examhtml="<td id='examimg"+re.id+"'><a target='_blank' href='"+re['examimg']+"'><img width='30px' width='30px' src='"+re['examimg']+"'></a></td>";
-                		$("#examimg"+re.id).html(examhtml);
-                		//答案替换
-                		var answerhtml="<td id='answer"+re.id+"'><a target='_blank' href='"+re['answerimg']+"'><img width='30px' width='30px' src='"+re['answerimg']+"'></a></td>";
-                		$("#answerimg"+re.id).html(answerhtml);
-                	}
+                	detailexercise(exerciseid);
                 }
            		
            		//清空输入框的数据
@@ -717,6 +687,7 @@ function detailexercise(id)
                     $("#kpointname").val(re.name);
                     $("#kpointid").val(re.id);
                     $("#kpointnum").val(re.count);
+                    $("#examname").val('');
                     
                     
                     $("#kpointlistdiv").html('<tr id="kpointlistdivtr"><th>序号</th><th>试卷名称</th><th>习题图片</th><th>答案图片</th><th>过程</th><th>操作</th></tr>');
@@ -726,7 +697,7 @@ function detailexercise(id)
         			for (var i = 0; i<mylength; i++) 
                     {
         				j=i+1;
-        				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailkpointpaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td id='examimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td id='answerimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a>未完成</a></td><td><a>向上</a><a >向下</a><a >删除</a></td></tr>";
+        				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailkpointpaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td id='examimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td id='answerimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a>未完成</a></td><td><a onclick='orderkeypaper("+testlist[i]['id']+","+testlist[i]['preid']+",1,2)'>向上</a><a onclick='orderkeypaper("+testlist[i]['id']+","+testlist[i]['nextid']+",2,2)'>向下</a><a onclick='deletekeypaper("+testlist[i]['id']+",2)'>删除</a></td></tr>";
         				j++;
                     }
         			$("#kpointlistdiv").append(appendhtml);
@@ -820,6 +791,55 @@ function detailexercise(id)
         $("#kpointid").val('');
         $("#examname").val('');
         $("#exerciseid").val('');
+        $("#file_exercise").val('');
+        $("#file_answer").val('');
     }
+    
+    function deletekeypaper(id,kind)
+    {
+    	if(id && kind) {
+       	 $.ajax({
+                url: "{:U('deletekeypaper')}",
+                type: 'POST',
+                data: {id:id,kind:kind},
+                dataType: 'json',
+                success: function (re) {
+                    if(re==1) {
+                   	 alert('删除成功');
+                   	 $("#paper"+id).hide();
+                    }
+                }
+            });
+   		}
+    }
+    
+    //排序 1向上 2向下3是区分知识点和试卷
+    function orderkeypaper(id,iid,status,kind)
+    {
+       	if(id && kind && iid) {
+          	 $.ajax({
+                   url: "{:U('orderkeypaper')}",
+                   type: 'POST',
+                   data: {id:id,kind:kind,iid:iid},
+                   dataType: 'json',
+                   success: function (re) {
+                       if(re==1) {
+                      	 alert('操作成功');
+                       }
+                   }
+               });
+          	 if(kind==1) {
+             	var exerciseid=$("#exerciseid").val();
+          		detailexercise(exerciseid);
+          	 }
+          	 if(kind==2) {
+              	var kpointid=$("#kpointid").val();
+              	detailkpoint(kpointid);
+           	 }
+      	}
+    }
+    
+   
+ 
 </script>
 </html>
