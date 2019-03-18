@@ -606,7 +606,7 @@ function detailexercise(id)
     			for (var i = 0; i<mylength; i++) 
                 {
     				j=i+1;
-    				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailkpoint('+testlist[i]['id']+');" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['createtime']+'</td><td></td></tr>';
+    				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailkpoint('+testlist[i]['id']+');" >'+testlist[i]['keynotemsg']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['createtime']+'</td><td></td></tr>';
     				$('#kpointdiv').html(beginhtml + addhtmlmsg);
     				j++;
                 }
@@ -684,7 +684,7 @@ function detailexercise(id)
                  success: function (re) {
                  	$("#newexercisename").val(re.exercisename);
                     $("#newpublishname").val(re.publishname);
-                    $("#kpointname").val(re.name);
+                    $("#kpointname").val(re.keynotemsg);
                     $("#kpointid").val(re.id);
                     $("#kpointnum").val(re.count);
                     $("#examname").val('');
