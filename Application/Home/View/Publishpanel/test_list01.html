@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html class="login-bg">
+<head>
+    <title>CTB-Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+    <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        tr.change:hover
+        {
+            background-color:#f4fafc;
+        }
+      .page_input_css
+      {
+      	width:80px;
+        margin-left:20px;
+        text-align:center;
+        border-radius:2px;
+         border-style:solid;
+    border-width:0px;
+      }
+    </style>
+</head>
+<body>
+<div class="container" style="width: 100%;">
+<div class="row">
+<div class="col-xs-5">
+    <div class="row" style="height: 54px;"></div>
+    <div class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-10" >
+            <table>
+                <tr>
+                    <td><a href="{:U('Adminindex/index')}"><img class="img-circle" style="width: 70px;height: 70px;" src="__PUBLIC__/img/admin_radio.png"></a></td>
+
+                    <td class="admin_title" style="padding-left: 20px;">
+                        <span style="font-size: 24px;">出版社处理模块-列表</span>
+                        <br>
+                        <span id="nowtimeid" class="admin_sec_title">当前日期：2018-2-12</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-xs-1">
+            <input id="tid" type="hidden" value="{$userdata[id]}">
+            <input id="tusername" type="hidden" value="{$userdata[username]}">
+            <input id="trealname" type="hidden" value="{$userdata[realname]}">
+        </div>
+    </div>
+    <div class="row" style="margin-top: 34px;"> <hr class="admin_hr"></div>
+    <div class="row">
+        <div style="height: 30px;"></div>
+        <div style="padding-left: 5%;"><b><span id="title_note" style="color: red;">待处理_习题册统计列表_出版社</span></b><input id="key_note_input" class="page_input_css" style="margin-left:70px;display:none;" value="" type="text" placeholder="知识点"><input class="page_input_css"  value="" type="text" placeholder="出版社"><input  class="page_input_css" value="" type="text" placeholder="图书名称"></div>
+    </div>
+  
+    <div class="row" id="thistest" style="margin-top: 35px;">
+        <div  class="col-xs-12 admin_data_tabel admin_list" style="padding-left:5%;padding-right:5%;">
+        <table id="exercisediv" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
+        </table>
+            <hr style="margin-top: 0px;">
+            <div style="padding-right: 0px;"><div class="result page"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div></div>
+        </div>
+    </div>
+
+    <div class="row" id="keytest" style="margin-top: 35px;display: none;">
+        <div class="col-xs-12 admin_data_tabel admin_list" style="padding-left:5%;padding-right:5%;">
+            <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
+            <tr style="height: 45px;">
+                <th>序号</th><th>知识点</th><th>习题册</th><th>出版社</th><th>进度</th>
+            </tr>
+            <volist name="data" id="testdata">
+            <tr class="change">
+                <td >{++$m1}<input type="hidden" value="{$testdata.id}"></td><td >{$testdata.paper_name}</td><td>{$testdata.userid}</td><td>{$testdata.creat_time}</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td>
+            </tr>
+            </volist>
+        </table>
+            <hr style="margin-top: 0px;">
+            <div style="padding-right: 0px;"><div class="result page"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div></div>
+        </div>
+    </div>
+
+
+
+
+
+    </div>
+  
+  
+    <div class="col-xs-7">
+        <div class="row" style="height:70px; "></div>
+        <div class="row" style="text-align:right;padding-right:15px;"><label style="width: 50%;"></label><label><input type="radio"  value="1" name="paper_kind" checked="checked"><span style="margin-left: 4px;">习题册</span> <input name="paper_kind"  value="0" style="margin-left: 10px;" type="radio"><span  style="margin-left: 4px;">知识点试卷</span></label><input id="inputbutton" type="submit" onclick="testsub()" value="处理完成习题" style="width:115px;height:32px;font-size:12px;background-color:#e8eef5; border: none;border-radius: 3px;border: 1px solid #cccccc;margin-left:15px;"></div>
+         <div class="row" style="height: 80px;">
+            <hr>
+           <span style="margin-left:40px;font-size:16px;color:red;display:block;margin-top:30px;">北京交通大学出版社—>初中物理练习册—>36套试卷</span>
+         </div>
+      
+      <div class="row" id="undotest" style="margin-top: 35px;height: 310px; border-left: 1px solid #dae2ea;">
+        <div class="col-xs-12 admin_data_tabel admin_list" style="padding-left:5%;padding-right:5%;">
+        <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
+            <tr style="height: 45px;">
+                <th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成（2/4）</th><th>操作</th>
+            </tr>
+            <volist name="data" id="testdata">
+            <tr class="change">
+                <td >{++$m1}<input type="hidden" value="{$testdata.id}"></td><td >{$testdata.paper_name}</td><td>{$testdata.userid}</td><td>{$testdata.creat_time}</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td>
+            </tr>
+            </volist>
+        </table>
+            <hr style="margin-top: 0px;">
+            <div style="padding-right: 0px;"><div class="result page">{$page}</div></div>
+        </div>
+        
+         </div>
+       
+      <div class="row" style="margin-top:15px;"></div>
+        
+<input id="pagelength" name="pagelength" type="hidden" value="6">
+</div>
+</div>
+</div>
+<script>
+
+
+    $(document).ready(function(){
+
+    	divshow(1);
+        nowtime();
+
+    })
+
+    function testsub()
+    {
+        var paper_kind=$("input[name='paper_kind']:checked").val();
+        if($('#undotest').css('display')!="none" || $('#undokeytest').css('display')!="none")
+        {
+            $('#undotest').css('display','none');
+            $('#undokeytest').css('display','none');
+
+            $('#finishtest').css('display','block');
+            $('#keyfinishtest').css('display','block');
+
+
+
+            if(paper_kind==1)
+            {
+                $('#keyfinishtest').css('display','none');
+                $('#title_note').text('完成_习题册统计列表_出版社');
+                $('#title_note').css('color','black');
+              $('#key_note_input').css('display','none');
+            }
+
+            if(paper_kind==0)
+            {
+                $('#finishtest').css('display','none');
+                $('#title_note').text('完成_知识点统计列表_出版社');
+                $('#title_note').css('color','black');
+              $('#key_note_input').css('display','');
+            }
+
+
+
+
+            $('#inputbutton').val('待处理习题');
+
+           // $('#kind_input').val(1);
+        }
+        else
+        {
+            $('#undotest').css('display','block');
+            $('#undokeytest').css('display','block');
+
+         // alert(paper_kind);
+            if(paper_kind==1)
+            {
+                $('#undokeytest').css('display','none');
+                $('#title_note').text('待处理_习题册统计列表_出版社');
+                $('#title_note').css('color','red');
+               	$('#key_note_input').css('display','none');
+            }
+
+            if(paper_kind==0)
+            {
+                $('#undotest').css('display','none');
+                $('#title_note').text('待处理_知识点统计列表_出版社');
+                $('#title_note').css('color','red');
+               	$('#key_note_input').css('display','');
+            }
+
+
+
+            $('#finishtest').css('display','none');
+            $('#keyfinishtest').css('display','none');
+
+
+
+            $('#inputbutton').val('处理完成习题');
+          //  $('#kind_input').val(0);
+        }
+    }
+
+    function nowtime()
+    {
+        var myDate = new Date();
+        var year=myDate.getFullYear();    //获取完整的年份(4位,1970-????)
+        var month=myDate.getMonth();       //获取当前月份(0-11,0代表1月)
+        var date=myDate.getDate();        //获取当前日(1-31)
+        var nowtime=year+'-'+(parseInt(month)+1)+'-'+date;
+        $('#nowtimeid').text('当前日期：'+nowtime);
+    }
+
+    $('input[name="paper_kind"]').change(function() {
+
+        var paper_kind=$("input[name='paper_kind']:checked").val();
+
+        if(paper_kind==0)
+        {
+			$('#key_note_input').css('display','');
+          	$('#keytest').css('display','');
+          	$('#thistest').css('display','none');
+             $('#title_note').text('待处理_知识点统计列表_出版社');
+         
+
+        }
+
+        if(paper_kind==1)
+        {   
+			$('#key_note_input').css('display','none');
+            $('#keytest').css('display','none');
+          	$('#thistest').css('display','');
+          $('#title_note').text('待处理_习题册统计列表_出版社');
+        }
+
+
+    });
+    
+    
+    
+//控制层是否显示
+function divshow(type)
+{
+	//习题册
+	if(type==1) {
+		//左侧试卷列表
+		var nowpage=1;
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#exercisename").val();
+		var publishname=$("#publishname").val();
+		person_sql_exercise(nowpage,pagelength,keywords,publishname);
+	}
+	
+	//知识点
+	if(type==2) {
+  		//左侧知识点列表
+		var nowpage=1;
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#kpoint").val();
+		var publishname=$("#kpublishname").val();
+		var exercisename=$("#kexercisename").val();
+		person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
+	}
+}
+
+function searchexercise()
+{
+   	var nowpage=1;
+   	var pagelength=$('#pagelength').val();
+   	var keywords=$("#exercisename").val();
+   	var publishname=$("#publishname").val();
+   	
+   	$('#exercisediv').html('');
+   	person_sql_exercise(nowpage,pagelength,keywords,publishname);
+}
+
+function nextpage()
+{
+	var nowpage=$('#nowpage').text();
+	var maxnum=$('#pagenum').text();
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#exercisename").val();
+	var publishname=$("#publishname").val();
+	
+	nowpage=nowpage*1+1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	 
+	$('#exercisediv').html('');
+	
+	person_sql_exercise(nowpage,pagelength,keywords,publishname);
+}
+
+function prepage()
+{
+	var nowpage=$('#nowpage').text();
+	var maxnum=$('#pagenum').text();
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#exercisename").val();
+	var publishname=$("#publishname").val();
+	
+	nowpage=nowpage*1-1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+
+	$('#exercisediv').html('');
+	person_sql_exercise(nowpage,pagelength,keywords,publishname);
+}
+//习题册
+function person_sql_exercise(nowpage,pagelength,keywords,publishname)
+{
+	$('#exercisediv').html('');
+    $.ajax({
+        url:"{:U('php_test_list01')}",
+        type: 'POST',
+        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishname:publishname,kind:1},
+        dataType: 'json',
+        success: function(re) {
+        	var testlist=re;
+			var addhtmlmsg = '<tr style="height: 45px;"><th>序号</th><th>习题册</th><th>出版社</th><th>时间</th><th>进度（2/4）</th><th>操作</th></tr>';
+			var beginhtml = $('#exercisediv').html();
+			var mylength = testlist['length'];
+			var pagenum=testlist['pagenum'];
+			
+			$('#pagenum').text(pagenum);
+			$('#nowpage').text(nowpage);
+
+			for (var i = 0; i<mylength; i++) 
+            {
+				j=i+1;
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['creat_time']+'</td><td>完成</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">冻结</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>';
+				$('#exercisediv').html(beginhtml + addhtmlmsg);
+				j++;
+            }
+
+           
+        }
+    });
+}
+
+
+
+//知识点ajax获取数据
+function person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename)
+{
+	$('#kpointdiv').html('');
+    $.ajax({
+        url:"{:U('php_kpoint_sql')}",
+        type: 'POST',
+        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishname:publishname,exercisename:exercisename},
+        dataType: 'json',
+        success: function(re) {
+        	var testlist=re;
+			var addhtmlmsg = '<tr><th>序号</th><th>知识点</th><th>习题册</th><th>出版社</th><th>时间</th><th>过程</th></tr>';
+			var beginhtml = $('#kpointdiv').html();
+			var mylength = testlist['length'];
+			var pagenum=testlist['pagenum'];
+			
+			$('#kpagenum').text(pagenum);
+			$('#knowpage').text(nowpage);
+
+			for (var i = 0; i<mylength; i++) 
+            {
+				j=i+1;
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailkpoint('+testlist[i]['id']+');" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['createtime']+'</td><td></td></tr>';
+				$('#kpointdiv').html(beginhtml + addhtmlmsg);
+				j++;
+            }
+
+           
+        }
+    });
+}
+</script>
+</body>
+</html>

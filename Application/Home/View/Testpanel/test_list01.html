@@ -52,14 +52,14 @@
             <tr style="height: 45px;">
                 <th>序号</th><th>标题</th><th>用户id</th><th>时间</th><th>操作</th>
             </tr>
-            <volist name="data" id="testdata">
+            
             <tr class="change">
                 <td >{++$m1}<input type="hidden" value="{$testdata.id}"></td><td >{$testdata.paper_name}</td><td>{$testdata.userid}</td><td>{$testdata.creat_time}</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td>
             </tr>
-            </volist>
+             
         </table>
             <hr style="margin-top: 0px;">
-            <div style="padding-right: 0px;"><div class="result page">{$page}</div></div>
+            <div style="padding-right: 0px;"><div class="result page"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div></div>
         </div>
     </div>
 
@@ -82,16 +82,6 @@
 
 
     <div id="finishtest" class="col-xs-12 admin_data_tabel admin_list" style="padding-left:5%;padding-right:5%;margin-top:35px;display: none;">
-          <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
-             <tr style="height: 45px;">
-                    <th>序号</th><th>标题</th><th>用户id</th><th>时间</th><th>操作</th>
-             </tr>
-                <volist name="fdata" id="testdata">
-                    <tr class="change">
-                        <td >{++$m3}<input type="hidden" value="{$testdata.id}"></td><td >{$testdata.paper_name}</td><td>{$testdata.userid}</td><td>{$testdata.creat_time}</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'1'))}">完成</a></td>
-                    </tr>
-                </volist>
-            </table>
             <hr style="margin-top: 0px;">
          <div style="padding-right: 0px;"><div class="result page">{$fpage}</div></div>
      </div>
@@ -297,6 +287,100 @@
 
 
     });
+    
+    
+    
+//控制层是否显示
+function divshow(type)
+{
+	//习题册
+	if(type==1) {
+	
+		//左侧试卷列表
+		var nowpage=1;
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#exercisename").val();
+		var publishname=$("#publishname").val();
+		person_sql_exercise(nowpage,pagelength,keywords,publishname);
+	}
+	
+	//知识点
+	if(type==2) {
+  		//左侧知识点列表
+		var nowpage=1;
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#kpoint").val();
+		var publishname=$("#kpublishname").val();
+		var exercisename=$("#kexercisename").val();
+		person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
+	}
+}
+
+//习题册
+function person_sql_exercise(nowpage,pagelength,keywords,publishname)
+{
+	$('#finishtest').html('');
+    $.ajax({
+        url:"{:U('php_test_list01')}",
+        type: 'POST',
+        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishname:publishname,kind=1},
+        dataType: 'json',
+        success: function(re) {
+        	var testlist=re;
+			var addhtmlmsg = '<tr><th>序号</th><th>习题册</th><th>出版社</th><th>试卷数</th><th>时间</th><th>过程</th></tr>';
+			var beginhtml = $('#exercisediv').html();
+			var mylength = testlist['length'];
+			var pagenum=testlist['pagenum'];
+			
+			$('#pagenum').text(pagenum);
+			$('#nowpage').text(nowpage);
+
+			for (var i = 0; i<mylength; i++) 
+            {
+				j=i+1;
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#"  onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>1</td><td>'+testlist[i]['createtime']+'</td><td>2</td></tr>';
+				$('#finishtest').html(beginhtml + addhtmlmsg);
+				j++;
+            }
+
+           
+        }
+    });
+}
+
+
+
+//知识点ajax获取数据
+function person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename)
+{
+	$('#kpointdiv').html('');
+    $.ajax({
+        url:"{:U('php_kpoint_sql')}",
+        type: 'POST',
+        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishname:publishname,exercisename:exercisename},
+        dataType: 'json',
+        success: function(re) {
+        	var testlist=re;
+			var addhtmlmsg = '<tr><th>序号</th><th>知识点</th><th>习题册</th><th>出版社</th><th>时间</th><th>过程</th></tr>';
+			var beginhtml = $('#kpointdiv').html();
+			var mylength = testlist['length'];
+			var pagenum=testlist['pagenum'];
+			
+			$('#kpagenum').text(pagenum);
+			$('#knowpage').text(nowpage);
+
+			for (var i = 0; i<mylength; i++) 
+            {
+				j=i+1;
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailkpoint('+testlist[i]['id']+');" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['createtime']+'</td><td></td></tr>';
+				$('#kpointdiv').html(beginhtml + addhtmlmsg);
+				j++;
+            }
+
+           
+        }
+    });
+}
 </script>
 </body>
 </html>
