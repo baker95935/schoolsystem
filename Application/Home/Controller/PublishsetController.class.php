@@ -794,12 +794,27 @@ class PublishsetController extends Controller
     	$this->display();
     }
     
+    //根据出版社列出习题册
+    public function exerciseinfolistbypublishid()
+    {
+    	$book=M('book_exercises');
+    	$id=$_POST['id'];
+    	
+    	$result=array();
+    	$result['count']=0;
+    	if($id) {
+    		$result=$book->where('publishid='.$id.' and status=1')->select();
+    		$result['count']=$book->where('publishid='.$id.' and status=1')->count();
+    	}
+    	echo json_encode($result);
+    	
+    }
     //添加知识点
     public function addkpoint()
     {
-    	$model=M('exercise_kpoint');
+    	$model=M('onekeynote');
     	$data=array();
-    	$data['name']=$_POST['name'];
+    	$data['keynotemsg']=$_POST['name'];
     	$data['publishid']=$_POST['publishid'];
     	$data['exerciseid']=$_POST['exerciseid'];
     	
@@ -814,9 +829,9 @@ class PublishsetController extends Controller
     	$result=0;
     	//校验下是否重复
     	if(!empty($_POST['kid'])) {
-    		$count=$model->where("name='".$data['name']."' and id!=".$_POST['kid'])->count();
+    		$count=$model->where("keynotemsg='".$data['name']."' and id!=".$_POST['kid'])->count();
     	} else {
-    		$count=$model->where("name='".$data['name']."'")->count();
+    		$count=$model->where("keynotemsg='".$data['name']."'")->count();
     	}
     	 
     	if($count>0) {
@@ -845,12 +860,12 @@ class PublishsetController extends Controller
     	$beginnum=($nowpage-1)*$pagelength+1;
     	$beginpagenum=$beginnum-1;
     
-    	$model=M('exercise_kpoint');
+    	$model=M('onekeynote');
     	$publish=M('publish_name');
     	$exercise=M('book_exercises');
     	 
     	$dataarr=array();
-    	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
+    	!empty($keywords) && $dataarr['keynotemsg']=['like',"%".$keywords."%"];
     	 
     	//查找出版社的名字
     	$publishinfo=array();
@@ -926,7 +941,7 @@ class PublishsetController extends Controller
 
     public function delkpoint()
     {
-    	$model=M('exercise_kpoint');
+    	$model=M('onekeynote');
     	$msg['id']=$_POST[id];
     	$mm=$model->where($msg)->delete();
     	echo $mm;
@@ -934,7 +949,7 @@ class PublishsetController extends Controller
     
     public function detailkpoint()
     {
-    	$model=M('exercise_kpoint');
+    	$model=M('onekeynote');
     	$publish=M('publish_name');
     	$exercise=M('book_exercises');
     	$msg['id']=$_POST[id];
@@ -978,7 +993,7 @@ class PublishsetController extends Controller
     
     public function editkpoint()
     {
-    	$model=M('exercise_kpoint');
+    	$model=M('onekeynote');
     	$data['id']=$_POST[id];
     	$data['status']=$_POST[status];
     	$mm=$model->where('id='.$data['id'])->save($data);
