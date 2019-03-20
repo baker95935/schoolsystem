@@ -136,9 +136,7 @@ class PublishpanelController extends Controller
 	    
 	    		if(!empty($publishinfo)){
 	    			$dataarr['publishid']=array('in',$publishinfo);
-	    		} else {
-	    			$dataarr['publishid']=0;
-	    		}
+	    		}  
 	    	}
 	    	
 	    	//查找习题册的名字
@@ -153,9 +151,7 @@ class PublishpanelController extends Controller
 	    	
 	    		if(!empty($exerciseinfo)){
 	    			$dataarr['exerciseid']=array('in',$exerciseinfo);
-	    		} else {
-	    			$dataarr['exerciseid']=0;
-	    		}
+	    		}  
 	    	}
 	    
 	    
