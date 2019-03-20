@@ -31,31 +31,9 @@ class PublishpanelController extends Controller
     public function test_list01()
     {
 
-        import('ORG.Util.Page');// 导入分页类
-        $srcframe=session('srcframe');
-        if($srcframe!="test_list01.html")
-        {
-            session('srcframe','test_list01.html');
-        }
-        $statusmsg=0;
-        $model = M('paper_msg_data'); // 实例化Data数据对象
-        $count= $model->where('statusmsg=0')->count();// 查询满足要求的总记录数
-        $page = new \Think\Page($count,12);// 实例化分页类 传入总记录数并且每页显示5条记录
-        $nowPage = isset($_GET['p'])?$_GET['p']:1;
-        $data = $model->where('statusmsg=0')->order('creat_time desc')->page($nowPage.','.$page->listRows)->select();
-        $show = $page->show();// 分页显示输出
-        $this->assign('page',$show);// 赋值分页输出
-        $this->assign('data',$data);// 赋值数据集
-
-
-        $fcount= $model->where('statusmsg=1 or statusmsg=3')->count();// 查询满足要求的总记录数
-        $fpage = new \Think\Page($fcount,12);// 实例化分页类 传入总记录数并且每页显示5条记录
-        $fnowPage = isset($_GET['p'])?$_GET['p']:1;
-        $fdata = $model->where('statusmsg=1 or statusmsg=3')->order('creat_time desc')->page($fnowPage.','.$fpage->listRows)->select();
-        $fshow = $fpage->show();// 分页显示输出
-        $this->assign('fpage',$fshow);// 赋值分页输出
-        $this->assign('fdata',$fdata);// 赋值数据集
-
+        $nowtime=date('Y-m-d');
+        $this->assign('nowtime',$nowtime);// 赋值数据集
+        
 
 
         $model_key = M('key_paper_msg_data'); // 实例化Data数据对象
@@ -82,11 +60,13 @@ class PublishpanelController extends Controller
     public function php_test_list01()
     {
     	$kind=$_POST['kind'];
-    	$publishid=$_POST['publishid'];
+    	$publishname=$_POST['publishname'];
     	$keywords=$_POST['keywords'];
     	
     	$nowpage=$_POST['nowpage'];
     	$pagelength=$_POST['pagelength'];
+    	
+    	$exercisename=$_POST['exercisename'];
     	
     	 
     	$beginnum=($nowpage-1)*$pagelength+1;
@@ -96,12 +76,29 @@ class PublishpanelController extends Controller
     	if($kind==1)
     	{
     		$dataarr=array();
-    		$model = M('paper_msg_data'); // 实例化Data数据对象
+    		$model = M('book_exercises'); // 实例化Data数据对象
     		$publish=M('publish_name');
 		  	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
-		  	!empty($publishid) && $dataarr['publishid']=$publishid;
+		  	
+		  	//查找出版社的名字
+		  	$publishinfo=array();
+		  	if($publishname) {
+		  		$publishlist=$publish->where("name like '%".$publishname."%'")->field('id')->select();
+		  		if(!empty($publishlist)) {
+		  			foreach($publishlist as $k=>$v) {
+		  				$publishinfo[]=$v['id'];
+		  			}
+		  		}
+		  	
+		  		if(!empty($publishinfo)){
+		  			$dataarr['publishid']=array('in',$publishinfo);
+		  		} else {
+		  			$dataarr['publishid']=0;
+		  		}
+		  	}
+		  	
 			$count=$model->where($dataarr)->count();
-			$data=$model->where($dataarr)->order('creat_time desc')->limit($beginpagenum.','.$pagelength)->select();
+			$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
 			
 			foreach($data as $k=>&$v) {
 				$v['num']=$beginnum;
@@ -113,19 +110,76 @@ class PublishpanelController extends Controller
 					$tmp=$publish->find($v['publishid']);
 					$v['publishname']=$tmp['name'];
 				}
+				$v['createtime']=date('Y-m-d H:i:s',$v['createtime']);
 			}
     	}
     	
     	//知识点
     	if($kind==2)
     	{
-    		$dataarr=array();
-    		$model = M('key_paper_msg_data'); // 实例化Data数据对象
-    	
-    		!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
-    		!empty($publishid) && $dataarr['publishid']=$publishid;
-    		$count=$model->where($dataarr)->count();
-    		$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
+	    	$model=M('onekeynote');
+	    	$publish=M('publish_name');
+	    	$exercise=M('book_exercises');
+	    	 
+	    	$dataarr=array();
+	    	!empty($keywords) && $dataarr['keynotemsg']=['like',"%".$keywords."%"];
+	    	 
+	    	//查找出版社的名字
+	    	$publishinfo=array();
+	    	if($publishname) {
+	    		$publishlist=$publish->where("name like '%".$publishname."%'")->field('id')->select();
+	    		if(!empty($publishlist)) {
+	    			foreach($publishlist as $k=>$v) {
+	    				$publishinfo[]=$v['id'];
+	    			}
+	    		}
+	    
+	    		if(!empty($publishinfo)){
+	    			$dataarr['publishid']=array('in',$publishinfo);
+	    		} else {
+	    			$dataarr['publishid']=0;
+	    		}
+	    	}
+	    	
+	    	//查找习题册的名字
+	    	$exerciseinfo=array();
+	    	if($exercisename) {
+	    		$exerciselist=$exercise->where("name like '%".$exercisename."%'")->field('id')->select();
+	    		if(!empty($exerciselist)) {
+	    			foreach($exerciselist as $k=>$v) {
+	    				$exerciseinfo[]=$v['id'];
+	    			}
+	    		}
+	    	
+	    		if(!empty($exerciseinfo)){
+	    			$dataarr['exerciseid']=array('in',$exerciseinfo);
+	    		} else {
+	    			$dataarr['exerciseid']=0;
+	    		}
+	    	}
+	    
+	    
+	    	$count=$model->where($dataarr)->count();
+	    
+	    	$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
+	    	foreach($data as $k=>&$v) {
+	    		$v['num']=$beginnum;
+	    		$beginnum=$beginnum+1;
+	    	 
+	    
+	    		//获取出版社数据
+	    		if($v['publishid']) {
+	    			$tmp=$publish->find($v['publishid']);
+	    			$v['publishname']=$tmp['name'];
+	    		}
+	    		//获取习题册的数据
+	    		if($v['exerciseid']) {
+	    			$tmp=$exercise->find($v['exerciseid']);
+	    			$v['exercisename']=$tmp['name'];
+	    		}
+	    
+	    	}
+    
     	}
     	
     	$data['length']=sizeof($data);
@@ -135,6 +189,82 @@ class PublishpanelController extends Controller
     	$data['pagenum']=ceil($count/$pagelength);
     	echo json_encode($data);
     	
+    }
+    
+    public function detailexercise()
+    {
+    	$model=M('book_exercises');
+    	$publish=M('publish_name');
+    	$msg['id']=$_POST[id];
+    	$info=$model->find($msg['id']);
+    	if($info['publishid']) {
+    		$tmp=$publish->find($info['publishid']);
+    		$info['publishname']=$tmp['name'];
+    	}
+    	 
+    	!empty($info['starttime']) && $info['starttime']=date('Y-m-d',$info['starttime']);
+    	!empty($info['endtime']) && $info['endtime']=date('Y-m-d',$info['endtime']);
+    	 
+    
+    	//获取知识点对应的试卷
+    	$paper=M('paper_msg_data');
+    	$img=M("paper_img_data");
+    	$list=$paper->where('exerciseid='.$msg['id'])->order('orderid asc,creat_time asc')->select();
+     
+    	!empty($list) && $info['list']=$list;
+    	$info['count']=0;
+    	!empty($list) && $info['count']=count($list);
+    	 
+    	echo json_encode($info);
+    }
+    
+    public function detailkpoint()
+    {
+    	$model=M('onekeynote');
+    	$publish=M('publish_name');
+    	$exercise=M('book_exercises');
+    	$msg['id']=$_POST[id];
+    	$info=$model->find($msg['id']);
+    	 
+    	//获取出版社和习题册的名字
+    	if(!empty($info['publishid'])) {
+    		$tmp=$publish->find($info['publishid']);
+    		$info['publishname']=$tmp['name'];
+    	}
+    	 
+    	if(!empty($info['exerciseid'])) {
+    		$tmp=$exercise->find($info['exerciseid']);
+    		$info['exercisename']=$tmp['name'];
+    	}
+    	 
+    	//获取知识点对应的试卷
+    	$keynote=M('key_paper_msg_data');
+    	$img=M('paper_img_data');
+    	$list=$keynote->where('keynote_id='.$msg['id'])->order('orderid asc,creat_time asc')->select();
+   
+    	!empty($list) && $info['list']=$list;
+    	$info['count']=0;
+    	!empty($list) && $info['count']=count($list);
+    	echo json_encode($info);
+    }
+    
+    //删除
+    public function deletepaper()
+    {
+    	$id=$_POST['id'];
+    	$kind=$_POST['kind'];
+    	 
+    	$paper=M('paper_msg_data');
+    	$keypaper=M('key_paper_msg_data');
+    	 
+    	if($kind==1) {
+    		$paper->where('id='.$id)->delete();
+    	}
+    	 
+    	if($kind==2) {
+    		$keypaper->where('id='.$id)->delete();
+    	}
+    	echo 1;
     }
     
     public function test_whole02()

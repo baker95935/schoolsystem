@@ -39,7 +39,7 @@
                     <td class="admin_title" style="padding-left: 20px;">
                         <span style="font-size: 24px;">出版社处理模块-列表</span>
                         <br>
-                        <span id="nowtimeid" class="admin_sec_title">当前日期：2018-2-12</span>
+                        <span id="nowtimeid" class="admin_sec_title">当前日期：{$nowtime}</span>
                     </td>
                 </tr>
             </table>
@@ -53,7 +53,20 @@
     <div class="row" style="margin-top: 34px;"> <hr class="admin_hr"></div>
     <div class="row">
         <div style="height: 30px;"></div>
-        <div style="padding-left: 5%;"><b><span id="title_note" style="color: red;">待处理_习题册统计列表_出版社</span></b><input id="key_note_input" class="page_input_css" style="margin-left:70px;display:none;" value="" type="text" placeholder="知识点"><input class="page_input_css"  value="" type="text" placeholder="出版社"><input  class="page_input_css" value="" type="text" placeholder="图书名称"></div>
+        <div style="padding-left: 5%;"><b><span id="title_note" style="color: red;">待处理_习题册统计列表_出版社</span></b>
+       	
+       	<span id="searchkpointdiv">
+        <input onblur="searchkpoint();" id="kpoint" name="kpoint" class="page_input_css" style="margin-left:70px;" value="" type="text" placeholder="知识点">
+        <input onblur="searchkpoint();" name="kpublishname" id="kpublishname" class="page_input_css"  value="" type="text" placeholder="出版社">
+        <input onblur="searchkpoint();" name="kexercisename" id="kexercisename" class="page_input_css" value="" type="text" placeholder="习题册">
+        </span>
+         
+        <span id="searchexexcisediv">
+        <input onblur="searchexercise();" name="publishname" id="publishname" class="page_input_css"  value="" type="text" placeholder="出版社">
+        <input onblur="searchexercise();" name="exercisename" id="exercisename" class="page_input_css" value="" type="text" placeholder="习题册">
+        </span>
+        
+        </div>
     </div>
   
     <div class="row" id="thistest" style="margin-top: 35px;">
@@ -67,16 +80,8 @@
 
     <div class="row" id="keytest" style="margin-top: 35px;display: none;">
         <div class="col-xs-12 admin_data_tabel admin_list" style="padding-left:5%;padding-right:5%;">
-            <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
-            <tr style="height: 45px;">
-                <th>序号</th><th>知识点</th><th>习题册</th><th>出版社</th><th>进度</th>
-            </tr>
-            <volist name="data" id="testdata">
-            <tr class="change">
-                <td >{++$m1}<input type="hidden" value="{$testdata.id}"></td><td >{$testdata.paper_name}</td><td>{$testdata.userid}</td><td>{$testdata.creat_time}</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td>
-            </tr>
-            </volist>
-        </table>
+            <table id="kpointdiv" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
+        	</table>
             <hr style="margin-top: 0px;">
             <div style="padding-right: 0px;"><div class="result page"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div></div>
         </div>
@@ -91,23 +96,16 @@
   
     <div class="col-xs-7">
         <div class="row" style="height:70px; "></div>
-        <div class="row" style="text-align:right;padding-right:15px;"><label style="width: 50%;"></label><label><input type="radio"  value="1" name="paper_kind" checked="checked"><span style="margin-left: 4px;">习题册</span> <input name="paper_kind"  value="0" style="margin-left: 10px;" type="radio"><span  style="margin-left: 4px;">知识点试卷</span></label><input id="inputbutton" type="submit" onclick="testsub()" value="处理完成习题" style="width:115px;height:32px;font-size:12px;background-color:#e8eef5; border: none;border-radius: 3px;border: 1px solid #cccccc;margin-left:15px;"></div>
+        <div class="row" style="text-align:right;padding-right:15px;"><label style="width: 50%;"></label><label><input type="radio"  value="1" name="paper_kind" onclick="divshow(1);" checked="checked"><span style="margin-left: 4px;">习题册</span> <input name="paper_kind" onclick="divshow(2);"  value="0" style="margin-left: 10px;" type="radio"><span  style="margin-left: 4px;">知识点试卷</span></label><input id="inputbutton" type="submit" onclick="testsub()" value="处理完成习题" style="width:115px;height:32px;font-size:12px;background-color:#e8eef5; border: none;border-radius: 3px;border: 1px solid #cccccc;margin-left:15px;"></div>
          <div class="row" style="height: 80px;">
             <hr>
-           <span style="margin-left:40px;font-size:16px;color:red;display:block;margin-top:30px;">北京交通大学出版社—>初中物理练习册—>36套试卷</span>
+           <span style="margin-left:40px;font-size:16px;color:red;display:block;margin-top:30px;"><span id="dirpublishname">北京交通大学出版社</span>—><span id="direxercisename">初中物理练习册</span>—><span id="dirnum">36</span>套试卷</span>
          </div>
       
       <div class="row" id="undotest" style="margin-top: 35px;height: 310px; border-left: 1px solid #dae2ea;">
         <div class="col-xs-12 admin_data_tabel admin_list" style="padding-left:5%;padding-right:5%;">
-        <table style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
-            <tr style="height: 45px;">
-                <th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成（2/4）</th><th>操作</th>
-            </tr>
-            <volist name="data" id="testdata">
-            <tr class="change">
-                <td >{++$m1}<input type="hidden" value="{$testdata.id}"></td><td >{$testdata.paper_name}</td><td>{$testdata.userid}</td><td>{$testdata.creat_time}</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td>
-            </tr>
-            </volist>
+        <table id="exerciselistdiv" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
+            
         </table>
             <hr style="margin-top: 0px;">
             <div style="padding-right: 0px;"><div class="result page">{$page}</div></div>
@@ -249,6 +247,15 @@ function divshow(type)
 		var keywords=$("#exercisename").val();
 		var publishname=$("#publishname").val();
 		person_sql_exercise(nowpage,pagelength,keywords,publishname);
+		
+		//习题的搜索框
+		$("#searchexexcisediv").show();
+		$("#searchkpointdiv").hide();
+		
+		//右侧顶部标题
+		$("#direxercisename").html('习题册');
+       	$("#dirpublishname").html('出版社');
+       	$("#dirnum").html(0);
 	}
 	
 	//知识点
@@ -259,6 +266,16 @@ function divshow(type)
 		var keywords=$("#kpoint").val();
 		var publishname=$("#kpublishname").val();
 		var exercisename=$("#kexercisename").val();
+		
+		//知识点的搜索框
+		$("#searchexexcisediv").hide();
+		$("#searchkpointdiv").show();
+		
+		//右侧顶部标题
+		$("#direxercisename").html('习题册');
+       	$("#dirpublishname").html('出版社');
+       	$("#dirnum").html(0);
+		
 		person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
 	}
 }
@@ -340,7 +357,7 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname)
 			for (var i = 0; i<mylength; i++) 
             {
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['creat_time']+'</td><td>完成</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">冻结</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="{$testdata.id}"></td><td ><a onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['createtime']+'</td><td>完成</td><td><a href="{:U('delpublicsub',array('id'=>$testdata[id]))}">冻结</a>&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>';
 				$('#exercisediv').html(beginhtml + addhtmlmsg);
 				j++;
             }
@@ -350,20 +367,48 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname)
     });
 }
 
-
+function detailexercise(id)
+{
+	if(id) {
+    	 $.ajax({
+             url: "{:U('detailexercise')}",
+             type: 'POST',
+             data: {id:id},
+             dataType: 'json',
+             success: function (re) {
+            	 
+          		$("#direxercisename").html(re.name);
+               	$("#dirpublishname").html(re.publishname);
+               	$("#dirnum").html(re.count);
+             	  
+                $("#exerciselistdiv").html('<tr style="height: 45px;"><th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成（2/4）</th><th>操作</th></tr>');
+                testlist=re['list'];
+                var mylength = re['count'];
+                var appendhtml='';
+    			for (var i = 0; i<mylength; i++) 
+                {
+    				j=i+1;
+    				var appendhtml=appendhtml+'<tr id="paper1'+testlist[i]['id']+'" class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>{$testdata.creat_time}</td><td><a onclick="deletepaper('+testlist[i]['id']+',1)">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td></tr>';
+    				j++;
+                }
+    			$("#exerciselistdiv").append(appendhtml);
+             }
+         })
+	}
+}
 
 //知识点ajax获取数据
 function person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename)
 {
 	$('#kpointdiv').html('');
     $.ajax({
-        url:"{:U('php_kpoint_sql')}",
+        url:"{:U('php_test_list01')}",
         type: 'POST',
-        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishname:publishname,exercisename:exercisename},
+        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishname:publishname,exercisename:exercisename,kind:2},
         dataType: 'json',
         success: function(re) {
         	var testlist=re;
-			var addhtmlmsg = '<tr><th>序号</th><th>知识点</th><th>习题册</th><th>出版社</th><th>时间</th><th>过程</th></tr>';
+			var addhtmlmsg ='<tr style="height: 45px;"><th>序号</th><th>知识点</th><th>习题册</th><th>出版社</th><th>进度</th></tr>';
 			var beginhtml = $('#kpointdiv').html();
 			var mylength = testlist['length'];
 			var pagenum=testlist['pagenum'];
@@ -374,7 +419,7 @@ function person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename)
 			for (var i = 0; i<mylength; i++) 
             {
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailkpoint('+testlist[i]['id']+');" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['createtime']+'</td><td></td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td><a onclick="detailkpoint('+testlist[i]['id']+')">'+testlist[i]['keynotemsg']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td><a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td></tr>';
 				$('#kpointdiv').html(beginhtml + addhtmlmsg);
 				j++;
             }
@@ -382,6 +427,112 @@ function person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename)
            
         }
     });
+}
+
+function searchkpoint()
+{
+   	var nowpage=1;
+   	var pagelength=$('#pagelength').val();
+   	var keywords=$("#kpoint").val();
+   	var publishname=$("#kpublishname").val();
+   	var exercisename=$("#kexercisename").val();
+   	
+   	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
+}
+
+
+function knextpage()
+{
+	var nowpage=$('#knowpage').text();
+	var maxnum=$('#kpagenum').text();
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#kpoint").val();
+	var publishname=$("#kpublishname").val();
+	var exercisename=$("#kexercisename").val();
+	
+	nowpage=nowpage*1+1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	 
+	
+	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
+}
+
+function kprepage()
+{
+	var nowpage=$('#knowpage').text();
+	var maxnum=$('#kpagenum').text();
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#kpoint").val();
+	var publishname=$("#kpublishname").val();
+	var exercisename=$("#kexercisename").val();
+	
+	nowpage=nowpage*1-1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+
+	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
+}
+
+
+function detailkpoint(id)
+{
+	if(id) {
+    	 $.ajax({
+             url: "{:U('detailkpoint')}",
+             type: 'POST',
+             data: {id:id},
+             dataType: 'json',
+             success: function (re) {
+           		$("#direxercisename").html(re.name);
+               	$("#dirpublishname").html(re.publishname);
+               	$("#dirnum").html(re.count);
+             	  
+                $("#exerciselistdiv").html('<tr style="height: 45px;"><th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成（2/4）</th><th>操作</th></tr>');
+                testlist=re['list'];
+                var mylength = re['count'];
+                var appendhtml='';
+    			for (var i = 0; i<mylength; i++) 
+                {
+    				j=i+1;
+    				var appendhtml=appendhtml+'<tr class="change" id="paper2'+testlist[i]['id']+'"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>{$testdata.creat_time}</td><td><a onclick="deletepaper('+testlist[i]['id']+',2)">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td></tr>';
+    				j++;
+                }
+    			$("#exerciselistdiv").append(appendhtml);
+             }
+         });
+	}
+}
+
+
+function deletepaper(id,kind)
+{
+	if(id && kind) {
+   	 $.ajax({
+            url: "{:U('deletepaper')}",
+            type: 'POST',
+            data: {id:id,kind:kind},
+            dataType: 'json',
+            success: function (re) {
+                if(re==1) {
+               	 alert('删除成功');
+               	 $("#paper"+kind+id).hide();
+                }
+            }
+        });
+		}
 }
 </script>
 </body>
