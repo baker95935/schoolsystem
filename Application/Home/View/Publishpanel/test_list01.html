@@ -115,10 +115,15 @@
          <div class="row" style="height: 80px;">
             <hr>
            <span style="margin-left:40px;font-size:16px;color:red;display:block;margin-top:30px;"><span id="dirpublishname">北京交通大学出版社</span>—><span id="direxercisename">初中物理练习册</span>—><span id="dirnum">36</span>           
-          <select name="paperstatusid" id="paperstatusid" style="width:80px;height:20px;font-size:12px;color:#000000;background: transparent; border: none;border-radius: 2px;border: 1px solid #cccccc;margin-left:15px;">
-          <option value="0">未完成</option>
-          <option value="1">完成</option>
-        </select></span>
+          <select onchange="papersearch();" name="paperstatusid" id="paperstatusid" style="width:80px;height:20px;font-size:12px;color:#000000;background: transparent; border: none;border-radius: 2px;border: 1px solid #cccccc;margin-left:15px;">
+	          <option value="0">全部</option>
+	          <option value="1">未完成</option>
+	          <option value="2">完成</option>
+          </select>
+          <input type="hidden" name="exerciseid" id="exerciseid" value=0>
+          <input type="hidden" name="kpointid" id="kpointid" value=0>
+          <input type="hidden" name="kind" id="kind" value=0>
+        </span>
          
            </div>
       
@@ -276,6 +281,9 @@ function divshow(type)
 		$("#direxercisename").html('习题册');
        	$("#dirpublishname").html('出版社');
        	$("#dirnum").html(0);
+       	
+       	//设置kind的值
+       	$("#kind").val(1);
 	}
 	
 	//知识点
@@ -295,6 +303,9 @@ function divshow(type)
 		$("#direxercisename").html('习题册');
        	$("#dirpublishname").html('出版社');
        	$("#dirnum").html(0);
+       	
+       	//设置kind的值
+       	$("#kind").val(2);
 		
 		person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
 	}
@@ -390,22 +401,24 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid)
     });
 }
 
-function detailexercise(id)
+function detailexercise(id,status='')
 {
 	if(id) {
     	 $.ajax({
              url: "{:U('detailexercise')}",
              type: 'POST',
-             data: {id:id},
+             data: {id:id,status:status},
              dataType: 'json',
              success: function (re) {
             	 
           		$("#direxercisename").html(re.name);
                	$("#dirpublishname").html(re.publishname);
                	$("#dirnum").html(re.count);
+               	
+               	$("#exerciseid").val(re.id);
              	  
                	testlist=re['list'];
-                $("#exerciselistdiv").html('<tr style="height: 45px;"><th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成（'+re['uncount']+'/'+re['count']+'）</th><th>操作</th></tr>');
+                $("#exerciselistdiv").html('<tr style="height: 45px;"><th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成 </th><th>操作</th></tr>');
                 
                 var mylength = re['count'];
                 var appendhtml='';
@@ -514,22 +527,24 @@ function kprepage()
 }
 
 
-function detailkpoint(id)
+function detailkpoint(id,status='')
 {
 	if(id) {
     	 $.ajax({
              url: "{:U('detailkpoint')}",
              type: 'POST',
-             data: {id:id},
+             data: {id:id,status:status},
              dataType: 'json',
              success: function (re) {
            		$("#direxercisename").html(re.name);
                	$("#dirpublishname").html(re.publishname);
                	$("#dirnum").html(re.count);
+               	
+               	$("#kpointid").val(re.id);
              	  
                	testlist=re['list'];
                	
-                $("#exerciselistdiv").html('<tr style="height: 45px;"><th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成（'+re['uncount']+'/'+re['count']+'）</th><th>操作</th></tr>');
+                $("#exerciselistdiv").html('<tr style="height: 45px;"><th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成</th><th>操作</th></tr>');
                 var mylength = re['count'];
                 var appendhtml='';
     			for (var i = 0; i<mylength; i++) 
@@ -560,7 +575,25 @@ function deletepaper(id,kind)
                 }
             }
         });
-		}
+	}
+}
+
+//右侧的试卷搜索
+function papersearch()
+{
+	var kind=$("#kind").val();
+	
+	if(kind==1) {
+     	var exerciseid=$("#exerciseid").val();
+     	var paperstatusid=$('#paperstatusid').val();
+  		detailexercise(exerciseid,paperstatusid);
+  	 }
+  	 if(kind==2) {
+      	var kpointid=$("#kpointid").val();
+      	var paperstatusid=$('#paperstatusid').val();
+      
+      	detailkpoint(kpointid,paperstatusid);
+   	 }
 }
 </script>
 </body>

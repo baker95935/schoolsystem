@@ -134,7 +134,11 @@ class PublishpanelController extends Controller
 				}
 				$v['createtime']=date('Y-m-d H:i:s',$v['createtime']);
 			}
+			
 			$data=array_slice($data, 0);
+			
+			$count=count($data);
+			$data=array_slice($data,$beginpagenum,$pagelength);
     	}
     	
     	//知识点
@@ -181,7 +185,7 @@ class PublishpanelController extends Controller
 	    
 	    	
 	    
-	    	$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
+	    	$data=$model->where($dataarr)->order('createtime desc')->select();
 	    	foreach($data as $k=>&$v) {
 	    		$v['num']=$beginnum;
 	    		$beginnum=$beginnum+1;
@@ -193,7 +197,7 @@ class PublishpanelController extends Controller
 	    		//已完成
 	    		if($statusid==2) {
 	    		 
-	    			if($v['uncount']!=0 || $v['count']==0) {
+	    			if($v['uncount']!=0) {
 	    				unset($data[$k]);
 	    			}
 	    		}
@@ -222,6 +226,7 @@ class PublishpanelController extends Controller
 	    	$data=array_slice($data, 0);
 	    	
 	    	$count=count($data);
+	    	$data=array_slice($data,$beginpagenum,$pagelength);
     
     	}
     	
@@ -239,6 +244,8 @@ class PublishpanelController extends Controller
     	$model=M('book_exercises');
     	$publish=M('publish_name');
     	$msg['id']=$_POST[id];
+    	$status=$_POST['status'];
+    
     	$info=$model->find($msg['id']);
     	if($info['publishid']) {
     		$tmp=$publish->find($info['publishid']);
@@ -258,10 +265,24 @@ class PublishpanelController extends Controller
     	$info['uncount']=$uncount;
     	$list=$paper->where('exerciseid='.$msg['id'])->order('orderid asc,creat_time asc')->select();
     	foreach($list as  $k=>&$v) {
-    		$v['statusmsg']==0 && $v['statusmsg']='未完成';
-    		$v['statusmsg']>0 && $v['statusmsg']='已完成';
+    		//已完成
+	    	if($status==2) {
+	    		if($v['statusmsg']==0) {
+	    			unset($list[$k]);
+	    		}
+	    	}
+	    		
+	    	//未完成
+	    	if($status==1) {
+	    		if($v['statusmsg']!=0) {
+	    			unset($list[$k]);
+	    		}
+	    	}
+	    	
+	    	$v['statusmsg']==0 && $v['statusmsg']='未完成';
+	    	$v['statusmsg']>0 && $v['statusmsg']='已完成';
     	}
-     
+    
     	!empty($list) && $info['list']=$list;
     	$info['count']=0;
     	!empty($list) && $info['count']=count($list);
@@ -275,6 +296,7 @@ class PublishpanelController extends Controller
     	$publish=M('publish_name');
     	$exercise=M('book_exercises');
     	$msg['id']=$_POST[id];
+    	$status=$_POST['status'];
     	$info=$model->find($msg['id']);
     	 
     	//获取出版社和习题册的名字
@@ -300,6 +322,20 @@ class PublishpanelController extends Controller
     	foreach($list as  $k=>&$v) {
     		$v['statusmsg']==0 && $v['statusmsg']='未完成';
     		$v['statusmsg']>0 && $v['statusmsg']='已完成';
+    		
+    		//已完成
+	    	if($status==2) {
+	    		if($v['statusmsg']==0) {
+	    			unset($list[$k]);
+	    		}
+	    	}
+	    		
+	    	//未完成
+	    	if($status==1) {
+	    		if($v['statusmsg']!=0) {
+	    			unset($list[$k]);
+	    		}
+	    	}
     	}
     	
     	!empty($list) && $info['list']=$list;
