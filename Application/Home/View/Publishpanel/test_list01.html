@@ -53,10 +53,15 @@
     <div class="row" style="margin-top: 34px;"> <hr class="admin_hr"></div>
     <div class="row">
         <div style="height: 30px;"></div>
-        <div style="padding-left: 5%;"><b><span id="title_note" style="color: red;">待处理_习题册统计列表_出版社</span></b>
+        <div style="padding-left: 5%;"><b><span id="title_note" style="color: red;">待处理_习题册</span></b>
+         <select style="width:80px;height:20px;font-size:12px;background: transparent; border: none;border-radius: 2px;border: 1px solid #cccccc;margin-left:15px;">
+          <option>未完成</option>
+          <option>完成</option>
+        </select>
        	
        	<span id="searchkpointdiv">
-        <input onblur="searchkpoint();" id="kpoint" name="kpoint" class="page_input_css" style="margin-left:70px;" value="" type="text" placeholder="知识点">
+ 
+        <input onblur="searchkpoint();" id="kpoint" name="kpoint" class="page_input_css"  value="" type="text" placeholder="知识点">
         <input onblur="searchkpoint();" name="kpublishname" id="kpublishname" class="page_input_css"  value="" type="text" placeholder="出版社">
         <input onblur="searchkpoint();" name="kexercisename" id="kexercisename" class="page_input_css" value="" type="text" placeholder="习题册">
         </span>
@@ -83,7 +88,7 @@
             <table id="kpointdiv" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
         	</table>
             <hr style="margin-top: 0px;">
-            <div style="padding-right: 0px;"><div class="result page"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div></div>
+            <div style="padding-right: 0px;"><div class="result page"><a onclick="kprepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="knowpage">1</span>/<span id="kpagenum">0</span></a><a style="margin-left: 4px;" onclick="knextpage()" href="javascript:void(0)">下一页</a></div></div>
         </div>
     </div>
 
@@ -96,11 +101,20 @@
   
     <div class="col-xs-7">
         <div class="row" style="height:70px; "></div>
-        <div class="row" style="text-align:right;padding-right:15px;"><label style="width: 50%;"></label><label><input type="radio"  value="1" name="paper_kind" onclick="divshow(1);" checked="checked"><span style="margin-left: 4px;">习题册</span> <input name="paper_kind" onclick="divshow(2);"  value="0" style="margin-left: 10px;" type="radio"><span  style="margin-left: 4px;">知识点试卷</span></label><input id="inputbutton" type="submit" onclick="testsub()" value="处理完成习题" style="width:115px;height:32px;font-size:12px;background-color:#e8eef5; border: none;border-radius: 3px;border: 1px solid #cccccc;margin-left:15px;"></div>
+        <div class="row" style="text-align:right;padding-right:15px;"><label style="width: 50%;"></label><label><input type="radio"  value="1" name="paper_kind" onclick="divshow(1);" checked="checked"><span style="margin-left: 4px;">习题册</span> <input name="paper_kind" onclick="divshow(2);"  value="0" style="margin-left: 10px;" type="radio"><span  style="margin-left: 4px;">知识点试卷</span></label>
+      
+
+      
+      </div>
          <div class="row" style="height: 80px;">
             <hr>
-           <span style="margin-left:40px;font-size:16px;color:red;display:block;margin-top:30px;"><span id="dirpublishname">北京交通大学出版社</span>—><span id="direxercisename">初中物理练习册</span>—><span id="dirnum">36</span>套试卷</span>
-         </div>
+           <span style="margin-left:40px;font-size:16px;color:red;display:block;margin-top:30px;"><span id="dirpublishname">北京交通大学出版社</span>—><span id="direxercisename">初中物理练习册</span>—><span id="dirnum">36</span>           
+          <select style="width:80px;height:20px;font-size:12px;color:#000000;background: transparent; border: none;border-radius: 2px;border: 1px solid #cccccc;margin-left:15px;">
+          <option>未完成</option>
+          <option>完成</option>
+        </select></span>
+         
+           </div>
       
       <div class="row" id="undotest" style="margin-top: 35px;height: 310px; border-left: 1px solid #dae2ea;">
         <div class="col-xs-12 admin_data_tabel admin_list" style="padding-left:5%;padding-right:5%;">
@@ -145,7 +159,7 @@
             if(paper_kind==1)
             {
                 $('#keyfinishtest').css('display','none');
-                $('#title_note').text('完成_习题册统计列表_出版社');
+                $('#title_note').text('完成_习题册');
                 $('#title_note').css('color','black');
               $('#key_note_input').css('display','none');
             }
@@ -153,7 +167,7 @@
             if(paper_kind==0)
             {
                 $('#finishtest').css('display','none');
-                $('#title_note').text('完成_知识点统计列表_出版社');
+                $('#title_note').text('完成_知识点');
                 $('#title_note').css('color','black');
               $('#key_note_input').css('display','');
             }
@@ -174,7 +188,7 @@
             if(paper_kind==1)
             {
                 $('#undokeytest').css('display','none');
-                $('#title_note').text('待处理_习题册统计列表_出版社');
+                $('#title_note').text('待处理_习题册');
                 $('#title_note').css('color','red');
                	$('#key_note_input').css('display','none');
             }
@@ -182,7 +196,7 @@
             if(paper_kind==0)
             {
                 $('#undotest').css('display','none');
-                $('#title_note').text('待处理_知识点统计列表_出版社');
+                $('#title_note').text('待处理_知识点');
                 $('#title_note').css('color','red');
                	$('#key_note_input').css('display','');
             }
@@ -218,7 +232,7 @@
 			$('#key_note_input').css('display','');
           	$('#keytest').css('display','');
           	$('#thistest').css('display','none');
-             $('#title_note').text('待处理_知识点统计列表_出版社');
+             $('#title_note').text('待处理_知识点');
          
 
         }
@@ -228,7 +242,7 @@
 			$('#key_note_input').css('display','none');
             $('#keytest').css('display','none');
           	$('#thistest').css('display','');
-          $('#title_note').text('待处理_习题册统计列表_出版社');
+          $('#title_note').text('待处理_习题册');
         }
 
 
