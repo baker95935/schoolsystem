@@ -145,15 +145,10 @@
 </div>
 </div>
 <script>
-
-
     $(document).ready(function(){
-
     	divshow(1);
         nowtime();
-
     })
-
     function testsub()
     {
         var paper_kind=$("input[name='paper_kind']:checked").val();
@@ -161,12 +156,8 @@
         {
             $('#undotest').css('display','none');
             $('#undokeytest').css('display','none');
-
             $('#finishtest').css('display','block');
             $('#keyfinishtest').css('display','block');
-
-
-
             if(paper_kind==1)
             {
                 $('#keyfinishtest').css('display','none');
@@ -174,7 +165,6 @@
                 $('#title_note').css('color','black');
               $('#key_note_input').css('display','none');
             }
-
             if(paper_kind==0)
             {
                 $('#finishtest').css('display','none');
@@ -182,19 +172,13 @@
                 $('#title_note').css('color','black');
               $('#key_note_input').css('display','');
             }
-
-
-
-
             $('#inputbutton').val('待处理习题');
-
            // $('#kind_input').val(1);
         }
         else
         {
             $('#undotest').css('display','block');
             $('#undokeytest').css('display','block');
-
          // alert(paper_kind);
             if(paper_kind==1)
             {
@@ -203,7 +187,6 @@
                 $('#title_note').css('color','red');
                	$('#key_note_input').css('display','none');
             }
-
             if(paper_kind==0)
             {
                 $('#undotest').css('display','none');
@@ -211,19 +194,12 @@
                 $('#title_note').css('color','red');
                	$('#key_note_input').css('display','');
             }
-
-
-
             $('#finishtest').css('display','none');
             $('#keyfinishtest').css('display','none');
-
-
-
             $('#inputbutton').val('处理完成习题');
           //  $('#kind_input').val(0);
         }
     }
-
     function nowtime()
     {
         var myDate = new Date();
@@ -233,11 +209,8 @@
         var nowtime=year+'-'+(parseInt(month)+1)+'-'+date;
         $('#nowtimeid').text('当前日期：'+nowtime);
     }
-
     $('input[name="paper_kind"]').change(function() {
-
         var paper_kind=$("input[name='paper_kind']:checked").val();
-
         if(paper_kind==0)
         {
 			$('#key_note_input').css('display','');
@@ -245,9 +218,7 @@
           	$('#thistest').css('display','none');
              $('#title_note').text('待处理_知识点');
          
-
         }
-
         if(paper_kind==1)
         {   
 			$('#key_note_input').css('display','none');
@@ -255,8 +226,6 @@
           	$('#thistest').css('display','');
           $('#title_note').text('待处理_习题册');
         }
-
-
     });
     
     
@@ -310,7 +279,6 @@ function divshow(type)
 		person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
 	}
 }
-
 function searchexercise()
 {
    	var nowpage=1;
@@ -322,7 +290,6 @@ function searchexercise()
    	$('#exercisediv').html('');
    	person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid);
 }
-
 function nextpage()
 {
 	var nowpage=$('#nowpage').text();
@@ -346,7 +313,6 @@ function nextpage()
 	
 	person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid);
 }
-
 function prepage()
 {
 	var nowpage=$('#nowpage').text();
@@ -365,7 +331,6 @@ function prepage()
 	{
 		return;
 	}
-
 	$('#exercisediv').html('');
 	person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid);
 }
@@ -387,7 +352,6 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid)
 			
 			$('#pagenum').text(pagenum);
 			$('#nowpage').text(nowpage);
-
 			for (var i = 0; i<mylength; i++) 
             {
 				j=i+1;
@@ -395,12 +359,10 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid)
 				$('#exercisediv').html(beginhtml + addhtmlmsg);
 				j++;
             }
-
            
         }
     });
 }
-
 function detailexercise(id,status='')
 {
 	if(id) {
@@ -425,7 +387,8 @@ function detailexercise(id,status='')
     			for (var i = 0; i<mylength; i++) 
                 {
     				j=i+1;
-    				var appendhtml=appendhtml+'<tr id="paper1'+testlist[i]['id']+'" class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>'+testlist[i]['statusmsg']+'</td><td><a onclick="deletepaper('+testlist[i]['id']+',1)">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td></tr>';
+    				var filesernum=testlist[i]['filesernum'];
+    				var appendhtml=appendhtml+'<tr id="paper1'+testlist[i]['id']+'" class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>'+testlist[i]['statusmsg']+'</td><td><a onclick="deletepaper('+testlist[i]['id']+',1)">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/index.php/Home/Testpanel/test_whole02/filesernum/'+filesernum+'/kind/school/oldstatus/0))">进行处理</a></td></tr>';
     				j++;
                 }
     			$("#exerciselistdiv").append(appendhtml);
@@ -433,7 +396,6 @@ function detailexercise(id,status='')
          })
 	}
 }
-
 //知识点ajax获取数据
 function person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename,statusid)
 {
@@ -452,20 +414,17 @@ function person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename,
 			
 			$('#kpagenum').text(pagenum);
 			$('#knowpage').text(nowpage);
-
 			for (var i = 0; i<mylength; i++) 
             {
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td><a onclick="detailkpoint('+testlist[i]['id']+')">'+testlist[i]['keynotemsg']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['uncount']+'/'+testlist[i]['count']+'<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td><a onclick="detailkpoint('+testlist[i]['id']+')">'+testlist[i]['keynotemsg']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['uncount']+'/'+testlist[i]['count']+'<a href="{:U('Testpanel/test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td></tr>';
 				$('#kpointdiv').html(beginhtml + addhtmlmsg);
 				j++;
             }
-
            
         }
     });
 }
-
 function searchkpoint()
 {
    	var nowpage=1;
@@ -477,8 +436,6 @@ function searchkpoint()
    	
    	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename,kstatusid);
 }
-
-
 function knextpage()
 {
 	var nowpage=$('#knowpage').text();
@@ -502,7 +459,6 @@ function knextpage()
 	
 	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename,kstatusid);
 }
-
 function kprepage()
 {
 	var nowpage=$('#knowpage').text();
@@ -522,11 +478,8 @@ function kprepage()
 	{
 		return;
 	}
-
 	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename,kstatusid);
 }
-
-
 function detailkpoint(id,status='')
 {
 	if(id) {
@@ -550,7 +503,8 @@ function detailkpoint(id,status='')
     			for (var i = 0; i<mylength; i++) 
                 {
     				j=i+1;
-    				var appendhtml=appendhtml+'<tr class="change" id="paper2'+testlist[i]['id']+'"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>'+testlist[i]['statusmsg']+'</td><td><a onclick="deletepaper('+testlist[i]['id']+',2)">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('test_whole02',array('filesernum'=>$testdata[filesernum],'kind'=>'school','oldstatus'=>'0'))}">进行处理</a></td></tr>';
+    				var filesernum=testlist[i]['filesernum'];
+    				var appendhtml=appendhtml+'<tr class="change" id="paper2'+testlist[i]['id']+'"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>'+testlist[i]['statusmsg']+'</td><td><a onclick="deletepaper('+testlist[i]['id']+',2)">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/index.php/Home/Testpanel/test_whole02/filesernum/'+filesernum+'/kind/key/oldstatus/0">进行处理</a></td></tr>';
     				j++;
                 }
     			$("#exerciselistdiv").append(appendhtml);
@@ -558,8 +512,6 @@ function detailkpoint(id,status='')
          });
 	}
 }
-
-
 function deletepaper(id,kind)
 {
 	if(id && kind) {
@@ -577,7 +529,6 @@ function deletepaper(id,kind)
         });
 	}
 }
-
 //右侧的试卷搜索
 function papersearch()
 {
