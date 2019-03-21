@@ -68,6 +68,8 @@ class PublishpanelController extends Controller
     	
     	$exercisename=$_POST['exercisename'];
     	
+    	!empty($_POST['statusid']) && $statusid=$_POST['statusid'];
+    	
     	 
     	$beginnum=($nowpage-1)*$pagelength+1;
     	$beginpagenum=$beginnum-1;
@@ -78,6 +80,7 @@ class PublishpanelController extends Controller
     		$dataarr=array();
     		$model = M('book_exercises'); // 实例化Data数据对象
     		$publish=M('publish_name');
+    		$paper=M('paper_msg_data');
 		  	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
 		  	
 		  	//查找出版社的名字
@@ -104,6 +107,25 @@ class PublishpanelController extends Controller
 				$v['num']=$beginnum;
 				$beginnum=$beginnum+1;
 				
+		 
+				//获取下 未完成的数量
+				$v['uncount']=$paper->where('exerciseid='.$v['id'].' and statusmsg=0')->count();
+				$v['count']=$paper->where('exerciseid='.$v['id'])->count();
+				
+				//已完成
+				if($statusid==2) {
+					if($v['uncount']!=0) {
+						unset($data[$k]);
+					}
+				}
+				
+				//未完成
+				if($statusid==1) {
+					if($v['uncount']==0) {
+						unset($data[$k]);
+					}
+				}
+				
 				//获取出版社数据
 				$v['publishname']=0;
 				if($v['publishid']) {
@@ -112,6 +134,7 @@ class PublishpanelController extends Controller
 				}
 				$v['createtime']=date('Y-m-d H:i:s',$v['createtime']);
 			}
+			$data=array_slice($data, 0);
     	}
     	
     	//知识点
@@ -120,6 +143,7 @@ class PublishpanelController extends Controller
 	    	$model=M('onekeynote');
 	    	$publish=M('publish_name');
 	    	$exercise=M('book_exercises');
+	    	$keynote=M('key_paper_msg_data');
 	    	 
 	    	$dataarr=array();
 	    	!empty($keywords) && $dataarr['keynotemsg']=['like',"%".$keywords."%"];
@@ -155,13 +179,31 @@ class PublishpanelController extends Controller
 	    	}
 	    
 	    
-	    	$count=$model->where($dataarr)->count();
+	    	
 	    
 	    	$data=$model->where($dataarr)->order('createtime desc')->limit($beginpagenum.','.$pagelength)->select();
 	    	foreach($data as $k=>&$v) {
 	    		$v['num']=$beginnum;
 	    		$beginnum=$beginnum+1;
 	    	 
+	    		//获取下 未完成的数量
+	    		$v['uncount']=$keynote->where('keynote_id='.$v['id'].' and statusmsg=0')->count();
+	    		$v['count']=$keynote->where('keynote_id='.$v['id'])->count();
+	    		
+	    		//已完成
+	    		if($statusid==2) {
+	    		 
+	    			if($v['uncount']!=0 || $v['count']==0) {
+	    				unset($data[$k]);
+	    			}
+	    		}
+	    		
+	    		//未完成
+	    		if($statusid==1) {
+	    			if($v['uncount']==0) {
+	    				unset($data[$k]);
+	    			}
+	    		}
 	    
 	    		//获取出版社数据
 	    		if($v['publishid']) {
@@ -173,8 +215,13 @@ class PublishpanelController extends Controller
 	    			$tmp=$exercise->find($v['exerciseid']);
 	    			$v['exercisename']=$tmp['name'];
 	    		}
+	    		
 	    
 	    	}
+	    	 
+	    	$data=array_slice($data, 0);
+	    	
+	    	$count=count($data);
     
     	}
     	
@@ -205,7 +252,15 @@ class PublishpanelController extends Controller
     	//获取知识点对应的试卷
     	$paper=M('paper_msg_data');
     	$img=M("paper_img_data");
+    	//获取下 未完成的数量
+    	$uncount=0;
+    	$uncount=$paper->where('exerciseid='.$msg['id'].' and statusmsg=0')->count();
+    	$info['uncount']=$uncount;
     	$list=$paper->where('exerciseid='.$msg['id'])->order('orderid asc,creat_time asc')->select();
+    	foreach($list as  $k=>&$v) {
+    		$v['statusmsg']==0 && $v['statusmsg']='未完成';
+    		$v['statusmsg']>0 && $v['statusmsg']='已完成';
+    	}
      
     	!empty($list) && $info['list']=$list;
     	$info['count']=0;
@@ -236,8 +291,17 @@ class PublishpanelController extends Controller
     	//获取知识点对应的试卷
     	$keynote=M('key_paper_msg_data');
     	$img=M('paper_img_data');
+    	
+    	//获取下 未完成的数量
+    	$uncount=0;
+    	$uncount=$keynote->where('keynote_id='.$msg['id'].' and statusmsg=0')->count();
+    	$info['uncount']=$uncount;
     	$list=$keynote->where('keynote_id='.$msg['id'])->order('orderid asc,creat_time asc')->select();
-   
+    	foreach($list as  $k=>&$v) {
+    		$v['statusmsg']==0 && $v['statusmsg']='未完成';
+    		$v['statusmsg']>0 && $v['statusmsg']='已完成';
+    	}
+    	
     	!empty($list) && $info['list']=$list;
     	$info['count']=0;
     	!empty($list) && $info['count']=count($list);
