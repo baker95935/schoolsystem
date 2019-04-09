@@ -59,14 +59,18 @@ class WechatController extends Controller
 		$page=$_GET['page']?$_GET['page']:1;
 		$begin=$page*$pagesize;
 		$userid=$_GET['userid'];
+ 
 		$exercise_name=$_GET['exercise_name']?$_GET['exercise_name']:'';
+ 
 		
 		$datalist=array();
 		if($userid) {
 			$mytest=M('mytest');
 			$paper=M('paper_msg_data');
 			$exercise=M('book_exercises');
+ 
 			$datalist=$mytest->where('userid='.$userid.' and deleted=0')->limit(0,$begin)->order('id desc')->select();
+ 
 			$count=$mytest->where('userid='.$userid)->count();
 			foreach($datalist as $k=>&$v) {
 				$tmp=$paper->find($v['testid']);
@@ -74,9 +78,11 @@ class WechatController extends Controller
 				$tmp_e=$exercise->find($v['exerciseid']);
 				$v['exercise_name']='';
 				$v['exercise_name']=$tmp_e['name'];
+ 
 				if(!empty($exercise_name) && $exercise_name!=$tmp_e['name']) {
 					unset($datalist[$k]);
 				}
+ 
 				$v['kk']==2;
 				if(($k+1)%2==0) {
 					$v['kk']==1;
@@ -101,6 +107,7 @@ class WechatController extends Controller
 		$data['nextpage']=$nextpage;
 		$data['list']=$datalist;
 		$data['count']=count($datalist);
+ 
 		$data['totalPage']=$totalPage;
 		
 		echo json_encode($data);
@@ -112,6 +119,7 @@ class WechatController extends Controller
 		$taskid=$_GET['taskid'];
 		
 		$res=0;
+ 
 		$data=array();
 		if($taskid) {
 			$mytest=M('mytest');
@@ -121,5 +129,6 @@ class WechatController extends Controller
 		echo $res;	
 	}
 	
+ 
  
 }
