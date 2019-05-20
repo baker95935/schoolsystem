@@ -152,7 +152,7 @@ class PublishsetController extends Controller
     	$publish=M('publish_name');
     	$publishlist=$publish->where('status=1')->select();
     	//分类列表
-    	$classify=M('book_classify');
+    	$classify=M('subject_data');
     	$classlist=$classify->select();
     	
     	$this->assign('publishlist',$publishlist);
