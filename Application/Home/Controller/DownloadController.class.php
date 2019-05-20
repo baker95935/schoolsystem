@@ -2,6 +2,7 @@
 namespace Home\Controller;
 use Think\Controller;
 use Think\Image;
+require 'Public/tcpdf/tcpdf.php';
 //use vendor\crop;
 
 class DownloadController extends Controller
@@ -17,7 +18,7 @@ class DownloadController extends Controller
 	paper_msg_data
 	*/
      $userid=cookie('userid');
-     $realname=cookie('realname');
+     $nickName=cookie('nickName');
      
      $model=M('mytest');
      
@@ -54,7 +55,7 @@ class DownloadController extends Controller
 		 $pertotalInfo="(".$peryun."|".$perydo.")";
    	 }
      $this->assign('userid',$userid);
-     $this->assign('realname',$realname);
+     $this->assign('$nickName',$nickName);
      $this->assign('mytesttotalInfo',$mytesttotalInfo);
      $this->assign('stutotalInfo',$stutotalInfo);
      $this->assign('stumytotalInfo',$stumytotalInfo);
@@ -275,28 +276,26 @@ class DownloadController extends Controller
    public function logout()
    {
    		cookie('userid',null);
-   		cookie('realname',null);
+   		cookie('nickName',null);
 	 	echo 1;
    }
    
   public function loadsubphp()
   {
 
-     $username=$_POST['username'];
-     $pwd=$_POST['pwd'];
+    // $username=$_POST['phone'];
+    // $seccode=$_POST['seccode'];
     
-     $model=M('user_data');
-     $data=$model->where(array('username'=>$username,'pwd'=>$pwd,'kind'=>'1'))->find();
-    // $id=$data[id];
-    // $realname=$data[realname];
+   	$phone=18902182280;
+    $seccode=1234;
     
-    // print_r($data);
-    
+     $model=M('weixin_users');
+     $data=$model->where(array('phone'=>$phone,'seccode'=>$seccode))->find();
 
      if($data[id]>0)
      {
 	 	cookie('userid',$data[id],60*60*24*7);
-	 	cookie('realname',$data[realname],60*60*24*7);
+	 	cookie('nickName',$data[nickame],60*60*24*7);
 		echo json_encode($data);
      }else{
        echo 0;
@@ -304,5 +303,257 @@ class DownloadController extends Controller
     
   }
   
+  public function phpdata1()
+  {
+ 
+    $userid=$_POST['userid'];
+    $userid=15;
+    $nowpage=$_POST['nowpage'];
+    $pagelength=$_POST['pagelength'];
+    $printnum=$_POST['printnum'];
+    $paperkind=$_POST['paperkind'];
+    
+    $beginnum=($nowpage-1)*$pagelength+1;
+    $beginpagenum=$beginnum-1;
+    
+    $datakind='test';//$datakind='data';
+    $Model=M('');
+    //$data=$Model->query('Select id,testid,lastreadtime,keyornot,nowtesttime,nowtestnum,printnum, case keyornot  when 0 then (select paper_name from paper_msg_data where id=a.testid) when 1 then (select paper_name from key_paper_msg_data where id=a.testid) end as paper_name,1 testkindnum  From  mytest as a  where userid='.$userid.' and printnum='.$printnum.'  union all select id,id as testid,lastreadtime,keyornot,nowtesttime,nowtestnum,paper_name,2 testkindnum,printnum from stumytest  where userid='.$userid.' and printnum='.$printnum.'  order by nowtesttime asc LIMIT '.$startnum.','.$endnum);
+   	//错题本
+   	if($paperkind=='ctb') {
+    	$sql='Select id,testid,lastreadtime,keyornot,nowtesttime,nowtestnum,printnum, case keyornot  when 0 then (select paper_name from paper_msg_data where id=a.testid) when 1 then (select paper_name from key_paper_msg_data where id=a.testid) end as paper_name,1 testkindnum  From  mytest as a  where userid='.$userid;
+    	$printnum!=3 && $sql=$sql.' and printnum='.$printnum;
+   	}
+   	//原始习题
+   	if($paperkind=='init') {
+   		$sql1='Select id,testid,lastreadtime,keyornot,nowtesttime,nowtestnum,printnum, case keyornot  when 0 then (select paper_name from paper_msg_data where id=a.testid) when 1 then (select paper_name from key_paper_msg_data where id=a.testid) end as paper_name,1 testkindnum  From  mytest as a  where userid='.$userid;
+   		$sql2=' union all select id,id as testid,lastreadtime,keyornot,nowtesttime,nowtestnum,paper_name,printnum ,2 testkindnum from stumytest  where userid='.$userid;
+   		$printnum!=3 && $sql1=$sql1.' and printnum='.$printnum;
+   		$printnum!=3 && $sql2=$sql2.' and printnum='.$printnum;
+   		$sql=$sql1.$sql2;
+   	}
+ 
+   	$data=$Model->query($sql.' order by nowtesttime asc LIMIT '.$beginnum.','.$pagelength);
+   	$countdata=$Model->query($sql);
+    $count=sizeof($countdata);
+    
+    $j=$beginnum;
+    for($i=0;$i<sizeof($data);$i++)
+    {
+      $newdata[$i]['id']=$data[$i]['id'];
+      $newdata[$i]['testid']=$data[$i]['testid'];
+      $newdata[$i]['lastreadtime']=date('Y-m-d',strtotime($data[$i]['lastreadtime']));
+      $newdata[$i]['nowtesttime']=$data[$i]['nowtesttime'];
+      if($data[$i]['nowtesttime']==null)
+      {
+        $data[$i]['nowtesttime']='--';
+      }
+      $newdata[$i]['printnum']=$data[$i]['printnum'];
+      $newdata[$i]['paper_name']=$data[$i]['paper_name'];
+      $newdata[$i]['num']=$j;
+  
+      if($data[$i]['nowtestnum']=='')
+      {
+        $newdata[$i]['nowtestnummsg']='--';
+      }
+      if($data[$i]['nowtestnum']==1)
+      {
+        $newdata[$i]['nowtestnummsg']='1st：';
+      }
+      if($data[$i]['nowtestnum']==2)
+      {
+        $newdata[$i]['nowtestnummsg']='2nd：';
+      }
+      if($data[$i]['nowtestnum']==3)
+      {
+        $newdata[$i]['nowtestnummsg']='3rd：';
+      }
+      
+      
+      if($data[$i]['printnum']==0)
+      {
+        $newdata[$i]['printmsg']='未进入打印';
+      }
+      
+      if($data[$i]['printnum']==1)
+      {
+        $newdata[$i]['printmsg']='待打印';
+      }
+      
+       if($data[$i]['printnum']==2)
+      {
+        $newdata[$i]['printmsg']='打印完成';
+      }
+      
+      if($data[$i]['testkindnum']==1)
+      {
+        if($data[$i]['keyornot']==0)
+        {
+          $newdata[$i]['testkind']='testctb';
+          if($datakind=='test')
+          {
+             $newdata[$i]['testkindmsg']='习题册原题';
+          }
+          else
+          {
+             $newdata[$i]['testkindmsg']='习题册错题';
+          }
+
+        }
+        else
+        {
+          $newdata[$i]['testkind']='keyctb';
+          if($datakind=='test')
+          {
+             $newdata[$i]['testkindmsg']='知识点原题';
+          }
+          else
+          {
+             $newdata[$i]['testkindmsg']='知识点错题';
+          }
+        }
+      }
+      
+      if($data[$i]['testkindnum']==2)
+      {
+        if($data[$i]['keyornot']==0)
+        {
+          $newdata[$i]['testkind']='sectestctb';
+          $newdata[$i]['testkindmsg']='个人习题册';
+        }
+        else
+        {
+         $newdata[$i]['testkind']='seckeyctb';
+         $newdata[$i]['testkindmsg']='个人知识点';
+        }
+      }
+      
+       $j=$j+1;
+    }
+    
+   
+    $data=$newdata;
+    $data['length']=sizeof($data);
+    $data['pagelength']=$pagelength;
+    $data['count']=$count;
+     
+    $data['pagenum']=ceil($count/$pagelength);
+    // $data['kind']=$kind;
+    echo json_encode($data);
+   // echo json_encode($newdata);
+ }
+  
+  
+  //个人试卷生成pdf
+    public function phpmanagepaperdetailpdf()
+    {
+        $testid=$_GET['testid'];
+        $outkind=$_GET['outkind'];
+        $paper_name=$_GET['paper_name'];
+        $testkind=$_GET['testkind'];
+        $testtime=$_GET['$testtime'];//试卷种类
+      	$paperkind=$_GET['paperkind'];
+      	$inittestid=$_GET['inittestid'];
+        $testtime='生成时间：'.date('Y-m-d h:i:s',time());
+
+            
+     // testid 181;outkind I papername 和平区2017-2018年度第二学期九年级节课质量调查数学考试；testkind:testctb;paperkind ctb;
+      
+      $testid=182;
+      $outkind='I';
+      $paper_name='和平区2017-2018年度第二学期九年级节课质量调查数学考试';
+      $testkind='testctb';
+      $paperkind='init';
+      $inittestid=1559;
+      
+      /*
+   
+      echo $testid;
+            echo $outkind.'<hr>';
+            echo $paper_name.'<hr>';
+            echo $testkind.'<hr>';
+            echo $testtime.'<hr>';
+            echo $paperkind.'<hr>';
+            echo $inittestid.'<hr>';
+
+      return;
+      
+     */
+      if($paperkind=='init')
+      {
+         if($testkind=='testctb')
+          {
+           $Model=M('');
+           $newtestdata=$Model->query('SELECT b.id,b.in_ser,b.typeid,b.srcid,b.pic1,b.pic2,b.pic3,b.pic4,b.ctbname,b.inputval,b.typeid,b.tsernum,b.ctbname,b.kind,b.picsum,b.inputname,b.inputval,b.filesernum,b.align,b.imgdisplay,b.questionscore FROM paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum where a.id='.$inittestid.' order by in_ser asc');   
+              
+         	for($i=0;$i<sizeof($newtestdata);$i++)
+        	 {
+           		$newtestdata[$i]['inputval']=cuttitle($newtestdata[$i]['inputval']);
+         	 }
+         
+         }
+        
+          if($testkind=='keyctb')
+          {
+             $model_key_test_public=M('key_test_public_data');
+              
+          }
+        
+        
+        
+       // print_r($newtestdata);
+        
+      //  return;
+
+
+
+   // $data=$model->where('id='.$testid)->find();
+//
+  //		$newtestdata=persontest_to_standtest($inittestid,'public');
+
+      }
+
+      
+      if($paperkind=='ctb')
+      {
+         if($testkind=='testctb' || $testkind=='keyctb')
+        	{
+           		$newtestdata=persontest_to_standtest($testid,'public');
+        	}
+        	else
+        	{
+       	   		$newtestdata=persontest_to_standtest($testid);
+        	}
+      }
+           
+      persontestpdf($outkind,$paper_name,$testtime,$newtestdata);
+    }
+  //个人答案生成pdf
+      public function php_managepaperanswerpdf()
+    {
+        $testid=$_GET['testid'];
+        $outkind=$_GET['outkind'];
+        $testkind=$_GET['testkind'];
+        $paper_name=$_GET['paper_name'].'答案';
+        $testtime=$_GET['$testtime'];//试卷种类
+        $testtime='生成时间：'.date('Y-m-d h:i:s',time());
+      
+      //	$testid=179;
+     // 	$testkind=0;
+      //	$outkind='I'; 
+     // 	$paper_name='123';
+     
+        //$newtestdata=persontest_to_standtest($testid);
+        
+        if($testkind=='testctb' || $testkind=='keyctb')
+        {
+           $newtestdata=persontest_to_standtest($testid,'public');
+        }
+        else
+        {
+        $newtestdata=persontest_to_standtest($testid);
+        }
+      	persontest_to_answerpdf($newtestdata,$paper_name,$outkind);
+    }
   
 }

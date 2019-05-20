@@ -4887,8 +4887,6 @@ function persontest_to_standtest($testid,$usertestkind)
         $typeidarr=$data['typeidarr'];
     }
 
-//    $ctbquestionid=$data['ctbquestionid'];
-//    $typeidarr=$data['typeidarr'];
     $ctbquestionarr=explode(',',$ctbquestionid);
     $typeidarr=explode(',',$typeidarr);
     $count=sizeof($ctbquestionarr);
@@ -4914,7 +4912,7 @@ function persontest_to_standtest($testid,$usertestkind)
     }
     //形成新的数组
 
-//    return $oldtestdata;
+   // return $oldtestdata;
 
 
     $count=$m;
@@ -4973,6 +4971,9 @@ function persontest_to_standtest($testid,$usertestkind)
 
 
     }
+  
+
+  
 
 
     //如果有a类型习题，那么需要添加t1类型标题。完形填空，添加完形标题。
@@ -5038,6 +5039,8 @@ function persontest_to_standtest($testid,$usertestkind)
         $newtestdata[$m]['questionscore']=$testdata[$i]['questionscore'];
         $m=$m+1;
     };
+  
+   // return $newtestdata;
 
     //进行添加序号
 
@@ -5530,6 +5533,9 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
 
 
 //原始试卷
+  
+//  print_r($data);
+//  return;
         $dpi=72;
 
         $wordheight=297;
@@ -5572,7 +5578,7 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
         //1.从习题数据库中读取数据
         $count=sizeof($data);
 
-   //    return $data;
+      // return $data;
 
         //2.读取习题中的图片信息
 
@@ -5784,7 +5790,11 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
             }
         }
 
-        // print_r($test);
+
+  
+ 		// return $test;
+  
+  
 
 
 
@@ -5902,7 +5912,7 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
         {
             $newtest[$m]['title']=$test[$j]['title'];
 
-            if($test[$j]['kind']=='title' && $test[$j]['src']!='')
+            if($test[$j]['kind']=='title' && $test[$j]['src']!='' &&  $test[$j]['src']!=0)
             {
                 $newtest[$m]['kind']='sertitle';
                 $newtest[$m]['font_size']=$p1_font_size;
@@ -5983,6 +5993,7 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
             $m=$m+1;
 
         }
+  
 
         $newtestlength=sizeof($newtest);
 
@@ -6011,12 +6022,16 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
             }
 
         }
+  
+ // print_r($newtest);
+  
+ // return;
 
         $newtest[$newtestlength-1]['page']=$pagenum;
 
-        $pagesum=$pagenum;
-
-
+      //  $pagesum=$pagenum;
+  $pagesum=0;
+  
 
         $pdf = new \TCPDF('P', 'mm', array($wordwidth,$wordheight), true, 'UTF-8', false);
 
@@ -6052,16 +6067,21 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
         $pdf->setImageScale($imagescale);
 
 //设置字体
-
+	 $pdf->SetMargins(0, 0, 0);
         $pdf->AddPage();
-        $pdf->SetMargins(0, 0, 0);
+       
+  
+
 
         // 进入循环添加信息
+  $addpagenum=1;
 
         $page_local=$margin_top;
         $test_size=sizeof($newtest);
         for($j=0;$j<$test_size;$j++)
         {
+          /*
+       
             if($newtest[$j]['kind']=='headtitle')
             {
                 //设置字体
@@ -6071,6 +6091,7 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
                 $page_local=$page_local+$newtest[$j]['height']+$lineheight;
             }
 
+        
             if($newtest[$j]['kind']=='title_line_height')
             {
                 $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
@@ -6087,6 +6108,7 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
                 $page_local=$page_local+$newtest[$j]['height']+$lineheight;
             }
 
+
             if($newtest[$j]['kind']=='note_line_height')
             {
                 $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
@@ -6096,16 +6118,26 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
             if($newtest[$j]['kind']=='title')
             {
                 $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
-                $pdf->MultiCell(180, 20,$newtest[$j]['title'], $border=0, $align='L',$fill=false, $ln=1, $x='10', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
+                $pdf->MultiCell(180, 20,$newtest[$j]['title'].$newtest[$j]['page'].'/'.$pagesum, $border=0, $align='L',$fill=false, $ln=1, $x='10', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
                 $page_local=$page_local+$newtest[$j]['height'];
                 $page_local=$page_local+$lineheight;
             }
+          
 
             if($newtest[$j]['kind']=='titleanswer'  || $newtest[$j]['kind']=='answer'  || $newtest[$j]['kind']=='sertitle')
             {
+
+
+
                 $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
-                $pdf->MultiCell(50, 10,'<span style="letter-spacing: 1px;">'.$newtest[$j]['title'].'</span>', $border=0, $align='L',$fill=false, $ln=1, $x='20', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
+                $pdf->MultiCell(50, 10,'<span style="letter-spacing: 1px;">'.$newtest[$j]['title'].$newtest[$j]['page'].'/'.$pagesum.'/'.$j.'</span>', $border=0, $align='L',$fill=false, $ln=1, $x='20', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
+
+            //  if($newtest[$j]['src']!=0)
+            //  {
                 $pdf->Image($newtest[$j]['src'], 30,$page_local, '','', '', '', '', false,300, '', false, false, 0, false, false, false);
+             // }
+              
+
 
                 if($newtest[$j]['pics_sum']==1)
                 {
@@ -6115,7 +6147,7 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
                     $pic_x=$x+round($newtest[$j]['pic1_img_x']/2,2)-6;
                     $pdf->SetFont('stsongstdlight', '',$pic_font_size);
                     $title = strtr($newtest[$j]['title'], '.', ' ');
-                    $pdf->MultiCell(50, 10,'<span style="letter-spacing: 1px;">'.'题'.$title.'图'.'</span>', $border=0, $align='L',$fill=false, $ln=1, $x=$pic_x, $y=$pic_page_local+$newtest[$j]['pic_maxheight'],  $reseth=true, $stretch=0,$ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
+                    $pdf->MultiCell(150, 10,'<span style="letter-spacing: 1px;">'.'题'.$title.'图'.'</span>', $border=0, $align='L',$fill=false, $ln=1, $x=$pic_x, $y=$pic_page_local+$newtest[$j]['pic_maxheight'],  $reseth=true, $stretch=0,$ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
                 }
 
                 if($newtest[$j]['pics_sum']==2)
@@ -6157,20 +6189,39 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
                 $page_local=$page_local+$newtest[$j]['height'];
                 $page_local=$page_local+$lineheight;
             }
+            */
+
+   			 if($newtest[$j]['kind']=='title')
+            {
+                $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
+                $pdf->MultiCell(180, 20,$newtest[$j]['title'].$newtest[$j]['page'].'/'.$pagesum, $border=0, $align='L',$fill=false, $ln=1, $x='10', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
+                $page_local=$page_local+$newtest[$j]['height'];
+                $page_local=$page_local+$lineheight;
+            }
+                  if($newtest[$j]['kind']=='titleanswer'  || $newtest[$j]['kind']=='answer'  || $newtest[$j]['kind']=='sertitle')
+            {
 
 
+                $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
+                $pdf->MultiCell(50, 10,'<span style="letter-spacing: 1px;">'.$newtest[$j]['title'].$newtest[$j]['page'].'/'.$pagesum.'/'.$j.'</span>', $border=0, $align='L',$fill=false, $ln=1, $x='20', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
+      			//$page_local=$page_local+$newtest[$j]['height'];
+                $page_local=$page_local+$lineheight;
+             }
 
-            if($newtest[$j]['page']>0 && $newtest[$j]['page']<$pagesum)
+           // if($newtest[$j]['page']>0 && $newtest[$j]['page']>$pagesum)
+          if($newtest[$j]['page']==$addpagenum)
             {
                 $pdf->AddPage();
                 $page_local=$margin_top;
-                //  $pdf->MultiCell(50, 10,2323, $border=0, $align='L',$fill=false, $ln=1, $x='20', $y='10',  $reseth=true, $stretch=0,$ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
+                //$pagesum=$newtest[$j]['page'];
+                $addpagenum=$addpagenum+1;
+               //  $pdf->MultiCell(50, 10,2323, $border=0, $align='L',$fill=false, $ln=1, $x='20', $y='10',  $reseth=true, $stretch=0,$ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
             }
 
         }
 
 //
-//    return $newtest;
+  //  return $newtest;
 
     $pdfname='test_'.date('y-m-d h:i:s',time());
 
@@ -6375,8 +6426,10 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
 //原始试卷
     $dpi=72;
 
+    //$wordheight=307;
     $wordheight=297;
-    $wordwidth=210;
+  	$wordwidth=210;
+  //$wordwidth=310;
     $lineheight=10;
     $margin_top=14;//mm
     $margin_side=20;//mm
@@ -6566,11 +6619,17 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
     }
 
     $newtestlength=sizeof($newtest);
+  
+  	//print_r($newtest);
 
     $sumwidth=$margin_side;
     $nextsumwidth=0;
     $standwidth=$wordwidth-20;
     $max_height=0;
+  
+ // echo $standwidth.'<hr>';
+  
+  
     //计算每个元素所在的行
   //需要修改，需要加入换页
     $linenum=1;
@@ -6578,10 +6637,15 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
     {
         $j=$i+1;
         $sumwidth=$sumwidth+$newtest[$i]['width'];
+      //当前元素的总宽度，进入总的宽度
         $nextsumwidth=$sumwidth+$newtest[$j]['width'];
+       //当前元素的总宽度+下一个宽度，进入下一个总的宽度
+      
+      //如果当前宽度<标准宽度<下一个总的宽度
 
         if($newtest[$i]['kind']=='headtitle')
         {
+          //当为大标题时，当前行数，总宽度初始状态，下一个总宽度初始状态
             $newtest[$i]['linenum']=$linenum;
             $sumwidth=$margin_side;
             $nextsumwidth=0;
@@ -6591,28 +6655,51 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
 
         if($newtest[$i]['kind']=='t0')
         {
+           //当前行数，总宽度初始状态，下一个总宽度初始状态，函数加一
+   
             $linenum=$linenum+1;
             $newtest[$i]['linenum']=$linenum;
             $linenum=$linenum+1;
             $sumwidth=$margin_side;
             $nextsumwidth=0;
+   
             continue;
         }
 
         if($sumwidth<=$standwidth && $nextsumwidth>=$standwidth)
         {
+          //如果当前宽度<标准宽度<下一个总的宽度
             $newtest[$i]['linenum']=$linenum;
+
             $linenum=$linenum+1;
             $sumwidth=$margin_side;
             $nextsumwidth=0;
         }
         else
         {
+          
+       if($sumwidth>$standwidth)
+        {
+          //如果当前宽度<标准宽度<下一个总的宽度
+            
             $newtest[$i]['linenum']=$linenum;
+ 			$linenum=$linenum+1;
+            $sumwidth=$margin_side;
+            $nextsumwidth=0;
+        }
+         else
+         {
+            $newtest[$i]['linenum']=$linenum;
+
+         }
+
         }
     }
 
     //最后一个判断，如果下一个宽度超过标准宽度，那么最后一个元素，到下一行。否则的话，就在本行。
+  
+  
+  
 
     if($nextsumwidth>=$standwidth)
     {
@@ -6623,10 +6710,18 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
         $newtest[$newtestlength-1]['linenum']=$linenum;
     }
     $count=sizeof($newtest);
+  
+ // print_r($newtest);
+  
+   // $standheight=$wordheight-$margin_top-$margin_top-30;
+  
+  //插入页码
+  
+ // echo $standheight;
 
     $maxline_height=0;
     $m=1;
-    for($i=1;$i<=$linenum;$i++)
+   for($i=1;$i<=$linenum;$i++)
     {
         $maxline_height=0;
         for($j=0;$j<$count;$j++)
@@ -6654,15 +6749,19 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
         }
     }
 
-    $standheight=$wordheight-$margin_top-$margin_top;
+//  print_r($maxline);
+//确定页面的高度
+    $standheight=$wordheight-$margin_top-$margin_top-20;
     $sumheight=0;$pagenum=1;
     for($i=1;$i<$linenum;$i++)
     {
         $j=$i+1;
         $sumheight=$sumheight+$maxline[$i]['height']+$lineheight;
         $nextsumheight=$sumheight+$maxline[$j]['height']+$lineheight;
+      
         if($sumheight<=$standheight && $nextsumheight<=$standheight)
         {
+          	//$maxline[$i]['page']
             $maxline[$i]['page']=$pagenum;
         }
         if($sumheight<=$standheight && $nextsumheight>=$standheight)
@@ -6702,7 +6801,7 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
         }
     }
   
-
+//width表示标题文字宽度
  // print_r($newtest);
  // return;
   
@@ -6748,16 +6847,20 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
     $test_size=sizeof($newtest);
     $nowline=1;
     $nowpage=1;
-    $tax=$margin_side;
+    $tax=$margin_side;//边距
+  
+ // print_r();
+  
+  //写入pdf，这里有问题
+  //linenum行数
+ // $test_size=19;
     for($j=0;$j<$test_size;$j++)
     {
-        $linenum=$newtest[$j]['linenum'];
-        $page=$newtest[$j]['page'];
-
-      
-
-
-        if($page!=$nowpage)
+     // echo $j.'<hr>';
+        $linenum=$newtest[$j]['linenum'];//当前行数
+        $page=$newtest[$j]['page'];//当前数据页数
+   
+        if($page!=$nowpage)//如果当前页数，不等于数据页数，那么就插入一个新页
         {
             $page_local=$margin_top;
             $nowpage=$page;
@@ -6766,19 +6869,17 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
             $tax=$margin_side;
             $nowline=$linenum;
         }
-      else
+      else//否则如果当前行数不等于数据行数
       {
          if($linenum!=$nowline)
         {
-            $k=$j-1;
+            $k=$j-1;//页面的垂直起始位置，加上上一个元素的高度，在加上行间距
             $page_local=$page_local+$newtest[$k]['height'];
             $page_local=$page_local+$lineheight;
-            $nowline=$linenum;
-            $tax=$margin_side;
+            $nowline=$linenum;//当前行数变成当前数据行数
+            $tax=$margin_side;//边距初始化
         }
       }
-
-
 
 
 
@@ -6787,36 +6888,60 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
             //设置字体
             $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
             //进行写入
+          	//如果是标题，那么x=0，y=$page_local，居中写入
             $pdf->MultiCell($wordwidth,$newtest[$j]['height'],$newtest[$j]['title'], $border=0, $align='C',$fill=false, $ln=1, $x='0', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
-            $page_local=$page_local+$newtest[$j]['height']+$lineheight;
+          	//$page_local=$page_local+文字高度+行间距  
+          	$page_local=$page_local+$newtest[$j]['height']+$lineheight;
+          	//当前行+1
             $nowline=$nowline+1;
         }
         if($newtest[$j]['kind']=='t0') {
             $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
-            $pdf->MultiCell(180, 20, $newtest[$j]['title'], $border = 0, $align = 'L', $fill = false, $ln = 1, $x = '10', $y = $page_local, $reseth = true, $stretch = 0, $ishtml = false, $autopadding = true, $maxh = 0, $valign = 'T', $fitcell = false);
-            $page_local = $page_local + $newtest[$j]['height'];
+           	//如果是副标题，那么x=10，y=$page_local，写入
+            $pdf->MultiCell(180, 20, $newtest[$j]['title'], $border = 0, $align = 'L', $fill = false, $ln = 1, $x = '10', $y = $page_local, $reseth = true, $stretch = 0, $ishtml = false, $autopadding = true, $maxh = 0, $valign = 'T', $fitcell = false); 
+            //$page_local=$page_local+文字高度+文字高度+行间距
+          	$page_local = $page_local + $newtest[$j]['height'];
             $page_local = $page_local + $lineheight;
+          	//当前行+1
             $nowline=$nowline+1;
         }
 
 
         if($newtest[$j]['kind']=='t-a')
         {
-          if($j==28)
-          {
-           // $page_local=14;
-          }
+ 
+          	//如果是习题，那么x=$tax，y=$page_local，开始写入标题
             $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
             $pdf->MultiCell($newtest[$j]['font_width'], 10,'<span style="letter-spacing: 1px;">'.$newtest[$j]['title'].'</span>', $border=0, $align='L',$fill=false, $ln=1, $tax, $y=$page_local,  $reseth=true, $stretch=0,$ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
-
+			//如果习题有图片
             if($newtest[$j]['src']!='0')
             {
+              
+
+              
+               //左边距=原有左边距+文字宽度，并且进行插入
                 $tax=$tax+$newtest[$j]['font_width'];
-                $pdf->Image($newtest[$j]['src'], $tax,$page_local, '','', '', '', '', false,300, '', false, false, 0, false, false, false);
+              	//插入图片
+              
+              if($newtest[$j]['height']>$standheight-$newtest[$j]['font_size'])
+              {
+                 $pdf->Image($newtest[$j]['src'], $tax,$page_local, '',$standheight-$newtest[$j]['font_size'], '', '', '', false,300, '', false, false, 0, false, false, false);
+              }
+              else
+              {
+                 $pdf->Image($newtest[$j]['src'], $tax,$page_local, '','', '', '', '', false,300, '', false, false, 0, false, false, false);
+              }
+              
+        
+              
+              
+              
+              	//恢复到起始位置
                 $tax=$tax+$newtest[$j]['width']-$newtest[$j]['font_width'];
             }
             else
             {
+              	//左边距为文字边距
                 $tax=$tax+$newtest[$j]['font_width'];
             }
         }
@@ -6829,7 +6954,22 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
             if($newtest[$j]['src']!='0')
             {
                 $tax=$tax+$newtest[$j]['font_width'];
-                $pdf->Image($newtest[$j]['src'], $tax,$page_local, '','', '', '', '', false,300, '', false, false, 0, false, false, false);
+              //图片源头，x，y，width，height
+              
+              
+              if($newtest[$j]['height']>$standheight-$newtest[$j]['font_size'])
+              {
+                 $pdf->Image($newtest[$j]['src'], $tax,$page_local, '',$standheight-$newtest[$j]['font_size'], '', '', '', false,300, '', false, false, 0, false, false, false);
+              }
+              else
+              {
+                 $pdf->Image($newtest[$j]['src'], $tax,$page_local, '','', '', '', '', false,300, '', false, false, 0, false, false, false);
+              }
+              
+              //  $pdf->Image($newtest[$j]['src'], $tax,$page_local, '','', '', '', '', false,300, '', false, false, 0, false, false, false);
+              
+              
+              
                 $tax=$tax+$newtest[$j]['width']-$newtest[$j]['font_width'];
             }
             else
@@ -6845,7 +6985,19 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
             if($newtest[$j]['src']!='0')
             {
                 $tax=$tax+$newtest[$j]['font_width'];
-                $pdf->Image($newtest[$j]['src'], $tax,$page_local, '','', '', '', '', false,300, '', false, false, 0, false, false, false);
+              
+              
+               if($newtest[$j]['height']>$standheight-$newtest[$j]['font_size'])
+              {
+                 $pdf->Image($newtest[$j]['src'], $tax,$page_local, '',$standheight-$newtest[$j]['font_size'], '', '', '', false,300, '', false, false, 0, false, false, false);
+              }
+              else
+              {
+                 $pdf->Image($newtest[$j]['src'], $tax,$page_local, '','', '', '', '', false,300, '', false, false, 0, false, false, false);
+              }
+              
+              
+             //   $pdf->Image($newtest[$j]['src'], $tax,$page_local, '','', '', '', '', false,300, '', false, false, 0, false, false, false);
                 $tax=$tax+$newtest[$j]['width']-$newtest[$j]['font_width'];
             }
             else
@@ -6862,7 +7014,6 @@ function persontest_to_answerpdf($data,$paper_name,$outkind)
 
 
     $pdfname='answer_'.date('y-m-d h:i:s',time()).'.pdf';
-
     if($outkind=='I')
     {
         $pdf->Output($pdfname, 'I');
@@ -7531,6 +7682,384 @@ function keynoteidtomsg($keynoteid)
   return $keynote_data['keynotemsg'];
 }
 
+//截取字符串中间字符
+ function msg_cut_mid_part($begin,$end,$str){
+      $b = mb_strpos($str,$begin) + mb_strlen($begin);
+      $e = mb_strpos($str,$end) - $b;
+      return mb_substr($str,$b,$e);
+ }
+
+//根据数组，返回偶数下标作为，错题，奇数，作为题型
+function ctb_arr($data)
+{
+  $length=sizeof($data);
+  $ctb_id_arr=$data[0];
+  $ctb_type_arr=$data[1];
+  for($i=2;$i<$length;$i++)
+  {
+    if($i%2==0)
+    {
+     $ctb_id_arr=$ctb_id_arr.','.$data[$i];
+    }
+    else
+    {
+      $ctb_type_arr=$ctb_type_arr.','.$data[$i];
+    }
+  }
+  
+  $result[0]=$ctb_id_arr;//错题
+  $result[1]=$ctb_type_arr;//题型
+  $result[2]=date("Y-m-d H:i:s");//更新时间
+  
+  
+  return $result;
+}
+//小程序page排版数组转化，从数据库数组，转化成页面参数数组
+function mid_wechat_page_arr($arr,$testkind)
+{
+  $data=$arr;
+  
+ // return $data;
+  
+   $model_img_cuted_data=M('img_cuted_data');//表B
+   $count=sizeof($data);
+    for($i=0;$i<$count;$i++)
+    {
+      if($testkind=='test' || $testkind=='key')
+      {
+        $data[$i]['title']=cuttitlemsg($data[$i]['inputval']);
+      }
+
+      
+      if($data[$i]['test_src']!='.')
+      {
+       	$data[$i]['test_x']=imgxy($data[$i]['test_src'])['x'];
+        $data[$i]['test_y']=imgxy($data[$i]['test_src'])['y'];
+        $data[$i]['test_src']=substr($data[$i]['test_src'],2);
+      }
+      else
+      {
+       	$data[$i]['test_x']=0;
+        $data[$i]['test_y']=0;
+      }
+
+      if($data[$i]['pic1']!=0)
+      {
+        $pic1_src=$model_img_cuted_data->where('id='.$data[$i]['pic1'])->find();
+        $data[$i]['pic1_src']=$pic1_src['src'];
+       	$data[$i]['pic1_x']=imgxy($pic1_src['src'])['x'];
+        $data[$i]['pic1_y']=imgxy($pic1_src['src'])['y'];
+        $data[$i]['pic1_src']=substr($data[$i]['pic1_src'],2);
+      }
+      else
+      {
+        $data[$i]['pic1_src']=0;
+        $data[$i]['pic1_x']=0;
+        $data[$i]['pic1_y']=0;
+      }
+      
+      if($data[$i]['pic2']!=0)
+      {
+        $pic1_src=$model_img_cuted_data->where('id='.$data[$i]['pic2'])->find();
+        $data[$i]['pic2_src']=$pic1_src['src'];
+        $data[$i]['pic2_x']=imgxy($pic1_src['src'])['x'];
+        $data[$i]['pic2_y']=imgxy($pic1_src['src'])['y'];
+        $data[$i]['pic2_src']=substr($data[$i]['pic2_src'],2);
+      }
+      else
+      {
+        $data[$i]['pic2_src']=0;
+        $data[$i]['pic2_x']=0;
+        $data[$i]['pic2_y']=0;
+      }
+      
+      if($data[$i]['pic3']!=0)
+      {
+        $pic1_src=$model_img_cuted_data->where('id='.$data[$i]['pic3'])->find();
+        $data[$i]['pic3_src']=$pic1_src['src'];
+        $data[$i]['pic3_x']=imgxy($pic1_src['src'])['x'];
+        $data[$i]['pic3_y']=imgxy($pic1_src['src'])['y'];
+        $data[$i]['pic3_src']=substr($data[$i]['pic3_src'],2);
+      }
+      else
+      {
+        $data[$i]['pic3_src']=0;
+        $data[$i]['pic3_x']=0;
+        $data[$i]['pic3_y']=0;
+      }
+      
+       if($data[$i]['pic4']!=0)
+      {
+        $pic1_src=$model_img_cuted_data->where('id='.$data[$i]['pic4'])->find();
+        $data[$i]['pic4_src']=$pic1_src['src'];
+        $data[$i]['pic4_x']=imgxy($pic1_src['src'])['x'];
+        $data[$i]['pic4_y']=imgxy($pic1_src['src'])['y'];
+        $data[$i]['pic4_src']=substr($data[$i]['pic4_src'],2);
+      }
+      else
+      {
+        $data[$i]['pic4_src']=0;
+        $data[$i]['pic4_x']=0;
+        $data[$i]['pic4_y']=0;
+      }
+      
+      if($data[$i]['answer_id']!=0)
+      {
+      	$data[$i]['answer_x']=imgxy($data[$i]['answer_src'])['x'];
+        $data[$i]['answer_y']=imgxy($data[$i]['answer_src'])['y'];
+        $data[$i]['answer_src']=substr($data[$i]['answer_src'],2);
+      }
+      else
+      {
+        $data[$i]['answer_x']=0;
+        $data[$i]['answer_y']=0;
+      }
+    }
+   
+      //$newdata['list']=$data;
+
+    //  return $data;
+  		$testnum=1;
+      for($i=0;$i<$count;$i++)
+      {
+        if($data[$i]['ctbname']=='t-a' || $data[$i]['ctbname']=='a' )
+        {
+          $testnum=$testnum+1;
+        }
+        $middata[$i]['srcid']=$data[$i]['srcid'];
+        $middata[$i]['pic1']=$data[$i]['pic1'];
+        $middata[$i]['pic2']=$data[$i]['pic2'];
+        $newdata[$i]['pic3']=$data[$i]['pic3'];
+        $middata[$i]['pic4']=$data[$i]['pic4'];
+        $middata[$i]['ctbname']=$data[$i]['ctbname'];
+        $middata[$i]['typeid']=$data[$i]['typeid'];
+        $middata[$i]['test_src']=$data[$i]['test_src'];
+        $middata[$i]['answer_id']=$data[$i]['answer_id'];
+        $middata[$i]['answer_src']=$data[$i]['answer_src'];
+        $middata[$i]['title']=$data[$i]['title'];
+        
+        $middata[$i]['test_x']=$data[$i]['test_x'];
+        $middata[$i]['test_y']=$data[$i]['test_y'];
+        $middata[$i]['pic1_src']=$data[$i]['pic1_src'];
+        $middata[$i]['pic1_x']=$data[$i]['pic1_x'];
+        $middata[$i]['pic1_y']=$data[$i]['pic1_y'];
+        
+        $middata[$i]['pic2_src']=$data[$i]['pic2_src'];
+        $middata[$i]['pic2_x']=$data[$i]['pic2_x'];
+        $middata[$i]['pic2_y']=$data[$i]['pic2_y'];
+        
+        $middata[$i]['pic3_src']=$data[$i]['pic3_src'];
+        $middata[$i]['pic3_x']=$data[$i]['pic3_x'];
+        $middata[$i]['pic3_y']=$data[$i]['pic3_y'];
+        
+        $middata[$i]['pic4_src']=$data[$i]['pic4_src'];
+        $middata[$i]['pic4_x']=$data[$i]['pic4_x'];
+        $middata[$i]['pic4_y']=$data[$i]['pic4_y'];
+        
+        $middata[$i]['answer_x']=$data[$i]['answer_x'];
+        $middata[$i]['answer_y']=$data[$i]['answer_y'];
+
+      }
+      $newdata['count']=$count;
+  	  $newdata['testnum']=$testnum;
+      $newdata['paper_name']=$data[0]['paper_name'];
+      $newdata['testid']=$testid;
+      $newdata['testimage']=$data[0]['testimage'];
+      $newdata['answerimage']=$data[0]['answerimage'];
+      $newdata['font_size']=$data[0]['font_size'];
+      $newdata['list']=$middata;
+  
+  return $newdata;
+  //return $middata;
+}
+
+function mid_wechat_choose_arr($arr)
+{
+  $data=$arr;
+      $count=sizeof($data);
+    for($i=0;$i<$count;$i++)
+    {
+      if($data[$i]['ctbname']=='t0')
+      {
+        $middata[$i]['title']=cuttitlemsg($data[$i]['inputval']).$data[$i]['typesmsg'];
+      }
+      else
+      {
+       $middata[$i]['title']=cuttitlemsg($data[$i]['inputval']);
+      }
+      $middata[$i]['ctbname']=$data[$i]['ctbname'];
+      $middata[$i]['typeid']=$data[$i]['typeid'];
+      $middata[$i]['test_id']=$data[$i]['test_id'];
+    }
+      $newdata['count']=$count;
+      $newdata['paper_name']=$data[0]['paper_name'];
+      $newdata['testid']=$testid;
+      $newdata['list']=$middata;
+  
+     return $newdata;
+}
+//数字转汉字
+function fir_num_to_font($num)
+{
+  $font;
+  switch($num)
+  {
+    case 1:$font='一';break;
+    case 2:$font='二';break;
+    case 3:$font='三';break;
+    case 4:$font='四';break;
+    case 5:$font='五';break;
+    case 6:$font='六';break;
+    case 7:$font='七';break;
+    case 8:$font='八';break;
+    case 9:$font='九';break;
+    case 10:$font='十';break;
+    case 11:$font='十一';break;
+    case 12:$font='十二';break;
+    case 13:$font='十三';break;
+    case 14:$font='十四';break;
+    case 15:$font='十五';break;
+    case 16:$font='十六';break;
+    case 17:$font='十七';break;
+    case 18:$font='十八';break;
+    case 19:$font='十九';break;
+    case 20:$font='二十';break;
+    case 21:$font='二十一';break;
+    case 22:$font='二十二';break;
+    case 23:$font='二十三';break;
+    case 24:$font='二十四';break;
+    case 25:$font='二十五';break;
+    case 26:$font='二十六';break;
+    case 27:$font='二十七';break;
+    case 28:$font='二十八';break;
+    case 29:$font='二十九';break;
+    case 30:$font='三十';break;
+  }
+  return $font;
+}
+
+//数字转汉字
+function third_num_to_font($num)
+{
+  $font;
+  switch($num)
+  {
+    case 1:$font='(1)';break;
+    case 2:$font='(2)';break;
+    case 3:$font='(3)';break;
+    case 4:$font='(4)';break;
+    case 5:$font='(5)';break;
+    case 6:$font='(6)';break;
+    case 7:$font='(7)';break;
+    case 8:$font='(8)';break;
+    case 9:$font='(9)';break;
+    case 10:$font='(10)';break;
+    case 11:$font='(11)';break;
+    case 12:$font='(12)';break;
+    case 13:$font='(13)';break;
+    case 14:$font='(14)';break;
+    case 15:$font='(15)';break;
+    case 16:$font='(16)';break;
+    case 17:$font='(17)';break;
+    case 18:$font='(18)';break;
+    case 19:$font='(19)';break;
+    case 20:$font='(20)';break;
+    case 21:$font='(21)';break;
+    case 22:$font='(22)';break;
+    case 23:$font='(23)';break;
+    case 24:$font='(24)';break;
+    case 25:$font='(25)';break;
+    case 26:$font='(26)';break;
+    case 27:$font='(27)';break;
+    case 28:$font='(28)';break;
+    case 29:$font='(29)';break;
+    case 30:$font='(30)';break;
+  }
+  return $font;
+}
+//错题本列表提示信息，题型数量
+function ctb_note_msg($msg)
+{
+    $type_arr=explode(',',$msg);
+    
+    $arr=array_count_values($type_arr);
+    $typemsg='';
+    $p=1;
+    
+    foreach($arr as $k=>$v){ 
+      if($p==1)
+      {
+        $typemsg=$p.'.'.$k."(".$v.")";
+        $p=$p+1;
+      }
+      else
+      {
+        $typemsg=$typemsg.' '.$p.'.'.$k."(".$v.")";
+        $p=$p+1;
+      } 
+	} 
+    
+    return $typemsg;
+}
+//拆分字符串中的年月日
+function ymd_sub($datetime,$kind)
+{
+  if($kind=='y')
+  {
+    return date('Y',strtotime($datetime));
+  }
+                
+  if($kind=='m')
+  {
+    return date('m',strtotime($datetime));
+  }
+                
+  if($kind=='d')
+  {
+    return date('d',strtotime($datetime));
+  }
+}
+
+//
+//去掉习题中重复数据，应用在Wechat中task函数
+function unique_exercise_arr($arr)
+{
+    $count=sizeof($arr);
+    $newarr=$arr;
+
+    for($i=0;$i<$count;$i++)
+    {
+        $ele=$arr[$i]['exerciseid'];
+
+        $newcount=sizeof($newarr);
+
+        for($m=$i+1;$m<$newcount;$m++)
+        {
+            if($ele==$newarr[$m]['exerciseid'])
+            {
+                $newarr[$m]['del']='del';
+            }
+        }
+    }
+
+    $k=0;
+    for($n=0;$n<$count;$n++)
+    {
+        if($newarr[$n]['del']!='del')
+        {
+            $outputarr[$k]['id']=$newarr[$n]['id'];
+            $outputarr[$k]['testid']=$newarr[$n]['testid'];
+            $outputarr[$k]['exerciseid']=$newarr[$n]['exerciseid'];
+            $outputarr[$k]['lastreadtime']=$newarr[$n]['lastreadtime'];
+            $outputarr[$k]['keyornot']=$newarr[$n]['keyornot'];
+            $outputarr[$k]['name']=$newarr[$n]['name'];
+            $outputarr[$k]['kind']=$newarr[$n]['kind'];
+            $k=$k+1;
+        }
+    }
+
+    return $outputarr;
+}
  
 
 ?>

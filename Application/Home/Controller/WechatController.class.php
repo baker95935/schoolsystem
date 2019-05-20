@@ -16,9 +16,14 @@ class WechatController extends Controller
 	
 	public function register()
 	{
+      
+      
 		$openid=$_GET['openid'];
 		$nickName=$_GET['nickName'];
 		$avatarUrl=$_GET['avatarUrl'];
+      
+     // $openid='oFSQR5ZwLmBNxsaF2s6V9End7eb0';
+     // $nickName='Founder';
 		
 		$country=$_GET['country'];
 		$city=$_GET['city'];
@@ -27,7 +32,7 @@ class WechatController extends Controller
 		
 		$model=M('weixin_users');
 		
-		$result=0;
+		//$result=0;
 		
 		$data=array();
 		$data['openid']=$openid;
@@ -46,10 +51,15 @@ class WechatController extends Controller
 				$result=$model->add($data);
 			} else {
 				$info=$model->where("openid='".$openid."'")->find();
-				$result=$info['id'];
+   
+				$result['id']=$info['id'];
+              	$result['st']=$info['st'];
+              	$result['nd']=$info['nd'];
+              	$result['rd']=$info['rd'];
 			}
 		}
-		echo $result;
+     
+		echo json_encode($result);
 	}
 	
 	public function task()
@@ -65,8 +75,8 @@ class WechatController extends Controller
 		$begin=$page*$pagesize;
 		$userid=$_GET['userid'];
       
-     	$userid=15;
-      	$begin=10;
+     	//$userid=15;
+      	//$begin=10;
       
       
 		$datalist=array();
@@ -355,6 +365,7 @@ class WechatController extends Controller
     $mytest_data['exerciseid']=$exerciseid;
     $mytest_data['keyornot']=$keyornot;
     $mytest_data['deleted']=0;
+    $mytest_data['kind']=0;
     $data_mytest=$model_mytest->where($mytest_data)->order("orderid asc")->limit(0,$endnum)->select();   
     $data_all_mytest=$model_mytest->where($mytest_data)->order("orderid asc")->select();   
      
@@ -392,8 +403,9 @@ class WechatController extends Controller
            	 $data[$i]['paper_name']=$data_paper['paper_name'];
            	 $data[$i]['keynote']='';
            	 $data[$i]['shareornot']=$data_paper['shareornot'];
-             $data[$i]['id']=$data_mytest[$i]['testid'];
+             $data[$i]['testid']=$data_mytest[$i]['testid'];
            	 $data[$i]['num']=($i+1).'/'.$all_count;
+           	 $data[$i]['id']=$data_mytest[$i]['id'];
            	 if($data[$i]['shareornot']==0 && $buyornot==0)
              {
                $data[$i]['lock']='bottom_view_lock';
@@ -426,12 +438,13 @@ class WechatController extends Controller
        		$data_paper=$model_key_paper_msg_data->where('id='.$data_mytest[$i]['testid'])->find();
             $data[$i]['paper_name']=$data_paper['paper_name'];
             $data[$i]['shareornot']=$data_paper['shareornot'];
-            $data[$i]['id']=$data_mytest[$i]['testid'];
+            $data[$i]['testid']=$data_mytest[$i]['testid'];
           	$keynote_id=$data_paper['keynote_id'];
           	$data_onekeynote=$model_onekeynote->where('id='.$keynote_id)->find();
           	$data[$i]['num']=($i+1).'/'.$all_count;
           	$data[$i]['paper_name']=$data_paper['paper_name'];
           	$data[$i]['keynote']='('.$data_onekeynote['keynotemsg'].')';
+            $data[$i]['id']=$data_mytest[$i]['id'];
           
             if($data[$i]['shareornot']==0  && $buyornot==0)
              {
@@ -523,27 +536,6 @@ class WechatController extends Controller
     }
   
   
-  public function alltestdetail()
-  {
-    $testid=$_GET['testid'];
-    $testid=1554;
-    $model_paper_msg_data=M('paper_msg_data');
-    $model_test_public_data=M('test_public_data');
-    $data_paper_msg_data=$model_paper_msg_data->where('id='.$testid)->find();
-    $filesernum=$data_paper_msg_data['filesernum'];
-    $test_public_data['filesernum']=$filesernum;
-    $data_public_data=$model_test_public_data->where($test_public_data)->order('in_ser asc')->select();
-    //t0,t1,a,t-a
-    print_r($data_public_data);
-    
-    echo 123;
-    
-    
-   
-    
-    
-  }
-  
   public function sendsms()
   {
   	$appid = 1400202683; 
@@ -624,6 +616,292 @@ class WechatController extends Controller
   	}  
   	echo $result;
   }
+  //列表详情页，原始习题展示,区分试卷类型 $testkind
+   public function alltestdetail()
+  {
+    $testid=$_GET['testid'];
+    $testkind=$_GET['testkind'];
+    $ctbid=$_GET['ctbid'];
+     
+    $testid=1557;
+    $ctbid=180;
+    $testkind='testctb';
+     
+    $Model = M();
+     
+    if($testkind=='test')
+    {
+   	$data=$Model->query('SELECT a.paper_name,a.testimage,a.answerimage,a.font_size,a.filesernum,b.id as test_id,b.srcid,b.pic1,b.pic2,b.pic3,b.pic4,b.ctbname,b.inputval,b.typeid,c.src as test_src,d.id as answer_id,d.src as answer_src FROM ((paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum) INNER JOIN img_cuted_data c on b.srcid=c.id)  INNER JOIN img_cuted_data d ON c.answerid=d.id where a.id='.$testid.' order by in_ser asc');   
+     }
+     
+    if($testkind=='key')
+    {
+   	$data=$Model->query('SELECT a.paper_name,a.testimage,a.answerimage,a.font_size,a.filesernum,b.id as test_id,b.srcid,b.pic1,b.pic2,b.pic3,b.pic4,b.ctbname,b.inputval,b.typeid,c.src as test_src,d.id as answer_id,d.src as answer_src FROM ((key_paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum) INNER JOIN img_cuted_data c on b.srcid=c.id)  INNER JOIN img_cuted_data d ON c.answerid=d.id where a.id='.$testid.' order by in_ser asc');   
+    
+    }
+     
+    if($testkind=='testctb')
+    {
+     // $testid_data=$Model->query('SELECT ctbtestid,typeidarr from mytest where id='.$ctbid);
+     // $test_arr=$testid_data['ctbtestid'];
+    //  select car_id from caridincarport where  not  EXISTS (select car_id from caridinccomment  where caridincarport.car_id =caridinccomment.car_id);
+// select * from test_public_data where id in(select ctbtestid from mytest  where mytest.id ='.$ctbid.');
+      //220,223,229,233,231,236,239,244
+      $mytest_data=$Model->query('select * from test_public_data where id in (select ctbtestid from mytest where mytest.id ='.$ctbid.')');
+      $mytest_data01=$Model->query('select * from test_public_data where id in (220,223,229,233,231,236,239,244)');
+      
+      $testid_data=$Model->query('SELECT ctbtestid from mytest where id='.$ctbid);
+      
+      
+    }
+     print_r($mytest_data01);
+     print_r($mytest_data);
+     print_r($testid_data);
+     return;
+     $newdata=mid_wechat_page_arr($data);
+     
+     echo json_encode($newdata);
+  }
+  
+  
+  //更新最后一次读取时间，下载使用
+     public function updata_php_test()
+    {
+    
+     $testid=$_GET['testid'];
+     $userid=$_GET['userid'];
+     $model_mytest=M('mytest');
+      
+     //$testid=1555;
+     //$userid=15;
+      
+     $test_data['userid']=$userid;
+     $test_data['testid']=$testid;   
+     $data['lastreadtime']=date("Y-m-d H:i:s");
+
+     $res=$model_mytest->where($test_data)->save($data);
+     echo $res;      
+    }
+  //设定页面,区分试卷类型 $testkind
+    public function setpage()
+  {
+     $testid=$_GET['testid'];
+     $answerimage=$_GET['answerimage'];
+     $testimage=$_GET['testimage'];
+     $font_size=$_GET['font_size'];
+     $testkind=$_GET['testkind'];
+    
+   // $testid=1555;
+    //$answerimage=1745;
+    //$testimage=1745;
+    //$font_size=27;
+    
+     $model_paper_msg_data=M('paper_msg_data');
+     $model_key_paper_msg_data=M('key_paper_msg_data');
+     $test_data['font_size']=$font_size;
+     $test_data['testimage']=$testimage;
+     $test_data['answerimage']=$answerimage;
+     $data['id']=$testid;
+     if($testkind=='test')
+      {
+     $res=$model_paper_msg_data->where($data)->save($test_data);
+      }
+      
+      if($testkind=='key')
+      {
+     $res=$model_key_paper_msg_data->where($data)->save($test_data);
+      }
+     echo $res;
+  }
+  //选择原始题错题,区分试卷类型 $testkind
+  public function choose()
+  {
+    $testid=$_GET['testid'];
+    $testkind=$_GET['testkind'];
+    //$testid=1555;
+    $model_paper_msg_data=M('paper_msg_data');
+    $model_test_public_data=M('test_public_data');
+    $model_img_cuted_data=M('img_cuted_data');//表B
+    $Model = M();
+    if($testkind=='test')
+    {
+      	$data=$Model->query('SELECT b.id as test_id,b.ctbname,b.inputval,b.typeid,c.typesmsg FROM (paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum) INNER JOIN questiontypes c on b.typeid=c.id where a.id='.$testid.' order by in_ser asc');   
+    }
+    if($testkind=='key')
+    {
+      	$data=$Model->query('SELECT b.id as test_id,b.ctbname,b.inputval,b.typeid,c.typesmsg FROM (key_paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum) INNER JOIN questiontypes c on b.typeid=c.id where a.id='.$testid.' order by in_ser asc');   
+    }
+    $newdata=mid_wechat_choose_arr($data);  
+    echo json_encode($newdata);
+  }
+  
+  //插入错题本
+  public function submitdata()
+  {
+    $model_testtime=M('testtime');
+    $testid=$_GET['testid'];
+    $mytestid=$_GET['mytestid'];
+    $testkind=$_GET['testkind'];
+    $arr=$_GET['arr'];
+    $userid=$_GET['userid'];
+    $st='+'.$_GET['st'].' day';
+    $nd='+'.$_GET['nd'].' day';
+    $rd='+'.$_GET['rd'].' day';
+    
+    $model_mytest=M('mytest'); 
+    $data = explode(",", $arr);
+	$result=ctb_arr($data);
+    $newdata['ctbtestid']=$result[0];
+    $newdata['typeidarr']=$result[1];
+    $newdata['lastreadtime']=$result[2];
+    $newdata['kind']=1;
+    $newdata['nowtestnum']=1;
+    
+    $count=$model_mytest->where('userid='.$userid.' and testid='.$testid.' and kind=1')->count();
+    if($count==0)
+    {
+    $newdata['nowtesttime']=date('Y-m-d', strtotime ($st, strtotime(date("y-m-d",time()))));
+    $msg=$model_mytest->where('userid='.$userid.' and testid='.$testid)->save($newdata);
+      
+      
+    $tnewdata['testid']=$testid;
+    $tnewdata['status']=1;
+    $tnewdata['nowstatus']=1; 
+    $tnewdata['testkind']=$testkind;
+    $tnewdata['testtime']=date("y-m-d",time());
+    $tnewdata['lastreadtime']=date("ymd",time());
+    $tnewdata['testtime']=date('Y-m-d', strtotime ($st, strtotime($tnewdata['testtime'])));
+    $model_testtime->add($tnewdata);
+    $tnewdata['nowstatus']=0; 
+    $tnewdata['status']=2;
+    $tnewdata['testtime']=date('Y-m-d', strtotime ($nd, strtotime($tnewdata['testtime'])));
+    $model_testtime->add($tnewdata);
+    $tnewdata['nowstatus']=0; 
+    $tnewdata['status']=3;
+    $tnewdata['testtime']=date('Y-m-d', strtotime ($rd, strtotime($tnewdata['testtime'])));
+    echo $model_testtime->add($tnewdata);
+    }
+    else
+    {
+      echo 0;
+    }
+
+  }
+  //查询错题连表
+  public function ctbdata_all()
+  {
+    $Model=M();
+    $model_mytest=M('mytest'); 
+    $model_stumytest=M('stumytest'); 
+    $testkind='all';
+    $userid=15;
+    $startnum=0;
+    $endnum=40;
+    
+    $arr['userid']=$userid;
+    $arr['kind']=1;
+    $test=0;$key=0;$testctb=0;$keyctb=0;
+    //$arr['keyornot']=0;
+    
+    $data_mytest=$model_mytest->field('keyornot')->where($arr)->select();
+    $data_stumytest=$model_stumytest->field('keyornot')->where($arr)->select();
+    
+    for($i=0;$i<sizeof($data_mytest);$i++)
+    {
+       if($data_mytest[$i]['keyornot']==0)
+       {
+         $test=$test+1;
+       }
+      else
+      {
+        $key=$key+1;
+      }
+    }
+    
+    for($i=0;$i<sizeof($data_stumytest);$i++)
+    {
+       if($data_stumytest[$i]['keyornot']==0)
+       {
+         $testctb=$testctb+1;
+       }
+      else
+      {
+        $keyctb=$keyctb+1;
+      }
+    }
+    
+    $data=$Model->query('Select id,testid,lastreadtime,keyornot,nowtesttime,nowtestnum, case keyornot  when 0 then (select paper_name from paper_msg_data where id=a.testid) when 1 then (select paper_name from key_paper_msg_data where id=a.testid) end as paper_name,1 testkindnum  From  mytest as a  where userid='.$userid.' and finishornot=0 and kind=1 union all select id,id as testid,lastreadtime,keyornot,nowtesttime,nowtestnum,paper_name,2 testkindnum from stumytest  where userid='.$userid.' and finishornot=0 and kind=1 order by lastreadtime desc LIMIT '.$startnum.','.$endnum);
+    $count=sizeof($data);
+    for($i=0;$i<$count;$i++)
+    {
+      $j=$i+1;
+      if($data[$i]['testkindnum']==1 && $data[$i]['keyornot']==0)
+      {
+        $newdata[$i]['id']=$data[$i]['id'];
+        $newdata[$i]['testid']=$data[$i]['testid'];
+        $newdata[$i]['lastreadtime']=$data[$i]['lastreadtime'];
+        $newdata[$i]['nowtesttime']=$data[$i]['nowtesttime'];
+        $newdata[$i]['nowtestnum']=$data[$i]['nowtestnum'];
+        $newdata[$i]['paper_name']=$j.'.'.$data[$i]['paper_name'];
+        $newdata[$i]['testkind']='testctb';
+        $newdata[$i]['thisclass']='square_view_01';         
+      }
+      if($data[$i]['testkindnum']==1 && $data[$i]['keyornot']==1)
+      {
+        $newdata[$i]['id']=$data[$i]['id'];
+        $newdata[$i]['testid']=$data[$i]['testid'];
+        $newdata[$i]['lastreadtime']=$data[$i]['lastreadtime'];
+        $newdata[$i]['nowtesttime']=$data[$i]['nowtesttime'];
+        $newdata[$i]['nowtestnum']=$data[$i]['nowtestnum'];
+        $newdata[$i]['paper_name']=$j.'.'.$data[$i]['paper_name'];
+        $newdata[$i]['testkind']='keyctb';
+        $newdata[$i]['thisclass']='square_view_03';         
+      }
+      if($data[$i]['testkindnum']==2 && $data[$i]['keyornot']==0)
+      {
+        $newdata[$i]['id']=$data[$i]['id'];
+        $newdata[$i]['testid']=$data[$i]['testid'];
+        $newdata[$i]['lastreadtime']=$data[$i]['lastreadtime'];
+        $newdata[$i]['nowtesttime']=$data[$i]['nowtesttime'];
+        $newdata[$i]['nowtestnum']=$data[$i]['nowtestnum'];
+        $newdata[$i]['paper_name']=$j.'.'.$data[$i]['paper_name'];
+        $newdata[$i]['testkind']='sectestctb';
+        $newdata[$i]['thisclass']='square_view_02';         
+      }
+      if($data[$i]['testkindnum']==2 && $data[$i]['keyornot']==1)
+      {
+        $newdata[$i]['id']=$data[$i]['id'];
+        $newdata[$i]['testid']=$data[$i]['testid'];
+        $newdata[$i]['lastreadtime']=$data[$i]['lastreadtime'];
+        $newdata[$i]['nowtesttime']=$data[$i]['nowtesttime'];
+        $newdata[$i]['nowtestnum']=$data[$i]['nowtestnum'];
+        $newdata[$i]['paper_name']=$j.'.'.$data[$i]['paper_name'];
+        $newdata[$i]['testkind']='seckeyctb';
+        $newdata[$i]['thisclass']='square_view_04';           
+      }   
+        if($newdata[$i]['nowtestnum']==1)
+        {
+          $newdata[$i]['ser']='1st';
+        }
+       if($newdata[$i]['nowtestnum']==2)
+        {
+          $newdata[$i]['ser']='2nd';
+        }
+        if($newdata[$i]['nowtestnum']==3)
+        {
+          $newdata[$i]['ser']='3rd';
+        }
+    }
+    
+    $returndata['testctb']=$test;
+    $returndata['keyctb']=$key;
+    $returndata['sectestctb']=$testctb;
+    $returndata['seckeyctb']=$keyctb;
+    $returndata['list']=$newdata;
+ 
+    echo json_encode($returndata); 
+  }
+  
  
  
 }
