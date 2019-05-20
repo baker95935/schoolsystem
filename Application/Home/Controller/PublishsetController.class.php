@@ -152,7 +152,7 @@ class PublishsetController extends Controller
     	$publish=M('publish_name');
     	$publishlist=$publish->where('status=1')->select();
     	//分类列表
-    	$classify=M('book_classify');
+    	$classify=M('subject_data');
     	$classlist=$classify->select();
     	
     	$this->assign('publishlist',$publishlist);
@@ -296,7 +296,7 @@ class PublishsetController extends Controller
     	foreach($list as $k=>&$v) {
     		//获取试卷和答案
     		if(!empty($v['filesernum'])) {
-    			$imglist=$img->where("filesernum='".$v['filesernum']."'")->select();
+    			$imglist=$img->where("filesernum='".$v['filesernum']."'")->order(' id desc')->select();
     			if(!empty($imglist)) {
     				foreach($imglist as $kk=>$vv) {
     					$vv['src_pic']=substr_replace($vv['src_pic'],"",strpos($vv['src_pic'],'.'),1);
@@ -788,6 +788,10 @@ class PublishsetController extends Controller
     	$exercise=M('book_exercises');
     	$exerciselist=$exercise->where('status=1')->select();
     	
+    	$subject=M('subject_data');
+    	$classlist=$subject->select();
+    	
+    	$this->assign('classlist',$classlist);
     	$this->assign('publishlist',$publishlist);
     	$this->assign('classlist',$classlist);
     	$this->assign('exerciselist',$exerciselist);
@@ -1375,7 +1379,7 @@ class PublishsetController extends Controller
 	    	
     	   	$publish=M('publish_name');
 	    	$exercise=M('book_exercises');
-	    	$koint=M('exercise_kpoint');
+	    	$koint=M('onekeynote');
 	    	
 	    	$info=$paper->find($data['id']);
 	    	if($info['keynote_id']) {
@@ -1433,7 +1437,7 @@ class PublishsetController extends Controller
     	$paper=M('key_paper_msg_data');
     	$publish=M('publish_name');
     	$exercise=M('book_exercises');
-    	$koint=M('exercise_kpoint');
+    	$koint=M('onekeynote');
     	
     	$msg['id']=$_POST[id];
     	$info=$paper->find($msg['id']);
@@ -1530,10 +1534,10 @@ class PublishsetController extends Controller
 	        	//更新
 	        	$data=array();
 		    	$data['paper_name']=$paper_name;
-		    	$data['filesernum']=$_POST['filesernum'];
+		    	$data['filesernum']=$filesernum;
 		    	$data['exerciseid']=$exerciseid;
 		    	$data['id']=$_POST['kpaperid'];
-		    	$model_key_paper->where('id='.$data['id'])->save($data);
+		    	$paper->where('id='.$data['id'])->save($data);
 	    	
 	            $filesernum=$data['filesernum'];
 	            $arr['filesernum']=$filesernum;
@@ -1571,7 +1575,7 @@ class PublishsetController extends Controller
 	        	$data=array();
 		    	$data['paper_name']=$paper_name;
 		    	$data['keynote_id']=$keynote_id;
-		    	$data['filesernum']=$_POST['filesernum'];
+		    	$data['filesernum']=$filesernum;
 		    	$data['id']=$_POST['kpaperid'];
 		    	$model_key_paper->where('id='.$data['id'])->save($data);
 	    	

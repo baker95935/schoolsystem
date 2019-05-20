@@ -8,7 +8,6 @@
 
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/main.css"/>
 	<script src="__PUBLIC__/jquery/jquery.min.js"></script>
-    <script src="__PUBLIC__/js/cookie.js"></script>
 	<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/stu.css"/>
@@ -23,32 +22,47 @@
 	<div>
 		<div class="row title_class">
 			<div class="col-xs-4"><a style="color:white;padding-left:40px;">好助教习题下载页面</a></div>
-			<div class="col-xs-3  title_font_middle " style="text-align:right;" ><input id="phone" type="text" placeholder="手机号" autocomplete="off"  style="font-size:13px;border:0px;border-radius:4px;text-align:center;color:#000000;"></div>
-          	<div class="col-xs-3  title_font_middle " style="text-align:left;"  ><input id="seccode" type="password" placeholder="提取码" autocomplete="off"  style="font-size:13px;border:0px;border-radius:4px;text-align:center;color:#000000;"></div>
+			<div class="col-xs-3  title_font_middle " style="text-align:right;" ><if condition="empty($realname)"><input id="username" type="text" placeholder="用户名" autocomplete="off"  style="font-size:13px;border:0px;border-radius:4px;text-align:center;color:#000000;"> </if></div>
+          	<div class="col-xs-3  title_font_middle " style="text-align:left;"  ><if condition="empty($realname)"><input id="pwd" type="password" placeholder="密码" autocomplete="off"  style="font-size:13px;border:0px;border-radius:4px;text-align:center;color:#000000;"> </if></div>
 			<div class="col-xs-2">
-				<a id='button1' href="javascript:void(0)" style="color:white;" onclick="loadsub()">登录</a>
-			 	<a id='button2' onclick="logout()"  href="javascript:void(0)"  style="color:white;margin-left:10px;">注销</a>
+			<a id='button1' href="javascript:void(0)" style="color:white;" onclick="loadsub()">
+			<if condition="!empty($realname)"> {$realname} <else /> 登录 </if>
+			</a>
+			<if condition="!empty($realname)">  <a id='button2' onclick="logout()"  href="javascript:void(0)"  style="color:white;margin-left:10px;">注销</a></if>
 			</div>
 		</div>
 		<div class="row parent_nav">
-        <div class="col-xs-3">
-		</div>	
+        
 		<div class="col-xs-3" >
-          <select id="printnum" class="blackselect" style="text-align:center;" onchange="search();">
-					<option value="1">待打印</option> 
-					<option value="2">已打印</option>
-					<option value="0">未进入打印</option>
-					<option value="3">全部</option>
+          <select id="testkind" class="blackselect" style="text-align:center;" onchange="search();">
+					<option value="1">班级原始错题{$mytesttotalInfo}</option> 
+					<option value="2">个人班级错题{$stutotalInfo}</option>
+					<option value="3">知识点习题{$stumytotalInfo}</option>
+                  	<option value="4">知识点错题{$mistakestotalInfo}</option>
+           			<option value="5">个人知识点错题{$pertotalInfo}</option>
           </select>
 		</div>
-
+         <div class="col-xs-3">
+			 <select id="download" class="blackselect" style="text-align:center;" onchange="search();">
+					<option value="0">下载状态</option>
+					<option value="1">未完成</option>
+					<option value="2">已完成</option>
+           </select>
+		</div>	
 		<div class="col-xs-3">
-                   <select id="paperkind" class="blackselect" style="text-align:center;" onchange="search();">
-					<option value="1">错题本</option> 
-					<option value="2">原始习题</option>
-				 </select>
+           <select id="subjectid" class="blackselect" style="text-align:center;" onchange="search();">
+					<option value="0">科目</option>
+					<option value="1">数学</option>
+					<option value="2">语文</option>
+           </select>
 		</div>
 		<div class="col-xs-3">
+			 <select id="grade" class="blackselect" style="text-align:center;" onchange="search();">
+				<option value="0">年级</option>
+				<option value="23">初一</option>
+                <option value="24">初二</option>
+                <option value="25">初三</option>
+           </select>
 		</div>	
           
           
@@ -94,40 +108,29 @@
 			var nowpage=1;
 			var pagelength=$('#pagelength').val();
 			var userid=$('#userid').val();
+			var kind=$('#testkind').val();
 			
-			var printnum=$('#printnum').val();  
-			var paperkind=$('#paperkind').val();  
-      
-      		var nickname=getCookie('nickName');
-      		var userid=getCookie('userid');
-      
-      testdata(userid,nowpage,pagelength,printnum,paperkind);
-      
-
-      
-      if(getCookie('userid')!=null)
-      {
-        loadmsg(1,nickname);
-        //testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download);     
-      }
-      else
-      {
-        loadmsg(0,nickname);
-         $('#list1').html('');
-      }
-      
+			var finish=$('#finishstatus').val();  
+			var subjectid=$('#subjectid').val();  
+			var grade=$("#grade").val();
+			var download=$("#download").val();
+			
+			testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download);     
 	})
-  
+
 	function nextpage()
 	{
 		var nowpage=$('#nowpage').text();
 		var maxnum=$('#pagenum').text();
 		var userid=$('#userid').val();
 		var pagelength=$('#pagelength').val();
+		var kind=$('#testkind').val();
 		
-		var printnum=$('#printnum').val();  
-		var paperkind=$('#paperkind').val();  
- 
+		var finish=$('#finishstatus').val();  
+		var subjectid=$('#subjectid').val();  
+		var grade=$("#grade").val();
+		var download=$("#download").val();
+		
 		nowpage=nowpage*1+1;
 		if(nowpage>maxnum)
 		{
@@ -139,7 +142,7 @@
 		}
 		 
 		$('#list1').html('');
-		testdata(userid,nowpage,pagelength,printnum,paperkind);
+		testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download);
 	}
 	
 	function prepage()
@@ -148,9 +151,12 @@
 		var maxnum=$('#pagenum').text();
 		var userid=$('#userid').val();
 		var pagelength=$('#pagelength').val();
- 
-		var printnum=$('#printnum').val();  
-		var paperkind=$('#paperkind').val();  
+		var kind=$('#testkind').val();
+		
+		var finish=$('#finishstatus').val();  
+		var subjectid=$('#subjectid').val();  
+		var grade=$("#grade").val();
+		var download=$("#download").val();
 		
 		nowpage=nowpage*1-1;
 		if(nowpage>maxnum)
@@ -163,7 +169,7 @@
 		}
  
 		$('#list1').html('');
-		testdata(userid,nowpage,pagelength,printnum,paperkind);
+		testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download);
 	}
 
 
@@ -177,36 +183,34 @@
 			dataType:'text',
 			type:'post',
 			success:function(re){
-			 if(re!=0)
-			{
+				if(re!=0)
+				{
 				
-			}
+				}
+	
 			}
 		})
 	}
   
   	function loadsub()
 	{
-      var phone=$('#phone').val();
-      var seccode=$('#seccode').val();
+      var username=$('#username').val();
+      var pwd=$('#pwd').val();
       
 		$.ajax({
 			url:"{:U('loadsubphp')}",
-			data:{phone:phone,seccode:seccode},
+			data:{username:username,pwd:pwd},
 			dataType:'json',
 			type:'post',
 			success:function(re){
-              
-              alert(re['nickname']);
-              
 				if(re!=0)
 				{
-                  var nickName=re['nickName'];
-                  loadmsg(1,nickName);
+                  var realname=re['realname'];
+                  loadmsg(1,realname);
 				  location.reload();
 				}else
                 {
-                  alert("手机号或提取码错误！！");
+                  alert("用户名或密码错误！！");
                 }
 			}
 		})
@@ -214,9 +218,6 @@
   	
   	function logout(userid)
   	{
-      
-      unsetCookie
-      
   		$.ajax({
 			url:"{:U('logout')}",
 			data:{userid:userid},
@@ -229,7 +230,7 @@
 				  location.reload();
 				}else
                 {
-                  alert("手机号或提取码错误！！");
+                  alert("用户名或密码错误！！");
                 }
 			}
 		})
@@ -237,15 +238,13 @@
   
   function loadmsg(kind,msg)
   {
-    
-   // alert(msg);
     if(kind==1)
     {
     $('#status').val(1);
     $('#button1').html(msg);
     $('#button2').css('display','');
-    $('#phone').css('display','none');
-    $('#seccode').css('display','none');
+    $('#username').css('display','none');
+    $('#pwd').css('display','none');
     }
     else
     {
@@ -253,10 +252,10 @@
     $('#button1').html('登录');
     $('#button2').css('display','none');
     $('#list1').html('');
-    $('#phone').css('display','');
+    $('#username').css('display','');
     $('#pwd').css('display','');
-    $('#phone').val('');
-    $('#seccode').val('');
+    $('#username').val('');
+    $('#pwd').val('');
     }
     
     
@@ -286,8 +285,11 @@
 	
 	function search()
 	{
-		var printnum=$('#printnum').val();  
-		var paperkind=$('#paperkind').val();  
+		var finish=$('#finishstatus').val();  
+		var subjectid=$('#subjectid').val();  
+		var grade=$("#grade").val();
+        var kind=$('#testkind').val();
+        var download=$("#download").val();
       
 		var pagelength=$('#pagelength').val();
 		var userid=$('#userid').val();
@@ -295,14 +297,15 @@
 		$('#nowpage').text(1);
  
 		nowpage=1;
-		testdata(userid,nowpage,pagelength,printnum,paperkind);
+		testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download);
 	}
 	
-	function testdata(userid,nowpage,pagelength,printnum,paperkind)
+	function testdata(userid,nowpage,pagelength,kind,finish,subjectid,grade,download)
 	{
+ 		var ckind=kind;
 		$.ajax({
-			url:"{:U('phpdata1')}",
-			data:{userid:userid,nowpage:nowpage,pagelength:pagelength,printnum:printnum,paperkind:paperkind},
+			url:"{:U('phpdata')}",
+			data:{userid:userid,nowpage:nowpage,pagelength:pagelength,kind:kind,subjectid:subjectid,finish:finish,grade:grade,download:download},
 			datatype:'json',
 			type:'post',
 			success:function(re){
@@ -310,7 +313,7 @@
 				var addhtmlmsg = '';
 				var beginhtml = $('#list1').html();
 				var mylength = testlist['length'];
-				var id = '';
+				var testid = '';
 				var pagenum=testlist['pagenum'];
 				$('#pagenum').text(pagenum);
 				$('#nowpage').text(nowpage);
@@ -319,32 +322,31 @@
 				 
 				for (var i = 0; i < mylength; i++) {
 					j=i+1;
-					id=testlist[i]['id'];
-                  var testkind;
+					testid=testlist[i]['id'];
 					//var ahtml='/index.php/Home/Student/testchecked0102/testid/'+testid+'/userid/'+$('#userid').val()+'/paper_name/'+testlist[i]['paper_name']+'/username/'+$('#username').val()+'/realname/'+$('#realname').val()+'/subjectid/'+testlist[i]['subjectid']+'/testkind/stu'+'.html';
 					var ahtml='javascript:void(0)';
 					//不同类型下的 下载地址
-					testkind=testlist[i]['testkind'];
-                  
-					var aahtml='http://d.hzjoo.com/index.php/Home/Student/phpmanagepaperdetailpdf/testid/'+id+'/outkind/I/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-					var bbhtml='http://d.hzjoo.com/index.php/Home/Student/php_managepaperanswerpdf/testid/'+id+'/outkind/I/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
+					if(ckind==1) {
+						testkind=0;
+					}
+					if(ckind==4) {
+						testkind=1;
+					}
+					var aahtml='/index.php/Home/Student/phpmanagepaperdetailpdf/testid/'+testid+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
+					var bbhtml='/index.php/Home/Student/php_managepaperanswerpdf/testid/'+testid+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
                     
-		//			if(ckind==2 || ckind==5) {
-		//				var aahtml='http://d.hzjoo.com/index.php/Home/Student/phpmanagelistdownloadpdf/testid/'+id+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-		//				var bbhtml='http://d.hzjoo.com/index.php/Home/Student/phpmanagelistdownloadanswerpdf/testid/'+id+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-		//			}
+					if(ckind==2 || ckind==5) {
+						var aahtml='/index.php/Home/Student/phpmanagelistdownloadpdf/testid/'+testid+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
+						var bbhtml='/index.php/Home/Student/phpmanagelistdownloadanswerpdf/testid/'+testid+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
+					}
 					
-		//			if(ckind==3) {
-		//				var aahtml='http://d.hzjoo.com/index.php/Home/Student/php_mykeymanagepaperdetailpdf/testid/'+id+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-		//				var bbhtml='http://d.hzjoo.com/index.php/Home/Student/php_mykeymanagepaperanswerpdf/testid/'+id+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-		//			}
+					if(ckind==3) {
+						var aahtml='/index.php/Home/Student/php_mykeymanagepaperdetailpdf/testid/'+testid+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
+						var bbhtml='/index.php/Home/Student/php_mykeymanagepaperanswerpdf/testid/'+testid+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
+					}
 					
-                  if(testlist[i]['nowtesttime']==null)
-                  {
-                    testlist[i]['nowtesttime']='--';
-                  }
 					
-					addhtmlmsg=addhtmlmsg+'<li><div class="row"><div class="col-xs-9"><a style="color: #000000;" href="'+ahtml+'">'+testlist[i]['num']+'.'+testlist[i]['paper_name']+'</a><span style="margin-left:5%;"> '+testlist[i]['nowtestnummsg']+testlist[i]['nowtesttime']+'&nbsp;&nbsp;&nbsp;&nbsp;'+testlist[i]['testkindmsg']+'&nbsp;&nbsp;&nbsp;&nbsp;（'+testlist[i]['printmsg']+'）</span></div><div class="col-xs-3"><a href="'+aahtml+'" style="color: #000000;margin-left:15%;">习题下载</a><a  href="'+bbhtml+'"  style="margin-left: 15px;color: #000000;">答案下载</a></div></div></li><hr>';
+					addhtmlmsg=addhtmlmsg+'<li><div class="row"><div class="col-xs-9"><a style="color: #000000;" href="'+ahtml+'">'+testlist[i]['num']+'.'+testlist[i]['paper_name']+'</a><span style="margin-left:5%;"> '+testlist[i]['creatime']+'</span></div><div class="col-xs-3"><a href="'+aahtml+'" style="color: #000000;margin-left:15%;">习题下载</a><a  href="'+bbhtml+'"  style="margin-left: 15px;color: #000000;">答案下载</a></div></div></li><hr>';
 					$('#list1').html(beginhtml + addhtmlmsg);
 					j++;
 				}

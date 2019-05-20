@@ -351,6 +351,12 @@ function detailexercise(id)
             formData.append('file_answer[]', $('#file_answer')[0].files[i]);
         }
 
+        var exerciseInput = $('#file_exercise').val();
+        var answerInput = $('#file_answer').val();
+        if(exerciseInput=='' && answerInput=='') {
+        	  alert('请上传习题和答案图片');
+              return;
+        }
 
         obj=document.getElementsByName("keynoteid");
         check_val=[];
