@@ -115,13 +115,19 @@
         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
          <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span>题型：</span>
-            <select id="typechoose" onchange="typechoose()">
-                <option value="0">未选择</option>
-                <volist name="questiontype" id="typeid">
-                    <option value="{$typeid.id}">{$typeid.typesmsg}</option>
+           <span>种类：</span>
+           	<select style="color:black" id="subjectid" onchange="subjectid()">
+                <option value="0" selected="selected">未选择</option>
+                <volist name="subjectid" id="subjectitemid">
+                    <option value="{$subjectitemid.id}">{$subjectitemid.subjectmsg}</option>
                 </volist>
             </select>
+            <span>题型：</span>
+         
+            <select style="color:black" id="typechoose" onchange="typechoose()">
+                <option value="0" selected="selected" >未选择</option>
+            </select>
+          
         </div>
         <div id="contenttest" style="height: 400px; border: 1px solid #f9f9f8;background-color: #9eb3c3;overflow-y: scroll;">
             <!--<hr>-->
@@ -2289,6 +2295,30 @@
             }
         })
 
+    }
+    
+    function subjectid()
+    {
+    	var subjectid=$("#subjectid").val();
+    	if(subjectid) {
+  	       $.ajax({
+  	            url: "{:U('subjectquestion')}",
+  	            type: 'POST',
+  	            data: {subjectid:subjectid},
+  	            dataType: 'json',
+  	            success: function (re) {
+  	                var mylength = re['count'];
+  	                var testlist=re['list'];
+  	                var str='<select style="color:black" id="typechoose" onchange="typechoose()"><option value="0">未选择</option>';
+	  	       		for (var i = 0; i<mylength; i++) 
+	                {
+	  	       			var str=str+"<option value="+testlist[i]['id']+">"+testlist[i]['typesmsg']+"</option>";
+	                }
+	  	       	    str=str+"</select>";
+	    			$("#typechoose").html(str);
+  	            }
+  	        })
+    	}
     }
 </script>
 </body>

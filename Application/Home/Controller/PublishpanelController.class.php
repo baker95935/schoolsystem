@@ -132,7 +132,7 @@ class PublishpanelController extends Controller
 					$tmp=$publish->find($v['publishid']);
 					$v['publishname']=$tmp['name'];
 				}
-				$v['createtime']=date('Y-m-d H:i:s',$v['createtime']);
+				$v['createtime']=date('Y年m月d日',$v['createtime']);
 			}
 			
 			$data=array_slice($data, 0);
@@ -1825,6 +1825,7 @@ class PublishpanelController extends Controller
         $model = M('test_public_data');
         $model1= M('img_cuted_data');
       
+        
       
 
       
@@ -1952,6 +1953,14 @@ class PublishpanelController extends Controller
 
             }
         }
+        
+        $subject=M('subject_data');
+        $subjectid=$subject->select();
+        $this->assign('subjectid',$subjectid);
+        
+        $questiontypes=$model3->select();
+        $this->assign('questiontypes',$questiontypes);
+ 
         $this->assign('questiontype',$questiontype);
         $this->assign('title',$title);
         $this->assign('filesernum',$filesernum);
@@ -2124,7 +2133,7 @@ class PublishpanelController extends Controller
       }
 
 
-        $this->redirect('testpanel/test_list01','', 0, '页面跳转中...');
+        $this->redirect('Publishpanel/test_list01','', 0, '页面跳转中...');
     }
     public function test_preview_06(){
         $filesernum=$_GET['filesernum'];
@@ -3110,6 +3119,20 @@ public function questionnum(){
    $command = './Public/cfile/myaddcutimgto '.$src1.' '.$src2;
    echo $result = exec($command);
 
+ }
+ 
+ public function subjectquestion()
+ {
+ 	$res=array();
+ 	
+ 	$model=M('questiontypes');
+ 	$subejctid=$_POST['subjectid'];
+ 	if($subejctid) {
+ 		$questionarr['subjectid']=$subejctid;
+        $res['list']=$model->where($questionarr)->order('orderid asc')->select();
+        $res['count']=$model->where($questionarr)->order('orderid asc')->count();
+ 	}
+ 	echo json_encode($res);
  }
   
 }
