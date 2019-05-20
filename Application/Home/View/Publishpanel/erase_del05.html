@@ -115,10 +115,17 @@
         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
          <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+           <span>种类：</span>
+           	<select style="color:black" id="subjectid" onchange="subjectid()">
+                <option value="0" selected="selected">未选择</option>
+                <volist name="subjectid" id="subjectitemid">
+                    <option value="{$subjectitemid.id}">{$subjectitemid.subjectmsg}</option>
+                </volist>
+            </select>
             <span>题型：</span>
-            <select id="typechoose" onchange="typechoose()">
-                <option value="0">未选择</option>
-                <volist name="questiontype" id="typeid">
+            <select style="color:black" id="typechoose" onchange="typechoose()">
+                <option value="0" selected="selected" >未选择</option>
+                <volist name="questiontypes" id="typeid">
                     <option value="{$typeid.id}">{$typeid.typesmsg}</option>
                 </volist>
             </select>
