@@ -119,10 +119,10 @@
                                 <option value="{$item.id}">{$item.name}</option>
                                 </foreach>
                             </select>
-                          <input style="display:none;"  required="required" name="publishname" id="publishname" type="text" placeholder="出版社名称">
+                          <input  name="searchpublishname" id="searchpublishname" type="text" placeholder="搜索出版社" onblur="searchpublishname();">
                         </li>
                         <li>
-                             <span class="sysset_marginleft28" >书号：</span>   <input id="booknumber" name="booknumber"   type="text">
+                             <span class="sysset_marginleft28" >书号：</span>   <input id="booknumber" name="booknumber" value="isbn"  type="text">
                         </li>
                         <li>
                             <span  class="sysset_marginleft28" >分类：</span> 
@@ -426,6 +426,47 @@ function changeprice()
 		$("#price").val('');
 	} else {
 		$("#price").val(0);
+	}
+}
+
+function searchpublishname()
+{
+	var searchpublishname=$("#searchpublishname").val();
+	if(searchpublishname) {
+		 $.ajax({
+	            url: "{:U('searchpublishname')}",
+	            type: 'POST',
+	            data: {searchpublishname:searchpublishname},
+	            dataType: 'json',
+	            success: function (re) {
+	                if(re['count']==1) {
+		                var str='<select id="publishid">';
+		  	       		var str=str+"<option value="+re['list']['id']+">"+re['list']['name']+"</option>";
+		  	       	    str=str+"</select>";
+		    			$("#publishid").html(str);
+	                }
+	            }
+	        });
+	} else {
+		 $.ajax({
+	            url: "{:U('searchpublishname')}",
+	            type: 'POST',
+	            data: {searchpublishname:searchpublishname},
+	            dataType: 'json',
+	            success: function (re) {
+	                 
+	            	var mylength = re['count'];
+	  	            var testlist=re['list'];
+	  	                
+	                var str='<select id="publishid"><option value ="0">未选择</option>';
+	                for (var i = 0; i<mylength; i++) 
+	                {
+	  	       			var str=str+"<option value="+testlist[i]['id']+">"+testlist[i]['name']+"</option>";
+	                }
+	  	       	    str=str+"</select>";
+	    			$("#publishid").html(str);
+	            }
+	        });
 	}
 }
 </script>

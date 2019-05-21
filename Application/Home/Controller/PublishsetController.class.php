@@ -1703,4 +1703,26 @@ class PublishsetController extends Controller
     	}
     	echo 1;
     }
+    
+    //出版社名称搜索
+    public function searchpublishname()
+    {
+    	$res=array();
+    	
+    	//出版社列表
+    	$publish=M('publish_name');
+    	$publisname=$_POST['searchpublishname'];
+    	//默认显示所有
+    	$res['list']=$publish->where('status=1')->select();
+    	$res['count']=$publish->where('status=1')->count();
+    	if($publisname) {
+    		
+    		$publishlist=$publish->where("status=1 and name like '%".$publisname."%'")->find();
+    		if(!empty($publishlist)) {
+	    		$res['list']=$publishlist;
+	    		$res['count']=1;
+    		}
+    	}  
+    	echo json_encode($res);
+    }
 }
