@@ -1725,46 +1725,5 @@ class PublishsetController extends Controller
     	}  
     	echo json_encode($res);
     }
-    
-    //号码生成算法
-    public function number()
-    {
-    	$time=date('YmdHis');
-    	$a=rand(0,9);
-    	$b=rand(0,9);
-    	$c=$a+$b;
-    	 
-    	if(($a+$b)>=10){
-    		$c=$a+$b-10;
-    	}
-    
-    	$str=$a.mt_rand(100,999).$b.mt_rand(10,99).$c.$time;
-    	echo $str;
-    }
-    
-    //号码校验算法
-    public function checknumber()
-    {
-    	$str="6986220820190522162949";
-    	//获取第一位和第五位和第八位
-    	$a=substr($str,0,1);
-    	$b=substr($str,4,1);
-    	$c=substr($str,7,1);
-    	$res=0;
-    	if($a+$b==$c) {
-    		$res=1;
-    	}
-    
-    	if(($a+$b-10)==$c) {
-    		$res=1;
-    	}
-    	echo $res;
-    }
-    
-    public function qrcode()
-    {
-    	require "./Thinkphp/Library/Org/Util/phpqrcode.php";
-    	 
-    	\QRcode::png('http://www.163.com','1.png');
-    }
+  
 }
