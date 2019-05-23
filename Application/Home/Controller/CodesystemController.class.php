@@ -27,12 +27,12 @@ class CodesystemController extends Controller
     $code_note=$_POST['code_note'];
     $code_price=$_POST['code_price'];
     $code_num=$_POST['code_num'];
+    $publishid=$_POST['publishid'];
     
-    $code_name='测试二维码';
-    $code_note='问问我';
-    $code_price='12';
-    $code_num='58926311201942222951';
-    
+    //$code_name='测试二维码';
+    //$code_note='问问我';
+    //$code_price='12';
+    //$code_num='58926311201942222951';
     //`id`, ``, `kind`, `exercises_id`, `status`, `publishid`, `creattime`, `endtime`, ``, ``, `free_test_arr`, `free_key_arr`, ``
     
     $data['codename']=$code_name;
@@ -43,6 +43,9 @@ class CodesystemController extends Controller
     $data['status']=0;
     $data['creattime']= date("Y-m-d h:i:s");
     $data['userednum']=0;
+    $data['publishid']=$publishid;
+    
+    
     
     $Model=M('code_msg');
     echo $Model->add($data);
@@ -104,6 +107,9 @@ class CodesystemController extends Controller
   	
   	$model=M('book_exercises');
   	$publish=M('publish_name');
+  	
+  	$paper=M('paper_msg_data');
+  	$key=M('key_paper_msg_data');
   	 
   	$dataarr=array();
   	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
@@ -119,12 +125,23 @@ class CodesystemController extends Controller
   	foreach($data as $k=>&$v) {
   		$v['num']=$beginnum;
   		$beginnum=$beginnum+1;
+  		
+  		//计算各种的 试卷和知识点数量
+  		$v['papernum']=$paper->where('exerciseid='.$v['id'])->count();
+  		$v['keynum']=$key->where('exerciseid='.$v['id'])->count();
+  		
   	}
   	
   	
   	$data['length']=sizeof($data);
   	$data['pagelength']=$pagelength;
   	$data['count']=$count;
+  	
+  	//获取出版社数据
+  	if($publishid) {
+  		$tmp=$publish->find($publishid);
+  		$data['publishname']=$tmp['name'];
+  	}
   	 
   	$data['pagenum']=ceil($count/$pagelength);
   	echo json_encode($data);
@@ -137,6 +154,35 @@ class CodesystemController extends Controller
   	
   	$this->assign('nowtime',$nowtime);
   	$this->display();
+  }
+  
+  public function phpcodeList()
+  {
+    $publishid=10;
+    //$publishid=$_POST['publishid'];
+    $Model=M('');
+    $data=$Model->query('select * from code_msg where publishid='.$publishid.' order by creattime desc');
+    $data['count']=sizeof($data);
+    echo json_encode($data);
+  }
+  
+  
+  //习题册对应的试卷和知识点
+  public function detailexerciseinfo()
+  {
+  	$res=array();
+  	$exerciseid=$_POST['exerciseid'];
+  	
+  	$paper=M('paper_msg_data');
+  	$key=M('key_paper_msg_data');
+  	
+  	//计算各种的 试卷和知识点数量
+  	$res['paperlist']=$paper->where('exerciseid='.$exerciseid)->select();
+  	$res['papernum']=$paper->where('exerciseid='.$exerciseid)->count();
+  	$res['keylist']=$key->where('exerciseid='.$exerciseid)->select();
+  	$res['keynum']=$key->where('exerciseid='.$exerciseid)->count();
+ 
+  	echo json_encode($res);
   }
 
 }
