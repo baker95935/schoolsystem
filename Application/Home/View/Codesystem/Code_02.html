@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/systemset.css"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style type="text/css">
-		ol{list-style-type:none;counter-reset:sectioncounter;width:90%;}  
+		ol{list-style-type:none;counter-reset:sectioncounter;width:90%;list-style:none;}  
 		ol li:before {  
     		content:counter(sectioncounter) ".";   
     		counter-increment:sectioncounter;  
@@ -202,7 +202,7 @@
 	
 				for (var i = 0; i<mylength; i++) 
 	            {
-					j=i+1;
+					j=i+1+(nowpage-1)*pagelength;
 					addhtmlmsg=addhtmlmsg+'<li><a href="#" onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></li>';
 					j++;
 	            }
@@ -287,7 +287,7 @@
 
 				for (var i = 0; i<mylength; i++) 
 	            {
-					j=i+1;
+					j=i+1+(nowpage-1)*pagelength;
 					addhtmlmsg=addhtmlmsg+'<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:15px;margin-top:20px;"><span><b>'+j+'<a href="#" onclick="detailexercise('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：试卷（123），知识点（123）</span><br></div>';
 					j++;
 	            }
