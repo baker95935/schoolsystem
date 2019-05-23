@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html class="login-bg">
+<head>
+    <title>CTB-CODE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+    <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/systemset.css"/>
+  	<script src="__PUBLIC__/js/public.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+		ol{list-style-type:none;counter-reset:sectioncounter;width:90%;}  
+		ol li:before {  
+    		content:counter(sectioncounter) ".";   
+    		counter-increment:sectioncounter;  
+   
+ 			} 
+      ol li a{
+      	color:#000000;
+      }
+      ol li{
+        margin-bottom:10px;
+      }
+      
+      
+    </style>
+</head>
+<body>
+<div class="container" style="width: 100%;">
+	<div class="row border_bottom" style="height:100px;">
+      		<div class="col-xs-6" style="padding-top:16px;padding-left:30px;">
+      			 <table>
+                	<tr>
+                    <td><a href="{:U('Adminindex/index')}"><img class="img-circle" style="width: 65px;height: 65px;" src="__PUBLIC__/img/admin_radio.png"></a></td>
+
+                    <td class="admin_title" style="padding-left: 20px;">
+                        <span style="font-size: 24px;">二维码管理系统</span>
+                        <br>
+                        <span id="nowtimeid" class="admin_sec_title">当前日期：{$nowtime}</span>
+                    </td>
+                </tr>
+            	</table>
+      		</div>
+     		<div class="col-xs-6" style="padding-top:60px;padding-left:30%;">
+              	<label><input type="radio" value="1" name="paper_kind"  checked="checked"><span style="margin-left: 4px;">动态二维码</span> 
+                  	   <input name="paper_kind"  value="0" style="margin-left: 10px;" type="radio"><span style="margin-left: 4px;">普通二维码</span>
+                </label>
+      		</div>
+  	</div> 
+  	<div class="row" style="min-height:750px;">
+      <div class="col-xs-3  border_right" style="min-height:750px;">
+        <div class="row  border_bottom" style="height:60px;">
+        	<div class="col-xs-6" style="text-align:center;margin-top:20px;">用户名</div>
+        	<div class="col-xs-6" style="padding-left:0px;margin-top:16px;"><input type="text" value=""  placeholder="用户名称" style="width:80%;border:0;border-bottom:1px solid #000000;text-align:center;"></div>
+        </div>
+        <div class="row" style="padding-top:20px;">
+        	<ol>
+              <volist name="data" id="publishname">
+              <li><a id="{$publishname[id]}" href="javascript:void(0)" publishname="{$publishname[name]}" onclick="publishsub({$publishname[id]})">{$publishname[names]}</a></li>
+              </volist>
+            </ol>
+        </div>
+       
+        <div class="row border_top" style="padding-left:90px;margin-top:40px;padding-top:10px;"><a>上一页</a><span style="margin-left:20px;margin-right:20px;">1/12</span><a>下一页</a></div>  
+
+      </div>
+      <div class="col-xs-9">
+          <div class="row border_bottom" style="height:60px;">
+            <div class="col-xs-4">
+              <div class="row">
+            	<div class="col-xs-6" style="margin-top:17px;padding-left:30px;"><input type="text" value=""  placeholder="二维码名称" style="width:60%;border:0;border-bottom:1px solid #000000;"></div>
+                <div class="col-xs-6" style="text-align:left;margin-top:24px;"><a id="codemsg" onclick="addcode()">添加新二维码</a></div>
+              </div>
+            </div>
+            <div class="col-xs-4">
+            	<input type="text" value="" placeholder="习题册" style="width:40%;border:0;margin-top:18px;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;text-align:center;">
+            </div>
+            <div class="col-xs-4">
+              	<span style="margin-top:20px;display:block;">免费使用试卷</span>
+            </div>
+          </div>
+      	  <div class="row" style="min-height:690px;">
+            <div class="col-xs-4 border_right"  style="min-height:690px;">
+              
+              <div  class="row border_bottom" style="height:26px;padding-left:20px;padding-top:2px;"><b><span id="publishname"></span></b></div>
+              
+              <div id="adddiv" class="row">
+                <table style="margin-left:10%;width:80%;height:180px;border-bottom:1px solid #000000;">
+                  <tr>
+                    <td rowspan="2" style="width:40%;"><img  style="width: 80px;height: 80px;margin-left:10px;" src="__PUBLIC__/img/codesample.png"></td>
+                    <td style="background:#fbfbfb;width:60%;">
+                    	<input id="code_name" type="text" value="" placeholder="二维码名称" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#fbfbfb;">
+                      	<input id="code_note" type="text" value="" placeholder="备注内容" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;margin-top:8px;background:#fbfbfb;">
+                        <input id="code_price" type="text" value="" placeholder="单价" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#fbfbfb;margin-top:8px;">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="background:#fbfbfb;width:60%;text-align:center;padding-left:60px;">
+                      
+                      <span><a href="javascript:void(0)" onclick="addCodeSub()">确认</a></span>
+                    </td>  
+                  </tr>
+                </table>
+              </div>
+              <div id="codecontent" class="row" style="display:none;">
+                <div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:20px;margin-top:20px;">
+                    <span><b>1.初中二年二维码</b></span><br>
+                	<span style="margin-top:10px;display:block;margin-bottom:10px;">备注：二维码名称二维码名称二维码名称二维码名称二维码名称</span>
+                  	<span style="margin-left:20px;display:block;margin-bottom:10px;">2019-09-12&nbsp;&nbsp;&nbsp;&nbsp;¥20</span>
+                     <span  style="margin-left:120px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a>下载</a></span>
+                </div>
+                <div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:20px;margin-top:20px;">
+                    <span><b>2.初中二年二维码</b></span><br>
+                	<span style="margin-top:10px;display:block;">备注：二维码名称二维码名称二维码名称二维码名称二维码名称</span><br>
+                    <span style="margin-left:20px;">2019-09-12</span><span  style="margin-left:20px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a>下载</a></span>
+                </div>
+                <div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:20px;margin-top:20px;">
+                    <span><b>3.初中二年二维码</b></span><br>
+                	<span style="margin-top:10px;display:block;">备注：二维码名称二维码名称二维码名称二维码名称二维码名称</span><br>
+                    <span style="margin-left:20px;">2019-09-12</span><span  style="margin-left:20px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a>下载</a></span>
+                </div>
+                <div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:20px;margin-top:20px;">
+                    <span><b>4.初中二年二维码</b></span><br>
+                	<span style="margin-top:10px;display:block;">备注：二维码名称二维码名称二维码名称二维码名称二维码名称</span><br>
+                    <span style="margin-left:20px;">2019-09-12</span><span  style="margin-left:20px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a>下载</a></span>
+                </div>
+                <div class="row" style="padding-left:90px;margin-top:30px;"><a>上一页</a><span style="margin-left:20px;margin-right:20px;">1/12</span><a>下一页</a></div> 
+              </div>
+            </div>
+          	<div class="col-xs-4 border_right"  style="min-height:690px;">
+              <div class="row border_bottom" style="height:120px;padding-left:20px;padding-top:30px;">
+                <span><b>初中物理练习册第二学期练习册英语考试习题</b></span><br><br>
+                <span>习题册（12）</span>
+                <span>知识点（12）</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span><a>删除</a></span>  
+              </div>
+              <div class="row" style="padding-top:20px;">
+                <ol>
+                  <li><a href="javascript:void(0)">第一卷习题册初中二年物理习题册</a></li>
+                  <li><a href="javascript:void(0)">第二卷习题册初中二年物理习题册</a></li>
+                </ol>           
+              </div> 
+            </div>
+          	<div class="col-xs-4  border_right"  style="min-height:690px;">
+               <div class="row  border_bottom" style="height:300px;">
+                 	<div class="col-xs-12 border_bottom" style="height:40px;width:100%;">
+                      <div class="row" style="text-align:center;">
+                        <div class="col-xs-6  border_right"  style="height:40px;text-align:center;background:#f2f6f6;"><span style="margin-top:10px;display:block;">习题册（9）</span></div>
+                        <div class="col-xs-6"><span style="margin-top:10px;display:block;">知识点（19）</span></div>
+                      </div>	
+                   </div>
+               </div>
+               <div class="row">
+                   <div class="col-xs-12 border_bottom" style="height:40px;width:100%;">
+                       <div class="row" style="text-align:center;">
+                        <div class="col-xs-6 border_right"><span style="margin-top:10px;display:block;">习题册（9）</span></div>
+                        <div class="col-xs-6" style="height:40px;background:#f2f6f6;"><span style="margin-top:10px;display:block;">知识点（19）</span></div>
+                      </div>	
+                 		
+                   </div>
+               </div> 
+            </div>
+      	</div>  
+ 	 </div> 
+  	 </div>
+</div>
+  <input id="codeoper" type="hidden" value="1">
+  <input id="publishid" type="hidden" value="0">
+<script>
+    $(document).ready(function(){
+
+    })
+  
+     $("input[type='radio']").on("change",function(){
+     window.location.href="Code_02.html"; 
+	})
+  
+  	function addcode()
+ 	{
+      if($('#codeoper').val()==1)
+      {
+        $('#adddiv').css('display','');
+        $('#codecontent').css('display','none');
+        $('#codemsg').text('取消添加');
+        $('#codeoper').val(0)
+      }
+      else
+      {
+        $('#adddiv').css('display','none');
+        $('#codecontent').css('display','');
+        $('#codemsg').text('添加新二维码');
+        $('#codeoper').val(1)
+      }
+    	
+ 	}
+  function publishsub(id)
+  {
+    var name=$('#'+id).attr('publishname');
+    $('#publishname').text(name);
+    $('#publishid').val(id);
+    
+   // alert(name);
+  }
+  
+
+  
+  function addCodeSub()
+  {
+    	if($('#publishid').val()==0)
+    	{
+    	  return;
+    	}
+    
+    	var code_name=$('#code_name').val();
+    	var code_note=$('#code_note').val();
+    	var code_price=$('#code_price').val();
+    	var code_num=randomNumber();
+    
+    alert(code_name+','+code_note+','+code_price+','+code_num);
+    
+    return;
+    
+    	$.ajax({
+		url:"{:U('phpaddCodeSub')}",
+		data:{code_name:code_name,code_note:code_note,code_price:code_price,code_num:code_num},
+		datatype:'json',
+		type:'post',
+		success:function(re){
+            	
+            }
+          })
+  }
+  
+</script>
+</body>
+</html>

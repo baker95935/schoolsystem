@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html class="login-bg">
+<head>
+    <title>CTB-CODE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+    <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/systemset.css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+		ol{list-style-type:none;counter-reset:sectioncounter;width:90%;}  
+		ol li:before {  
+    		content:counter(sectioncounter) ".";   
+    		counter-increment:sectioncounter;  
+   
+ 			} 
+      ol li a{
+      	color:#000000;
+      }
+      ol li{
+        margin-bottom:10px;
+      }
+      
+      
+    </style>
+</head>
+<body>
+<div class="container" style="width: 100%;">
+	<div class="row border_bottom" style="height:100px;">
+      		<div class="col-xs-6" style="padding-top:16px;padding-left:30px;">
+      			 <table>
+                	<tr>
+                    <td><a href="{:U('Adminindex/index')}"><img class="img-circle" style="width: 65px;height: 65px;" src="__PUBLIC__/img/admin_radio.png"></a></td>
+
+                    <td class="admin_title" style="padding-left: 20px;">
+                        <span style="font-size: 24px;">二维码管理系统</span>
+                        <br>
+                        <span id="nowtimeid" class="admin_sec_title">当前日期：{$nowtime}</span>
+                    </td>
+                </tr>
+            	</table>
+      		</div>
+     		<div class="col-xs-6" style="padding-top:60px;padding-left:30%;">
+              	<label><input type="radio" value="1" name="paper_kind"><span style="margin-left: 4px;">动态二维码</span> 
+                  	   <input name="paper_kind"  value="0" style="margin-left: 10px;"  checked="checked" type="radio"><span style="margin-left: 4px;">普通二维码</span>
+                </label>
+      		</div>
+  	</div> 
+  	<div class="row" style="min-height:750px;">
+      <div class="col-xs-3  border_right" style="min-height:750px;">
+        <div class="row  border_bottom" style="height:60px;">
+        	<div class="col-xs-6" style="text-align:center;margin-top:20px;">出版社</div>
+        	<div class="col-xs-6" style="padding-left:0px;margin-top:16px;"><input type="text" name="publishname"  onblur="searchpublish()" id="publishname"  placeholder="出版社名称" style="width:80%;border:0;border-bottom:1px solid #000000;text-align:center;"></div>
+        </div>
+        <div id="publishlist" class="row" style="padding-top:20px;">
+        	<ol>
+              <li><a href="javascript:void(0)">清华大学出版社</a></li>
+              <li><a>清华大学出版社</a></li>
+              <li><a>北京市交通大学出版社有限公司（201）</a></li>
+            </ol>
+        </div>
+       
+        <div class="row border_top" style="padding-left:90px;margin-top:40px;padding-top:10px;"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div>  
+
+      </div>
+      <div class="col-xs-9">
+          <div class="row border_bottom" style="height:60px;">
+            <div class="col-xs-4">
+              <div class="row">
+            	<div class="col-xs-6" style="margin-top:17px;padding-left:30px;"><input type="text" name="exercisename" id="exercisename" onblur="searchexercise();"  placeholder="练习册名称" style="width:60%;border:0;border-bottom:1px solid #000000;"></div>
+                <div class="col-xs-6" style="text-align:left;margin-top:24px;"></div>
+              </div>
+            </div>
+            <div class="col-xs-4">
+            	<input type="text" value="" placeholder="习题册" style="width:40%;border:0;margin-top:18px;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;text-align:center;">
+            </div>
+            <div class="col-xs-4">
+              	<span style="margin-top:20px;display:block;">二维码生成</span>
+            </div>
+          </div>
+      	  <div class="row" style="min-height:690px;">
+            <div class="col-xs-4 border_right"  style="min-height:690px;">
+              <div id="adddiv" class="row" style="display:none;">
+                <table style="margin-left:10%;width:80%;height:180px;border-bottom:1px solid #000000;">
+                  <tr>
+                    <td rowspan="2" style="width:40%;"><img  style="width: 80px;height: 80px;margin-left:10px;" src="__PUBLIC__/img/codesample.png"></td>
+                    <td style="background:#fbfbfb;width:60%;">
+                    	<input type="text" value="" placeholder="二维码名称" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#fbfbfb;">
+                      	<input type="text" value="" placeholder="备注内容" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;margin-top:8px;background:#fbfbfb;">
+                      <input type="text" value="" placeholder="单价" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#fbfbfb;margin-top:8px;">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="background:#fbfbfb;width:60%;text-align:center;padding-left:60px;">
+                      
+                      <span><a>确认</a></span>
+                    </td>  
+                  </tr>
+                </table>
+              </div>
+              <div class="row">
+                <div id="exerciselist">
+	        
+                </div>
+                <div class="row" style="padding-left:90px;margin-top:30px;"><a onclick="prepageexercise();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpageexercise">1</span>/<span id="pagenumexercise">0</span></a><a style="margin-left: 4px;" onclick="nextpageexercise()" href="javascript:void(0)">下一页</a></div> 
+              </div>
+            </div>
+            
+            
+                        
+          	<div class="col-xs-4  border_right"  style="min-height:690px;">
+               <div class="row  border_bottom" style="height:300px;">
+                 	<div class="col-xs-12 border_bottom" style="height:40px;width:100%;">
+                      <div class="row" style="text-align:center;">
+                        <div class="col-xs-6  border_right"  style="height:40px;text-align:center;background:#f2f6f6;"><span style="margin-top:10px;display:block;">习题册（9）</span></div>
+                        <div class="col-xs-6"><span style="margin-top:10px;display:block;">知识点（19）</span></div>
+                      </div>	
+                   </div>
+               </div>
+              
+               <div class="row">
+                   <div class="col-xs-12 border_bottom" style="height:40px;width:100%;">
+                       <div class="row" style="text-align:center;">
+                        <div class="col-xs-6 border_right"><span style="margin-top:10px;display:block;">习题册（9）</span></div>
+                        <div class="col-xs-6" style="height:40px;background:#f2f6f6;"><span style="margin-top:10px;display:block;">知识点（19）</span></div>
+                      </div>	
+                 		
+                   </div>
+               </div>  
+            </div>
+            
+          	<div class="col-xs-4 border_right"  style="min-height:690px;">
+              <div class="row border_bottom" style="height:280px;padding-left:20px;padding-top:30px;">
+                <span><b>单个二维码</b></span>
+                <br>
+                <br>
+                <input type="text" value="" placeholder="二维码名称" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;">
+                <input type="text" value="" placeholder="备注内容" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;margin-top:8px;background:#ffffff;">
+                <input type="text" value="" placeholder="单价" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;">
+                <input type="text" value="" placeholder="生成时间" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;">
+                <input type="text" value="" placeholder="到期时间" style="width:65%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;"><input type="checkbox"><span>&nbsp;&nbsp;永久</span>
+                <br><br><span style="margin-left:160px;"><a>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a>下载</a></span>
+              </div>
+               <div class="row border_bottom" style="height:320px;padding-left:20px;padding-top:30px;">
+                <span><b>一次二维码</b></span>
+                <br>
+                <br>
+                <input type="text" value="" placeholder="二维码名称" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;">
+                <input type="text" value="" placeholder="备注内容" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;margin-top:8px;background:#ffffff;">
+                <input type="text" value="" placeholder="个数" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;margin-top:8px;background:#ffffff;">
+                <input type="text" value="" placeholder="单价" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;">
+                <input type="text" value="" placeholder="生成时间" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;">
+                <input type="text" value="" placeholder="到期时间" style="width:65%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;"><input type="checkbox"><span>&nbsp;&nbsp;永久</span>
+                <br><br><span style="margin-left:160px;"><a>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a>下载</a></span>
+              </div>
+            </div>
+
+            
+            
+      	</div>  
+ 	 </div> 
+  	 </div>
+  
+</div>
+<input id="pagelength" name="pagelength" type="hidden" value="4">
+<input id="publishid" name="publishid" type="hidden" >
+
+<script>
+
+    $(document).ready(function(){
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	var keywords=$("#publishname").val();
+    	person_sql_publish(nowpage,pagelength,keywords);
+
+    })
+    
+   $("input[type='radio']").on("change",function(){
+     window.location.href="Code_01.html";
+	})
+	
+	
+	//出版社函数
+	function person_sql_publish(nowpage,pagelength,keywords)
+    {
+
+        $.ajax({
+	        url:"{:U('php_publish_sql')}",
+	        type: 'POST',
+	        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords},
+	        dataType: 'json',
+	        success: function(re) {
+	        	var testlist=re;
+				var addhtmlmsg = '<ol>';
+				var beginhtml = $('#publishlist').html('');
+				var mylength = testlist['length'];
+				var pagenum=testlist['pagenum'];
+				
+				$('#pagenum').text(pagenum);
+				$('#nowpage').text(nowpage);
+	
+				for (var i = 0; i<mylength; i++) 
+	            {
+					j=i+1;
+					addhtmlmsg=addhtmlmsg+'<li><a href="#" onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></li>';
+					j++;
+	            }
+				addhtmlmsg=addhtmlmsg+'</ol>';
+				$('#publishlist').html(addhtmlmsg);
+	
+	        }
+	    });
+    }
+    
+    function nextpage()
+	{
+		var nowpage=$('#nowpage').text();
+		var maxnum=$('#pagenum').text();
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#publishname").val();
+		
+		nowpage=nowpage*1+1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+		 
+		$('#publishlist').html('');
+		
+    	person_sql_publish(nowpage,pagelength,keywords);
+	}
+	
+	function prepage()
+	{
+		var nowpage=$('#nowpage').text();
+		var maxnum=$('#pagenum').text();
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#publishname").val();
+		
+		nowpage=nowpage*1-1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+ 
+		$('#publishlist').html('');
+		person_sql_publish(nowpage,pagelength,keywords)
+	}
+	
+	//出版社搜索
+	function searchpublish()
+    {
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	var keywords=$("#publishname").val();
+    	$('#publishlist').html('');
+    	person_sql_publish(nowpage,pagelength,keywords);
+    }
+	
+	//试题列表
+	function person_sql_exercise(nowpage,pagelength,keywords,publishid)
+	{
+
+	    $.ajax({
+	        url:"{:U('php_exercise_sql')}",
+	        type: 'POST',
+	        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishid:publishid},
+	        dataType: 'json',
+	        success: function(re) {
+	        	var testlist=re;
+	        	
+				var addhtmlmsg = '';
+				var mylength = testlist['length'];
+				var pagenum=testlist['pagenum'];
+				
+				$('#pagenumexercise').text(pagenum);
+				$('#nowpageexercise').text(nowpage);
+
+				for (var i = 0; i<mylength; i++) 
+	            {
+					j=i+1;
+					addhtmlmsg=addhtmlmsg+'<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:15px;margin-top:20px;"><span><b>'+j+'<a href="#" onclick="detailexercise('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：试卷（123），知识点（123）</span><br></div>';
+					j++;
+	            }
+
+				$('#exerciselist').html(addhtmlmsg);
+	        }
+	    });
+	}
+	
+	//点击出版社 显示对应的习题册
+	function detailexercise(id)
+	{
+		var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	var keywords=$("#exercisehname").val();
+    	$("#publishid").val(id);
+    	var publishid=id;
+    	person_sql_exercise(nowpage,pagelength,keywords,publishid);
+	}
+	
+	//试题搜索
+	function searchexercise()
+    {
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	var keywords=$("#exercisename").val();
+    	var publishid=$("#publishid").val();
+    	$('#exerciselist').html('');
+    	person_sql_exercise(nowpage,pagelength,keywords,publishid);
+    }
+	
+	function nextpageexercise()
+	{
+		var nowpage=$('#nowpageexercise').text();
+		var maxnum=$('#pagenumexercise').text();
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#exercisename").val();
+		var publishid=$("#publishid").val();
+		
+		nowpage=nowpage*1+1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+		 
+		$('#exerciselist').html('');
+		
+		person_sql_exercise(nowpage,pagelength,keywords,publishid);
+	}
+		
+	function prepageexercise()
+	{
+		var nowpage=$('#nowpageexercise').text();
+		var maxnum=$('#pagenumexercise').text();
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#exercisename").val();
+		var publishid=$("#publishid").val();
+		
+		nowpage=nowpage*1-1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+ 
+		$('#exerciselist').html('');
+		person_sql_exercise(nowpage,pagelength,keywords,publishid);
+	}
+	
+</script>
+</body>
+</html>
