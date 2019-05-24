@@ -8106,19 +8106,12 @@ function downloadcode($id)
 	//校验下 是否已生成
 	$code=M('code_msg');
 	$codeinfo=$code->find($id);
-	if(empty($codeinfo['codemsg'])) {
-		//先生成规则的序列号
-		$str=number();
-
-		//然后生成图片
-		$imgstr=qrcode($str);
-
-		$data['id']=$id;
-		$data['codemsg']=$str;
-		$code->save($data);
-	} else {
-		$imgstr='./uploads/code/'.$codeinfo['codemsg'].'.png';
-	}
+	 
+	 
+	//然后生成图片
+	$imgstr=qrcode($codeinfo['codemsg']);
+ 
+	 
 	//然后下载图片
 	 
 	//获取要下载的文件名

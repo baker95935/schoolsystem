@@ -119,7 +119,7 @@
             
                         
           	<div class="col-xs-4  border_right"  style="min-height:690px;">
-              
+               <div  class="row border_bottom" style="height:26px;padding-left:20px;padding-top:2px;"><b><span id="exercisenameinfo">练习册</span></b></div>
               
                <div class="row">
                    <div class="col-xs-12" style="height:40px;width:100%;">
@@ -309,7 +309,7 @@
 				for (var i = 0; i<mylength; i++) 
 	            {
 					j=i+1+(nowpage-1)*pagelength;
-					addhtmlmsg=addhtmlmsg+'<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:15px;margin-top:20px;"><span><b>'+j+'<a href="#" onclick="detailexerciseinfo('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：试卷（'+testlist[i]['papernum']+'），知识点（'+testlist[i]['keynum']+'）</span><br></div>';
+					addhtmlmsg=addhtmlmsg+'<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:15px;margin-top:20px;"><span >'+j+'.<a style="color:#000000" href="#" onclick="detailexerciseinfo('+testlist[i]['id']+')" ><b>'+testlist[i]['name']+'</b></a></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：试卷（'+testlist[i]['papernum']+'），知识点（'+testlist[i]['keynum']+'）</span><br></div>';
 					j++;
 	            }
 				$("#publishnameinfo").text(testlist['publishname']+'('+testlist['count']+')');
@@ -321,6 +321,23 @@
 	//点击出版社 显示对应的习题册
 	function detailexercise(id)
 	{
+		
+		//第三和第三 数据初始化
+		$("#exercisenameinfo").text('');
+		$("#paperalllist").html('');
+		$("#allpaper").text('试卷');
+		$("#key_paperalllist").html('');
+		$("#allkey").text('知识点');
+		
+		//第四列初始化
+		$("#free_test_arr").val('');
+		$("#free_key_arr").val();
+		$("#codename").val('');
+		$("#codenote").val('');
+		$("#price").val('');
+		$("#endtime").val('');
+		$("#codeid").val('');
+		
 		var nowpage=1;
     	var pagelength=$('#pagelength').val();
     	var keywords=$("#exercisehname").val();
@@ -430,6 +447,8 @@
 				$('#allpaper').text('试卷（'+re['papernum']+'）');
 				$('#allkey').text('知识点（'+re['keynum']+'）');
 				
+
+				
 				//试卷
 				paperlist=re['paperlist'];
 				//paper
@@ -450,6 +469,10 @@
 	            }
 				addhtmlmsg=addhtmlmsg+'</ol>';
 				$("#key_paperalllist").html(addhtmlmsg);
+				
+				//练习册标题
+				$("#exercisenameinfo").text(re.exerciseinfo.name);
+			 
 	        }
 	    });
 	}
@@ -551,7 +574,7 @@
 				type:'post',
 				success:function(re){
 					if(re!='') {
-						var info=eval("("+re+")");
+						info=eval("("+re+")");
 						$("#free_test_arr").val(info['free_test_arr']);
 						$("#free_key_arr").val(info['free_key_arr']);
 						$("#codename").val(info['codename']);

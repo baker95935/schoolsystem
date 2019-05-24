@@ -61,6 +61,7 @@ class CodesystemController extends Controller
     	//校验下 pid和eid必须唯一
  		$codeinfo=$Model->where('publishid='.$data['publishid'].' and exercises_id='.$data['exercises_id'])->find();
  		if(empty($codeinfo)) {
+ 			$data['codemsg']=number();
     		$res=$Model->add($data);
  		} else {
  			$data['id']=$codeinfo['id'];
@@ -203,12 +204,14 @@ class CodesystemController extends Controller
   	
   	$paper=M('paper_msg_data');
   	$key=M('key_paper_msg_data');
+  	$model=M('book_exercises');
   	
   	//计算各种的 试卷和知识点数量
   	$res['paperlist']=$paper->where('exerciseid='.$exerciseid)->select();
   	$res['papernum']=$paper->where('exerciseid='.$exerciseid)->count();
   	$res['keylist']=$key->where('exerciseid='.$exerciseid)->select();
   	$res['keynum']=$key->where('exerciseid='.$exerciseid)->count();
+  	$res['exerciseinfo']=$model->find($exerciseid);
  
   	echo json_encode($res);
   }
