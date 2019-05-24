@@ -10,7 +10,7 @@ class CodesystemController extends Controller
      $begin_num=0;
      $size_num=15;
      $Model=M('');
-     $data=$Model->query('select id,name,sum  from publish_name  where status=1  order by name desc limit '.$begin_num.','.$size_num);
+     $data=$Model->query('select id,name,sum from publish_name  where status=1  order by name desc limit '.$begin_num.','.$size_num);
      for($i=0;$i<sizeof($data);$i++)
      {
        $data[$i]['names']=$data[$i]['name'].'('.$data[$i]['sum'].')';
@@ -25,29 +25,33 @@ class CodesystemController extends Controller
   {
     $code_name=$_POST['code_name'];
     $code_note=$_POST['code_note'];
-    $code_price=$_POST['code_price'];
-    $code_num=$_POST['code_num'];
+    $code_price=$_POST['price'];
+    //$code_num=$_POST['code_num'];
     $publishid=$_POST['publishid'];
+    $exerciseid=$_POST['exerciseid'];
+    $free_test_arr=$_POST['free_test_arr'];
+    $free_key_arr=$_POST['free_key_arr'];
     
-    //$code_name='测试二维码';
-    //$code_note='问问我';
-    //$code_price='12';
-    //$code_num='58926311201942222951';
-    //`id`, ``, `kind`, `exercises_id`, `status`, `publishid`, `creattime`, `endtime`, ``, ``, `free_test_arr`, `free_key_arr`, ``
+    //处理下字符串
     
+    $data['price']=$code_price;
     $data['codename']=$code_name;
-    $data['codemsg']=$code_num;
     $data['codenote']=$code_note;
-    $data['codemsg']=$code_num;
     $data['kind']=0;
     $data['status']=0;
     $data['creattime']= date("Y-m-d h:i:s");
     $data['userednum']=0;
-    $data['publishid']=$publishid;
-    
-    
-    
+    $data['publishid']=$publishid;   
+    $data['exercises_id']=$exerciseid;
+    $data['free_test_arr']=$free_test_arr;
+    $data['free_key_arr']=$free_key_arr;
+     
     $Model=M('code_msg');
+    
+    $Model_publish_name=M('publish_name');
+    
+    $Model_publish_name->where('id='.$publishid)->setInc('sum');
+    
     echo $Model->add($data);
     
   }
@@ -158,10 +162,20 @@ class CodesystemController extends Controller
   
   public function phpcodeList()
   {
-    $publishid=10;
-    //$publishid=$_POST['publishid'];
+    //$publishid=10;
+    $publishid=$_POST['publishid'];
     $Model=M('');
     $data=$Model->query('select * from code_msg where publishid='.$publishid.' order by creattime desc');
+    $data['count']=sizeof($data);
+    echo json_encode($data);
+  }
+  //
+    public function phpexerciseList()
+  {
+    //$publishid=10;
+    $publishid=$_POST['publishid'];
+    $Model=M('');
+    $data=$Model->query('select * from book_exercises where publishid='.$publishid.' order by createtime desc');
     $data['count']=sizeof($data);
     echo json_encode($data);
   }
