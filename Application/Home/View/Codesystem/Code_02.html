@@ -130,13 +130,11 @@
                      
                      <div id="paperalllist" class="row" style="height:650px;padding-top:20px;overflow-y:scroll;">
                      <ol id="testol">
-             				 <li><a  onclick="itemsub(this)" href="javascript:void(0)">c物理测试卷一</a></li>
            				  </ol>
                        </div>
                        
                        <div id="key_paperalllist" class="row" style="display:none;height:650px;padding-top:20px;overflow-y:scroll;">
                           <ol id="keyol">
-             				 <li><a href="javascript:void(0)">dhello物理测试卷一</a></li>
            				  </ol>
                      </div>
                  		
@@ -146,7 +144,6 @@
             
           	<div class="col-xs-4 border_right"  style="min-height:690px;">
               <div class="row border_bottom" style="height:280px;padding-left:20px;padding-top:30px;">
-                <span><b>单个二维码</b></span>
                 <br>
                 <br>
                 <input type="hidden" name="codeid" id="codeid">
@@ -154,10 +151,9 @@
                 <input type="text" name="codenote" id="codenote" placeholder="备注内容" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;margin-top:8px;background:#ffffff;">
                 <input type="text" name="price" id="price" placeholder="单价" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;">
                 <input type="text" name="endtime" id="endtime" placeholder="到期时间" style="width:65%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;"><input type="checkbox"><span>&nbsp;&nbsp;永久</span>
-                <br><br><span style="margin-left:160px;"><a href="#" onclick="codedo();">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('downloadcode')}" onclick="downloadcode();">下载</a></span>
+                <br><br><span style="margin-left:160px;"><a href="#" onclick="codedo();">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="downloadcode();">下载</a></span>
               </div>
                <div class="row border_bottom" style="height:320px;padding-left:20px;padding-top:30px;">
-                <span><b>一次二维码</b></span>
                 <br>
                 <br>
                 <input type="text" value="" placeholder="二维码名称" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;">
@@ -189,6 +185,14 @@
     	var nowpage=1;
     	var pagelength=$('#pagelength').val();
     	var keywords=$("#publishname").val();
+    	
+    	//页面变量初始化
+    	$("#publishid").val('');
+    	$("#exerciseid").val('');
+    	$("#free_test_arr").val('');
+    	$("#free_key_arr").val('');
+    	$("#codeid").val('');
+    	
     	person_sql_publish(nowpage,pagelength,keywords);
 
     })
@@ -527,6 +531,9 @@
 				datatype:'json',
 				type:'post',
 				success:function(re){
+					if(codeid=='') {
+						$("#codeid").val(re);
+					}
 					alert('处理成功');
 		        }
 		    });
@@ -563,9 +570,7 @@
     {
     	var codeid=$('#codeid').val();
     	if(codeid) {
-    		 
-			var url="{:U('Codesystem/downloadcode?codeid=')}";
-			url=url+codeid;
+			var url="/index.php/Home/Codesystem/downloadcode/codeid/"+codeid;
 			window.open(url);
 		       
     	} else {

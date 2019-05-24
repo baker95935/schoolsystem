@@ -23,7 +23,7 @@ class CodesystemController extends Controller
   
   public function phpaddCodeSub()
   {
-  	$res=0;
+  	$res=1;
   	
     $code_name=$_POST['code_name'];
     $code_note=$_POST['code_note'];
@@ -58,9 +58,16 @@ class CodesystemController extends Controller
     	$data['id']=$codeid;
     	$Model->save($data);
     } else {
-    	$Model->add($data);
+    	//校验下 pid和eid必须唯一
+ 		$codeinfo=$Model->where('publishid='.$data['publishid'].' and exercises_id='.$data['exercises_id'])->find();
+ 		if(empty($codeinfo)) {
+    		$res=$Model->add($data);
+ 		} else {
+ 			$data['id']=$codeinfo['id'];
+ 			$Model->save($data);
+ 		}
     }
-    echo 1;
+    echo $res;
   }
   
   //出版社无刷新加载列表和搜索
@@ -215,6 +222,7 @@ class CodesystemController extends Controller
   	$code=M('code_msg');
   	
   	$res=$code->where('publishid='.$publishid.' and exercises_id='.$exerciseid)->find();
+ 
   	echo json_encode($res);
   }
   
@@ -234,79 +242,15 @@ class CodesystemController extends Controller
    echo json_encode($res);  
   }
   
+  //二维码下载
   public function downloadcode()
   {
   	$id=$_GET['codeid'];
-  	//然后更新二维码表
-  	//校验下 是否已生成
-  	$code=M('code_msg');
-  	$codeinfo=$code->find($id);
-  	if(empty($codeinfo['codemsg'])) {
-  		//先生成规则的序列号
-  		$str=$this->number();
-  		
-  		//然后生成图片
-  		$imgstr=$this->qrcode($str);
-  		
-	  	$data['id']=$id;
-	  	$data['codemsg']=$str;
-	  	$code->save($data);
-  	} else {
-  		$imgstr='./uploads/code/'.$codeinfo['codemsg'].'.png';
-  	}
-  	//然后下载图片
-  	
-  	//获取要下载的文件名
-  	$filename = $imgstr;
-  	//设置头信息
-  	header('Content-Disposition:attachment;filename='.basename($filename));
-  	header('Content-Length:' . filesize($filename));
-  	//读取文件并写入到输出缓冲
-  	readfile($filename);
+  	downloadcode($id);
   }
   
   
-  //号码生成算法
-  public function number()
-  {
-  	$time=date('YmdHis');
-  	$a=rand(0,9);
-  	$b=rand(0,9);
-  	$c=$a+$b;
+ 
   
-  	if(($a+$b)>=10){
-  		$c=$a+$b-10;
-  	}
-  
-  	$str=$a.mt_rand(100,999).$b.mt_rand(10,99).$c.$time;
-  	return $str;
-  }
-  
-  //号码校验算法
-  public function checknumber()
-  {
-  	$str="6986220820190522162949";
-  	//获取第一位和第五位和第八位
-  	$a=substr($str,0,1);
-  	$b=substr($str,4,1);
-  	$c=substr($str,7,1);
-  	$res=0;
-  	if($a+$b==$c) {
-  		$res=1;
-  	}
-  
-  	if(($a+$b-10)==$c) {
-  		$res=1;
-  	}
-  	echo $res;
-  }
-  
-  //图片二维码生成
-  public function qrcode($str)
-  {
-  	require "./ThinkPHP/Library/Org/Util/phpqrcode.php";
-  	\QRcode::png($str,'./uploads/code/'.$str.'.png');
-  	
-  	return './uploads/code/'.$str.'.png';
-  }
+ 
 }

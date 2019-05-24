@@ -8055,20 +8055,80 @@ function unique_exercise_arr($arr)
     return $outputarr;
 }
 
+//二维码号生成
 function number()
-    {
-    	$time=date('YmdHis');
-    	$a=rand(0,9);
-    	$b=rand(0,9);
-    	$c=$a+$b;
-    	 
-    	if(($a+$b)>=10){
-    		$c=$a+$b-10;
-    	}
-    
-    	$str=$a.mt_rand(100,999).$b.mt_rand(10,99).$c.$time;
-    	return $str;
+{
+	$time=date('YmdHis');
+	$a=rand(0,9);
+	$b=rand(0,9);
+	$c=$a+$b;
+	    	 
+	if(($a+$b)>=10){
+	$c=$a+$b-10;
+	}
+	    
+	$str=$a.mt_rand(100,999).$b.mt_rand(10,99).$c.$time;
+	return $str;
 }
- 
+
+//号码校验算法
+function checknumber($str)
+{
+	//$str="6986220820190522162949";
+	//获取第一位和第五位和第八位
+	$a=substr($str,0,1);
+	$b=substr($str,4,1);
+	$c=substr($str,7,1);
+	$res=0;
+	if($a+$b==$c) {
+		$res=1;
+	}
+
+	if(($a+$b-10)==$c) {
+		$res=1;
+	}
+	echo $res;
+}
+
+//图片二维码生成
+function qrcode($str)
+{
+	require "./ThinkPHP/Library/Org/Util/phpqrcode.php";
+	\QRcode::png($str,'./uploads/code/'.$str.'.png',QR_ECLEVEL_L, 10);
+	 
+	return './uploads/code/'.$str.'.png';
+}
+
+//二维码生成和更新
+function downloadcode($id)
+{
+	 
+	//校验下 是否已生成
+	$code=M('code_msg');
+	$codeinfo=$code->find($id);
+	if(empty($codeinfo['codemsg'])) {
+		//先生成规则的序列号
+		$str=number();
+
+		//然后生成图片
+		$imgstr=qrcode($str);
+
+		$data['id']=$id;
+		$data['codemsg']=$str;
+		$code->save($data);
+	} else {
+		$imgstr='./uploads/code/'.$codeinfo['codemsg'].'.png';
+	}
+	//然后下载图片
+	 
+	//获取要下载的文件名
+	$filename = $imgstr;
+	//设置头信息
+	header('Content-Disposition:attachment;filename='.basename($filename));
+	header('Content-Type: application/octet-stream;charset=utf-8');
+	header('Content-Length:'.filesize($filename));
+	//读取文件并写入到输出缓冲
+	readfile($filename);
+}
 
 ?>
