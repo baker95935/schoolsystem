@@ -325,9 +325,9 @@
 		//第三和第三 数据初始化
 		$("#exercisenameinfo").text('');
 		$("#paperalllist").html('');
-		$("#allpaper").text('试卷');
+		$("#allpaper").text('试卷（0）');
 		$("#key_paperalllist").html('');
-		$("#allkey").text('知识点');
+		$("#allkey").text('知识点（0）');
 		
 		//第四列初始化
 		$("#free_test_arr").val('');
@@ -465,7 +465,7 @@
 				addhtmlmsg='<ol id="keyol">';
 				for (var i = 0; i<re['keynum']; i++) 
 	            {
-					addhtmlmsg=addhtmlmsg+'<li><a  onclick="itemsub(this,'+keylist[i]['id']+',1)" href="javascript:void(0)">'+keylist[i]['paper_name']+'</a></li>';
+					addhtmlmsg=addhtmlmsg+'<li><a  onclick="itemsub(this,'+keylist[i]['id']+',2)" href="javascript:void(0)">'+keylist[i]['paper_name']+'</a></li>';
 	            }
 				addhtmlmsg=addhtmlmsg+'</ol>';
 				$("#key_paperalllist").html(addhtmlmsg);
@@ -574,14 +574,14 @@
 				type:'post',
 				success:function(re){
 					if(re!='') {
-						info=eval("("+re+")");
-						$("#free_test_arr").val(info['free_test_arr']);
-						$("#free_key_arr").val(info['free_key_arr']);
-						$("#codename").val(info['codename']);
-						$("#codenote").val(info['codenote']);
-						$("#price").val(info['price']);
-						$("#endtime").val(info['endtime']);
-						$("#codeid").val(info['id']);
+						//info=eval("("+re+")");
+						$("#free_test_arr").val(re.free_test_arr);
+						$("#free_key_arr").val(re.free_key_arr);
+						$("#codename").val(re.codename);
+						$("#codenote").val(re.codenote);
+						$("#price").val(re.price);
+						$("#endtime").val(re.endtime);
+						$("#codeid").val(re.id);
 					}
 		        }
 		    });
