@@ -5543,8 +5543,18 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
         $wordwidth=210;
         $lineheight=3;
         $margin_top=14;//mm
+  
+  		if(strlen($paper_name)>18)
+        {
+                  $title_font_size=mmtopx(6,$dpi);//dot
+        }
+  		else
+ 		 {
+                  $title_font_size=mmtopx(10,$dpi);//dot     
+ 		 }
+  
 
-        $title_font_size=mmtopx(10,$dpi);//dot
+     //   $title_font_size=mmtopx(10,$dpi);//dot
         $title_font_height=10;
 
         $title_line_height=0;
@@ -6001,7 +6011,7 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
         $nextsumheight=0;
 
 
-        $standheight=$wordheight-$margin_top-$margin_top;
+        $standheight=$wordheight-$margin_top-$margin_top-4;
         $m=0;$n=0;
         for($i=0;$i<$newtestlength-1;$i++)
         {
@@ -6029,10 +6039,10 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
 
         $newtest[$newtestlength-1]['page']=$pagenum;
 
-      //  $pagesum=$pagenum;
-  $pagesum=0;
+       $mypagesum=$pagenum;
+  //$pagesum=0;
   
-
+$wordheight=$wordheight+20;
         $pdf = new \TCPDF('P', 'mm', array($wordwidth,$wordheight), true, 'UTF-8', false);
 
         //页眉：43，页面高度：1160
@@ -6080,7 +6090,7 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
         $test_size=sizeof($newtest);
         for($j=0;$j<$test_size;$j++)
         {
-          /*
+         // echo $newtest[$j]['kind'].'<br>'.$pagesum.'<hr>';
        
             if($newtest[$j]['kind']=='headtitle')
             {
@@ -6118,7 +6128,7 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
             if($newtest[$j]['kind']=='title')
             {
                 $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
-                $pdf->MultiCell(180, 20,$newtest[$j]['title'].$newtest[$j]['page'].'/'.$pagesum, $border=0, $align='L',$fill=false, $ln=1, $x='10', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
+                $pdf->MultiCell(180, 20,$newtest[$j]['title'], $border=0, $align='L',$fill=false, $ln=1, $x='10', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
                 $page_local=$page_local+$newtest[$j]['height'];
                 $page_local=$page_local+$lineheight;
             }
@@ -6130,7 +6140,7 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
 
 
                 $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
-                $pdf->MultiCell(50, 10,'<span style="letter-spacing: 1px;">'.$newtest[$j]['title'].$newtest[$j]['page'].'/'.$pagesum.'/'.$j.'</span>', $border=0, $align='L',$fill=false, $ln=1, $x='20', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
+                $pdf->MultiCell(50, 10,'<span style="letter-spacing: 1px;">'.$newtest[$j]['title'].'</span>', $border=0, $align='L',$fill=false, $ln=1, $x='20', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
 
             //  if($newtest[$j]['src']!=0)
             //  {
@@ -6189,31 +6199,14 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
                 $page_local=$page_local+$newtest[$j]['height'];
                 $page_local=$page_local+$lineheight;
             }
-            */
-
-   			 if($newtest[$j]['kind']=='title')
-            {
-                $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
-                $pdf->MultiCell(180, 20,$newtest[$j]['title'].$newtest[$j]['page'].'/'.$pagesum, $border=0, $align='L',$fill=false, $ln=1, $x='10', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
-                $page_local=$page_local+$newtest[$j]['height'];
-                $page_local=$page_local+$lineheight;
-            }
-                  if($newtest[$j]['kind']=='titleanswer'  || $newtest[$j]['kind']=='answer'  || $newtest[$j]['kind']=='sertitle')
-            {
 
 
-                $pdf->SetFont('stsongstdlight', '', $newtest[$j]['font_size']);
-                $pdf->MultiCell(50, 10,'<span style="letter-spacing: 1px;">'.$newtest[$j]['title'].$newtest[$j]['page'].'/'.$pagesum.'/'.$j.'</span>', $border=0, $align='L',$fill=false, $ln=1, $x='20', $y=$page_local,  $reseth=true, $stretch=0,$ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
-      			//$page_local=$page_local+$newtest[$j]['height'];
-                $page_local=$page_local+$lineheight;
-             }
 
-           // if($newtest[$j]['page']>0 && $newtest[$j]['page']>$pagesum)
-          if($newtest[$j]['page']==$addpagenum)
+            if($newtest[$j]['page']>0 && $newtest[$j]['page']<$mypagesum)
             {
                 $pdf->AddPage();
                 $page_local=$margin_top;
-                //$pagesum=$newtest[$j]['page'];
+                $pagesum=$newtest[$j]['page'];
                 $addpagenum=$addpagenum+1;
                //  $pdf->MultiCell(50, 10,2323, $border=0, $align='L',$fill=false, $ln=1, $x='20', $y='10',  $reseth=true, $stretch=0,$ishtml=false, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
             }
@@ -6221,7 +6214,8 @@ function  persontestpdf($outkind,$paper_name,$testnote,$data){
         }
 
 //
-  //  return $newtest;
+ // echo $mypagesum;
+//   return;
 
     $pdfname='test_'.date('y-m-d h:i:s',time());
 
@@ -8059,6 +8053,21 @@ function unique_exercise_arr($arr)
     }
 
     return $outputarr;
+}
+
+function number()
+    {
+    	$time=date('YmdHis');
+    	$a=rand(0,9);
+    	$b=rand(0,9);
+    	$c=$a+$b;
+    	 
+    	if(($a+$b)>=10){
+    		$c=$a+$b-10;
+    	}
+    
+    	$str=$a.mt_rand(100,999).$b.mt_rand(10,99).$c.$time;
+    	return $str;
 }
  
 

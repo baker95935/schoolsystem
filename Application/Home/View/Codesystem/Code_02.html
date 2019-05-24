@@ -124,47 +124,19 @@
                <div class="row">
                    <div class="col-xs-12" style="height:40px;width:100%;">
                        <div class="row  border_bottom" style="text-align:center;">
-                        <div name="testdiv" class="col-xs-6 border_right" style="background:#f2f6f6;height:40px;"><span style="margin-top:10px;display:block;" id="allpaper">试卷1（9）</span></div>
-                        <div name="keydiv"  class="col-xs-6" style="height:40px;"><span style="margin-top:10px;display:block;" id="allkey">知识点1（19）</span></div>
+                        <div name="testdiv" class="col-xs-6 border_right" style="background:#f2f6f6;height:40px;"><span style="margin-top:10px;display:block;" id="allpaper">试卷（0）</span></div>
+                        <div name="keydiv"  class="col-xs-6" style="height:40px;"><span style="margin-top:10px;display:block;" id="allkey">知识点（0）</span></div>
                       </div>
                      
                      <div id="paperalllist" class="row" style="height:650px;padding-top:20px;overflow-y:scroll;">
                      <ol id="testol">
              				 <li><a  onclick="itemsub(this)" href="javascript:void(0)">c物理测试卷一</a></li>
-             				 <li><a  onclick="itemsub(this)">c物理测试卷二</a></li>
-             				 <li><a class="red_class" onclick="itemsub(this)">物理测试卷三</a></li>
-                             <li><a   href="javascript:void(0)">物理测试卷一</a></li>
-             				 <li><a  onclick="itemsub(this)">物理测试卷二</a></li>
-             				 <li><a  onclick="itemsub(this)">物理测试卷三</a></li>
-                             <li><a  onclick="itemsub(this)" href="javascript:void(0)">物理测试卷一</a></li>
-             				 <li><a   onclick="itemsub(this)">物理测试卷二</a></li>
-             				 <li><a   onclick="itemsub(this)">物理测试卷三</a></li>
-                              <li><a   onclick="itemsub(this)" href="javascript:void(0)">物理测试卷一</a></li>
-             				 <li><a   onclick="itemsub(this)">物理测试卷二</a></li>
-             				 <li><a   onclick="itemsub(this)">物理测试卷三</a></li>
-                             <li><a   onclick="itemsub(this)" href="javascript:void(0)">物理测试卷一</a></li>
-             				 <li><a   onclick="itemsub(this)">物理测试卷二</a></li>
-             				 <li><a   onclick="itemsub(this)">物理测试卷三</a></li>
            				  </ol>
                        </div>
                        
                        <div id="key_paperalllist" class="row" style="display:none;height:650px;padding-top:20px;overflow-y:scroll;">
                           <ol id="keyol">
              				 <li><a href="javascript:void(0)">dhello物理测试卷一</a></li>
-             				 <li><a>d物理测试卷二</a></li>
-             				 <li><a>12物理测试卷三</a></li>
-                             				 <li><a href="javascript:void(0)">1物理测试卷一</a></li>
-             				 <li><a>12物理测试卷二</a></li>
-             				 <li><a>1物理测试卷三</a></li>
-                             				 <li><a href="javascript:void(0)">1物理测试卷一</a></li>
-             				 <li><a>1物理测试卷二</a></li>
-             				 <li><a>物理测试卷三</a></li>
-                             				 <li><a href="javascript:void(0)">物理测试卷一</a></li>
-             				 <li><a>物理测试卷二</a></li>
-             				 <li><a>物理测试卷三</a></li>
-                             				 <li><a href="javascript:void(0)">物理测试卷一</a></li>
-             				 <li><a>物理测试卷二</a></li>
-             				 <li><a>物理测试卷三</a></li>
            				  </ol>
                      </div>
                  		
@@ -177,11 +149,12 @@
                 <span><b>单个二维码</b></span>
                 <br>
                 <br>
+                <input type="hidden" name="codeid" id="codeid">
                 <input type="text" name="codename" id="codename" placeholder="二维码名称" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;">
                 <input type="text" name="codenote" id="codenote" placeholder="备注内容" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;margin-top:8px;background:#ffffff;">
                 <input type="text" name="price" id="price" placeholder="单价" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;">
                 <input type="text" name="endtime" id="endtime" placeholder="到期时间" style="width:65%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;"><input type="checkbox"><span>&nbsp;&nbsp;永久</span>
-                <br><br><span style="margin-left:160px;"><a href="#" onclick="codedo();">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a>下载</a></span>
+                <br><br><span style="margin-left:160px;"><a href="#" onclick="codedo();">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{:U('downloadcode')}" onclick="downloadcode();">下载</a></span>
               </div>
                <div class="row border_bottom" style="height:320px;padding-left:20px;padding-top:30px;">
                 <span><b>一次二维码</b></span>
@@ -544,12 +517,13 @@
 		var code_name=$("#codename").val();
 		var code_note=$("#codenote").val();
 		var price=$("#price").val();
-		var endtime=$("endtime").val();
+		var endtime=$("#endtime").val();
+		var codeid=$("#codeid").val();
 		
 		if(publishid && exerciseid && codename) {
 			$.ajax({
 				url:"{:U('phpaddCodeSub')}",
-				data:{code_name:code_name,code_note:code_note,price:price,publishid:publishid,exerciseid:exerciseid,free_test_arr:free_test_arr,free_key_arr:free_key_arr},
+				data:{codeid:codeid,code_name:code_name,code_note:code_note,price:price,publishid:publishid,exerciseid:exerciseid,free_test_arr:free_test_arr,free_key_arr:free_key_arr},
 				datatype:'json',
 				type:'post',
 				success:function(re){
@@ -569,9 +543,33 @@
 				datatype:'json',
 				type:'post',
 				success:function(re){
-					console.log(re);
+					if(re!='') {
+						var info=eval("("+re+")");
+						$("#free_test_arr").val(info['free_test_arr']);
+						$("#free_key_arr").val(info['free_key_arr']);
+						$("#codename").val(info['codename']);
+						$("#codenote").val(info['codenote']);
+						$("#price").val(info['price']);
+						$("#endtime").val(info['endtime']);
+						$("#codeid").val(info['id']);
+					}
 		        }
 		    });
+    	}
+    }
+    
+    //下载二维码
+    function downloadcode()
+    {
+    	var codeid=$('#codeid').val();
+    	if(codeid) {
+    		 
+			var url="{:U('Codesystem/downloadcode?codeid=')}";
+			url=url+codeid;
+			window.open(url);
+		       
+    	} else {
+    		alert('请先提交二维码信息');
     	}
     }
 </script>
