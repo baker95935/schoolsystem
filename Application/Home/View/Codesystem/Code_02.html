@@ -439,6 +439,9 @@
 	{
 	   //把选中的exerciseid给予赋值
 	   $("#exerciseid").val(id);
+	   var publishid=$("#publishid").val();
+	   //查找是否已经添加了二维码信息，如果有展示
+	   detailcodeinfo(publishid,id);
 	   
 	    $.ajax({
 	        url:"{:U('detailexerciseinfo')}",
@@ -550,10 +553,27 @@
 				datatype:'json',
 				type:'post',
 				success:function(re){
+					alert('处理成功');
 		        }
 		    });
 		}
 	}
+    
+    //根据出版社ID和练习册ID获取已经生成的二维码信息
+    function detailcodeinfo(publishid,exerciseid)
+    {
+    	if(publishid && exerciseid) {
+    		$.ajax({
+				url:"{:U('detailcodemsg')}",
+				data:{publishid:publishid,exerciseid:exerciseid},
+				datatype:'json',
+				type:'post',
+				success:function(re){
+					console.log(re);
+		        }
+		    });
+    	}
+    }
 </script>
 </body>
 </html>

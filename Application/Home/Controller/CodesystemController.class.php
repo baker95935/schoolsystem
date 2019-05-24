@@ -199,4 +199,15 @@ class CodesystemController extends Controller
   	echo json_encode($res);
   }
 
+  //二维码信息
+  public function detailcodemsg()
+  {
+  	$res=array();
+  	$publishid=$_POST['publishid'];
+  	$exerciseid=$_POST['exerciseid'];
+  	$code=M('code_msg');
+  	
+  	$res=$code->where('publishid='.$publishid.' and exercises_id='.$exerciseid)->find();
+  	echo json_encode($res);
+  }
 }
