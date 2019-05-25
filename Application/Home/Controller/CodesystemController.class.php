@@ -7,16 +7,8 @@ class CodesystemController extends Controller
 {
    public function Code_01()
    {
-     $begin_num=0;
-     $size_num=15;
-     $Model=M('');
-     $data=$Model->query('select id,name,sum from publish_name  where status=1  order by name desc limit '.$begin_num.','.$size_num);
-     for($i=0;$i<sizeof($data);$i++)
-     {
-       $data[$i]['names']=$data[$i]['name'].'('.$data[$i]['sum'].')';
-     }
-     //  echo  json_encode($data);
-     $this->assign('data',$data);
+   	 $nowtime=date('Y-m-d');
+  	 $this->assign('nowtime',$nowtime);
      $this->display();
    }
   

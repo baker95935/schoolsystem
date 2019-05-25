@@ -3,7 +3,12 @@
 <head>
     <title>CTB-CODE</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+  
+
+      <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.qrcode.min.js"></script>
+  
+  
     <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/systemset.css"/>
@@ -23,10 +28,29 @@
         margin-bottom:10px;
       }
       
+      .red_class{
+      	color:red;
+      }
+      
+      .black_class{
+        color:black;
+      }
+      
+      .box_relative {
+  		position: absolute;
+  		left: 300px;
+  		top: 0px;
+        width:100px;
+        height:100px;
+        z-index:1;
+        background:red;
+	}
       
     </style>
 </head>
 <body>
+<div id="qrcodeTable" style="display:none;"></div>
+<img class="showImg"  style="display:none;">
 <div class="container" style="width: 100%;">
 	<div class="row border_bottom" style="height:100px;">
       		<div class="col-xs-6" style="padding-top:16px;padding-left:30px;">
@@ -35,7 +59,7 @@
                     <td><a href="{:U('Adminindex/index')}"><img class="img-circle" style="width: 65px;height: 65px;" src="__PUBLIC__/img/admin_radio.png"></a></td>
 
                     <td class="admin_title" style="padding-left: 20px;">
-                        <span style="font-size: 24px;">二维码管理系统</span>
+                      <span style="font-size: 24px;"><a onclick="mycodesub()">二维码管理系统</a></span>
                         <br>
                         <span id="nowtimeid" class="admin_sec_title">当前日期：{$nowtime}</span>
                     </td>
@@ -43,7 +67,7 @@
             	</table>
       		</div>
      		<div class="col-xs-6" style="padding-top:60px;padding-left:30%;">
-              	<label><input type="radio" value="1" name="paper_kind"  checked="checked"><span style="margin-left: 4px;">动态二维码</span> 
+              	<label ><input type="radio" value="1" name="paper_kind"  checked="checked"><span style="margin-left: 4px;">动态二维码</span> 
                   	   <input name="paper_kind"  value="0" style="margin-left: 10px;" type="radio"><span style="margin-left: 4px;">普通二维码</span>
                 </label>
       		</div>
@@ -51,18 +75,14 @@
   	<div class="row" style="min-height:750px;">
       <div class="col-xs-3  border_right" style="min-height:750px;">
         <div class="row  border_bottom" style="height:60px;">
-        	<div class="col-xs-6" style="text-align:center;margin-top:20px;">用户名</div>
-        	<div class="col-xs-6" style="padding-left:0px;margin-top:16px;"><input type="text" value=""  placeholder="用户名称" style="width:80%;border:0;border-bottom:1px solid #000000;text-align:center;"></div>
+        	<div class="col-xs-6" style="text-align:center;margin-top:20px;">出版社</div>
+        	<div class="col-xs-6" style="padding-left:0px;margin-top:16px;"><input type="text" name="publishname"  onblur="searchpublish()" id="publishname"  placeholder="出版社名称" style="width:80%;border:0;border-bottom:1px solid #000000;text-align:center;"></div>
         </div>
-        <div class="row" style="padding-top:20px;">
-        	<ol>
-              <volist name="data" id="publishname">
-              <li><a id="{$publishname[id]}" href="javascript:void(0)" publishname="{$publishname[name]}" onclick="publishsub({$publishname[id]})">{$publishname[names]}</a></li>
-              </volist>
-            </ol>
+        <div id="publishlist" class="row" style="padding-top:20px;">
+         
         </div>
        
-        <div class="row border_top" style="padding-left:90px;margin-top:40px;padding-top:10px;"><a>上一页</a><span style="margin-left:20px;margin-right:20px;">1/12</span><a>下一页</a></div>  
+        <div class="row border_top" style="padding-left:90px;margin-top:40px;padding-top:10px;"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div>  
 
       </div>
       <div class="col-xs-9">
@@ -76,16 +96,16 @@
             <div class="col-xs-4">
             	<input type="text" value="" placeholder="习题册" style="width:40%;border:0;margin-top:18px;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;text-align:center;">
             </div>
-            <div class="col-xs-4">
-              	<span style="margin-top:20px;display:block;">免费使用试卷</span>
+            <div class="col-xs-4" style="padding-top:20px;">
+              <span>免费使用试卷</span>	<span style="margin-left:40%;"><a href="javascript:void(0)"  onclick="updatasub()">确定</a></span>
             </div>
           </div>
       	  <div class="row" style="min-height:690px;">
             <div class="col-xs-4 border_right"  style="min-height:690px;">
               
-              <div  class="row border_bottom" style="height:26px;padding-left:20px;padding-top:2px;"><b><span id="publishname"></span></b></div>
+              <div  class="row border_bottom" style="height:26px;padding-left:20px;padding-top:2px;"><b><span id="publishname">当前选择的用户</span></b></div>
               
-              <div id="adddiv" class="row">
+              <div id="adddiv" class="row" style="display:none;">
                 <table style="margin-left:10%;width:80%;height:180px;border-bottom:1px solid #000000;">
                   <tr>
                     <td rowspan="2" style="width:40%;"><img  style="width: 80px;height: 80px;margin-left:10px;" src="__PUBLIC__/img/codesample.png"></td>
@@ -103,72 +123,71 @@
                   </tr>
                 </table>
               </div>
-              <div id="codecontent" class="row" style="display:none;">
-                <div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:20px;margin-top:20px;">
-                    <span><b>1.初中二年二维码</b></span><br>
-                	<span style="margin-top:10px;display:block;margin-bottom:10px;">备注：二维码名称二维码名称二维码名称二维码名称二维码名称</span>
-                  	<span style="margin-left:20px;display:block;margin-bottom:10px;">2019-09-12&nbsp;&nbsp;&nbsp;&nbsp;¥20</span>
-                     <span  style="margin-left:120px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a>下载</a></span>
-                </div>
-                <div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:20px;margin-top:20px;">
-                    <span><b>2.初中二年二维码</b></span><br>
-                	<span style="margin-top:10px;display:block;">备注：二维码名称二维码名称二维码名称二维码名称二维码名称</span><br>
-                    <span style="margin-left:20px;">2019-09-12</span><span  style="margin-left:20px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a>下载</a></span>
-                </div>
-                <div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:20px;margin-top:20px;">
-                    <span><b>3.初中二年二维码</b></span><br>
-                	<span style="margin-top:10px;display:block;">备注：二维码名称二维码名称二维码名称二维码名称二维码名称</span><br>
-                    <span style="margin-left:20px;">2019-09-12</span><span  style="margin-left:20px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a>下载</a></span>
-                </div>
-                <div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:20px;margin-top:20px;">
-                    <span><b>4.初中二年二维码</b></span><br>
-                	<span style="margin-top:10px;display:block;">备注：二维码名称二维码名称二维码名称二维码名称二维码名称</span><br>
-                    <span style="margin-left:20px;">2019-09-12</span><span  style="margin-left:20px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a>下载</a></span>
-                </div>
-                <div class="row" style="padding-left:90px;margin-top:30px;"><a>上一页</a><span style="margin-left:20px;margin-right:20px;">1/12</span><a>下一页</a></div> 
+              <div id="codecontent" class="row" style="height:600px;overflow-y:auto;">
+              
               </div>
+              <div class="row" style="padding-left:90px;margin-top:30px;"><a>上一页</a><span style="margin-left:20px;margin-right:20px;">1/12</span><a>下一页</a></div> 
             </div>
           	<div class="col-xs-4 border_right"  style="min-height:690px;">
+              <div  class="row border_bottom" style="height:26px;padding-left:20px;padding-top:2px;"><b><span id="exercisename">当前选择的习题册</span></b></div>
               <div class="row border_bottom" style="height:120px;padding-left:20px;padding-top:30px;">
-                <span><b>初中物理练习册第二学期练习册英语考试习题</b></span><br><br>
-                <span>习题册（12）</span>
-                <span>知识点（12）</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span><a>删除</a></span>  
+                <b><span id="choose_item"></span></b><br><br>
+                <span id="choose_test"></span>
+                <span id="choose_key"></span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span><a id="delmsg" onclick="clearsub()"></a></span>  
               </div>
-              <div class="row" style="padding-top:20px;">
-                <ol>
-                  <li><a href="javascript:void(0)">第一卷习题册初中二年物理习题册</a></li>
-                  <li><a href="javascript:void(0)">第二卷习题册初中二年物理习题册</a></li>
-                </ol>           
+              <div id="exercisediv" class="row" style="padding-top:20px;">
+                       
               </div> 
             </div>
-          	<div class="col-xs-4  border_right"  style="min-height:690px;">
-               <div class="row  border_bottom" style="height:300px;">
-                 	<div class="col-xs-12 border_bottom" style="height:40px;width:100%;">
-                      <div class="row" style="text-align:center;">
-                        <div class="col-xs-6  border_right"  style="height:40px;text-align:center;background:#f2f6f6;"><span style="margin-top:10px;display:block;">习题册（9）</span></div>
-                        <div class="col-xs-6"><span style="margin-top:10px;display:block;">知识点（19）</span></div>
-                      </div>	
-                   </div>
-               </div>
+            
+            
+          	<div class="col-xs-4  border_right"  style="min-height:690px;">                    
                <div class="row">
-                   <div class="col-xs-12 border_bottom" style="height:40px;width:100%;">
-                       <div class="row" style="text-align:center;">
-                        <div class="col-xs-6 border_right"><span style="margin-top:10px;display:block;">习题册（9）</span></div>
-                        <div class="col-xs-6" style="height:40px;background:#f2f6f6;"><span style="margin-top:10px;display:block;">知识点（19）</span></div>
-                      </div>	
+                   <div class="col-xs-12" style="height:40px;width:100%;">
+                       <div class="row  border_bottom" style="text-align:center;">
+                        <div name="testdiv" class="col-xs-6 border_right" style="background:#f2f6f6;height:40px;"><span style="margin-top:10px;display:block;" id="allpaper">试卷</span></div>
+                        <div name="keydiv"  class="col-xs-6" style="height:40px;"><span style="margin-top:10px;display:block;" id="allkey">知识点</span></div>
+                      </div>
+                     
+                     <div id="paperalllist" class="row" style="height:650px;padding-top:20px;overflow-y:scroll;">
+                    
+                       </div>
+                       
+                       <div id="key_paperalllist" class="row" style="display:none;height:650px;padding-top:20px;overflow-y:scroll;">
+                         
+                     </div>
                  		
                    </div>
-               </div> 
+               </div>  
             </div>
+            
+            
       	</div>  
  	 </div> 
   	 </div>
 </div>
+<input id="pagelength" name="pagelength" type="hidden" value="4">
+
   <input id="codeoper" type="hidden" value="1">
   <input id="publishid" type="hidden" value="0">
+  <input id="exerciseid" type="hidden" value="0">
+  <input id="codeid" type="hidden" value="0">
+  <input id="test_arr" type="hidden" value="0">
+  <input id="key_arr" type="hidden" value="0">
 <script>
     $(document).ready(function(){
-
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	var keywords=$("#publishname").val();
+    	
+    	//页面变量初始化
+    	$("#publishid").val('');
+    	$("#exerciseid").val('');
+    	$("#free_test_arr").val('');
+    	$("#free_key_arr").val('');
+    	$("#codeid").val('');
+    	
+    	person_sql_publish(nowpage,pagelength,keywords);
     })
   
      $("input[type='radio']").on("change",function(){
@@ -182,14 +201,15 @@
         $('#adddiv').css('display','');
         $('#codecontent').css('display','none');
         $('#codemsg').text('取消添加');
-        $('#codeoper').val(0)
+        $('#codeoper').val(0);
       }
       else
       {
         $('#adddiv').css('display','none');
         $('#codecontent').css('display','');
         $('#codemsg').text('添加新二维码');
-        $('#codeoper').val(1)
+        $('#codeoper').val(1);
+        codeList();
       }
     	
  	}
@@ -198,8 +218,15 @@
     var name=$('#'+id).attr('publishname');
     $('#publishname').text(name);
     $('#publishid').val(id);
-    
-   // alert(name);
+    $('#exercisediv').html('');
+    $('#exercisename').text('');
+    $('#codeid').val('');
+    $('#paperalllist').html('');
+    $('#key_paperalllist').html('');
+    $('#allpaper').text('试卷');
+    $('#allkey').text('知识点');
+    clearsub();
+    codeList();
   }
   
 
@@ -208,28 +235,434 @@
   {
     	if($('#publishid').val()==0)
     	{
+          alert('请选择用户！！');
     	  return;
     	}
     
+    	var publishid=$('#publishid').val();
     	var code_name=$('#code_name').val();
     	var code_note=$('#code_note').val();
     	var code_price=$('#code_price').val();
     	var code_num=randomNumber();
     
-    alert(code_name+','+code_note+','+code_price+','+code_num);
+    	if(code_name=='')
+        {
+          alert('二维码名称不能为空！！');
+          return;
+        }
     
-    return;
-    
+    	if(isNumber(code_price)==false)
+   		 {
+      		alert('单价输入错误');
+      
+     		 return;
+      
+   		 } 
     	$.ajax({
 		url:"{:U('phpaddCodeSub')}",
-		data:{code_name:code_name,code_note:code_note,code_price:code_price,code_num:code_num},
+		data:{code_name:code_name,code_note:code_note,code_price:code_price,code_num:code_num,publishid:publishid},
 		datatype:'json',
 		type:'post',
 		success:function(re){
+          if(re>0)
+          {
+            alert('二维码添加成功！！');
+            $('#code_name').val('');
+    	    $('#code_note').val('');
+    	    $('#code_price').val('');
+            var num=$('#span'+publishid).text();
+            num=num*1+1;     
+            $('#span'+publishid).text(num);
+          }
             	
-            }
-          })
+        }
+       })
   }
+  
+  function codeList()
+  {
+   	 var publishid=$('#publishid').val();
+      $.ajax({
+		url:"{:U('phpcodeList')}",
+		data:{publishid:publishid},
+		datatype:'json',
+		type:'post',
+		success:function(re){
+           $('#codecontent').html('');
+          var testlist=eval("("+re+")");
+          var count=testlist['count'];
+          var html='';
+          var num=0;
+          for(var i=0;i<count;i++)
+          {
+            num=i+1;
+            html=html+ '<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:20px;margin-top:20px;">';
+            html=html+ '<span><b><a href="javascript:void(0)" onclick="exerciseList(this)" codename='+testlist[i]['codename']+'  codeid='+testlist[i]['id']+' style="color:#000000;">'+num+'.'+testlist[i]['codename']+'</a></b></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：'+testlist[i]['codenote']+'</span>';
+            html=html+ '<span style="margin-left:20px;display:block;margin-bottom:10px;">'+testlist[i]['creattime']+'&nbsp;&nbsp;&nbsp;&nbsp;¥'+testlist[i]['price']+'</span>';
+            html=html+ '<span  style="margin-left:120px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a href="javascript:void(0)" codename='+testlist[i]['codename']+' codemsg='+testlist[i]['codemsg']+' onclick="mycodesub(this)">下载</a></span> </div>';      
+          } 
+          $('#codecontent').append(html);
+        }
+       })
+     
+  }
+  
+  
+  
+    $("div[name='testdiv']").bind("click",function(){
+     
+     //alert('test');
+     $("div[name='testdiv']").css('background','#f2f6f6');
+     $("div[name='keydiv']").css('background','#ffffff');
+     
+     $("#paperalllist").css('display','');
+     $("#choose_test").css('display','');
+     $("#key_paperalllist").css('display','none');
+     $("#choose_key").css('display','none');
+     
+   })
+  
+     $("div[name='keydiv']").bind("click",function(){
+       
+       //alert('key');
+      $("div[name='testdiv']").css('background','#ffffff');
+      $("div[name='keydiv']").css('background','#f2f6f6');
+       
+     $("#paperalllist").css('display','none');
+     $("#choose_test").css('display','none');
+     $("#key_paperalllist").css('display','');
+     $("#choose_key").css('display','');
+   })
+  
+  
+  
+   function exerciseList(item)
+  {
+    
+    var codename=$(item).attr('codename');
+    var codeid=$(item).attr('codeid');
+    
+    $('#codeid').val(codeid);
+    $('#exercisename').text(codename);
+    
+   	 var publishid=$('#publishid').val();
+      $.ajax({
+		url:"{:U('phpexerciseList')}",
+		data:{publishid:publishid},
+		datatype:'json',
+		type:'post',
+		success:function(re){
+          var testlist=eval("("+re+")");
+          var count=testlist['count'];
+          var html='';
+          var num=0;
+          $('#exercisediv').html('');
+          for(var i=0;i<count;i++)
+          {
+            num=i+1;
+            html=html+ '<div class="col-xs-12" style="margin-bottom:20px;"><a style="color:#000000;" href="javascript:void(0)" onclick="choose_exerciseid(this)" exerciseid='+testlist[i]['id']+'  exercisename='+testlist[i]['name']+'>'+num+'.'+testlist[i]['name']+'</a></div>';  
+          } 
+          $('#exercisediv').append(html);
+        }
+       })
+     
+  }
+  
+  function choose_exerciseid(item)
+  {
+    var exerciseid=$(item).attr('exerciseid');
+    var exercisename=$(item).attr('exercisename');
+    $('#exerciseid').val(exerciseid);    
+    detailexerciseinfo();
+    $.ajax({
+		url:"{:U('phpChooseExercise')}",
+		data:{exerciseid:exerciseid},
+		datatype:'json',
+		type:'post',
+		success:function(re){
+          
+        //  alert(re);
+          
+   
+          var testlist=eval("("+re+")");
+          var test_num=testlist['test_num'];
+          var key_num=testlist['key_num'];
+         
+          $('#choose_item').text(exercisename);
+          $('#choose_test').text('试卷('+test_num+')');
+          $('#choose_key').text('知识点('+key_num+')');
+          $('#delmsg').text('删除');
+ 
+          
+          
+        }
+    }
+   )
+  //  alert(exerciseid);
+  }
+  
+  
+    //点击习题册  显示对应的试卷和知识点
+	function detailexerciseinfo()
+	{
+     // var id=123;
+      var id=$('#exerciseid').val();
+	    $.ajax({
+	        url:"{:U('detailexerciseinfo')}",
+	        type: 'POST',
+	        data: {exerciseid:id},
+	        dataType: 'json',
+	        success: function(re) {
+				
+				$('#allpaper').text('试卷（'+re['papernum']+'）');
+				$('#allkey').text('知识点（'+re['keynum']+'）');
+				
+				paperlist=re['paperlist'];
+				//paper
+				addhtmlmsg='<ol>';
+				for (var i = 0; i<re['papernum']; i++) 
+	            {
+					addhtmlmsg=addhtmlmsg+'<li><a name="test" testid='+paperlist[i]['id']+' onclick="itemsub(this)" href="javascript:void(0)">'+paperlist[i]['paper_name']+'</a></li>';
+	            }
+				addhtmlmsg=addhtmlmsg+'</ol>';
+				$("#paperalllist").html(addhtmlmsg);
+              
+              	keylist=re['keylist'];
+				//key
+				addhtmlmsg='<ol>';
+				for (i = 0; i<re['keynum']; i++) 
+	            {
+					addhtmlmsg=addhtmlmsg+'<li><a name="key" keyid='+keylist[i]['id']+'  onclick="itemsub(this)"  href="javascript:void(0)">'+keylist[i]['paper_name']+'</a></li>';
+	            }
+				addhtmlmsg=addhtmlmsg+'</ol>';
+				$("#key_paperalllist").html(addhtmlmsg);
+	        }
+	    });
+	}
+  //文字颜色
+  function itemsub(item)
+  {
+    if($(item).hasClass('red_class')){
+      $(item).attr("class", "black_class");
+    }
+    else
+    {
+      $(item).attr("class", "red_class");
+    }
+    
+    var testmsg='';
+    var keymsg='';
+    var i=0;
+        $("a[name='test']").each(function(){
+          if($(this).hasClass('red_class'))
+          {
+          if(i==0)
+          {
+            testmsg=$(this).attr('testid');
+            i=1;
+          }
+          else
+          {
+            testmsg=testmsg+','+$(this).attr('testid');
+          }
+          }  
+        })
+    
+    	i=0;
+    
+        $("a[name='key']").each(function(){
+          if($(this).hasClass('red_class'))
+          {
+          if(i==0)
+          {
+            keymsg=$(this).attr('keyid');
+            i=1;
+          }
+          else
+          {
+            keymsg=keymsg+','+$(this).attr('keyid');
+          }
+          }  
+        })
+    
+    $('#test_arr').val(testmsg);
+    $('#key_arr').val(keymsg);  
+  }
+  
+  function clearsub(){
+       $('#choose_item').text('');
+       $('#choose_test').text('');
+       $('#choose_key').text('');
+       $('#delmsg').text('');
+       $('#exerciseid').val('');
+       $('#test_arr').val('');
+       $('#key_arr').val('');
+       $('#paperalllist').html('');
+       $('#key_paperalllist').html(''); 
+       $('#allpaper').text('试卷');
+       $('#allkey').text('知识点');
+  }
+  
+  function updatasub()
+  {
+    var codeid=$('#codeid').val();
+    var exerciseid=$('#exerciseid').val();
+    var test_arr=$('#test_arr').val();
+    var key_arr=$('#key_arr').val();
+    
+    $.ajax({
+	   url:"{:U('phpupdatacode')}",
+	   type: 'POST',
+	   data: {codeid:codeid,exerciseid:exerciseid,test_arr:test_arr,key_arr:key_arr},
+	   dataType: 'json',
+	   success: function(re) {
+         if(re==1)
+         {
+           alert('添加成功!!');
+         }
+         else
+         {
+           alert('添加失败！！');
+         }
+            
+        }
+      })
+    
+    //alert(codeid+','+exerciseid+'/'+test_arr+'/'+key_arr);
+
+  }
+  
+  
+  function mycodesub(item)
+  {
+    
+    var codename=$(item).attr('codename');
+    var codemsg=$(item).attr('codemsg');
+    
+   // var mycode=$('#mycode').val();
+    
+    $('#qrcodeTable').qrcode({  //生成普通二维码
+		         render    : "canvas",                //二维码生成方式
+		         text    : codemsg , //二维码地址
+		         width : "200",               //二维码的宽度
+                 height : "200",			  //二维码的高度
+                // src: 'zhcw.jpg' 
+	}); 
+    
+    var type = 'png';
+	var canvas = document.querySelector("#qrcodeTable").children[0]
+	var imgData = canvas.toDataURL(type);
+    
+    
+	type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+	var r = type.match(/png|jpeg|bmp|gif/)[0];
+	var _fixType ='image/' + r;
+    
+    imgData = imgData.replace(_fixType,'image/octet-stream');
+	$(".showImg").attr("src",imgData);
+    
+    var filename=codename+'.'+type;
+    
+    saveFile(imgData,filename);
+    
+  }
+
+  	function saveFile(data, filename){
+		var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+		save_link.href = data;
+		save_link.download = filename;
+				   
+		var event = document.createEvent('MouseEvents');
+		event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+		save_link.dispatchEvent(event);
+	};
+  
+	//出版社函数
+	function person_sql_publish(nowpage,pagelength,keywords)
+    {
+
+        $.ajax({
+	        url:"{:U('php_publish_sql')}",
+	        type: 'POST',
+	        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords},
+	        dataType: 'json',
+	        success: function(re) {
+	        	var testlist=re;
+				var addhtmlmsg = '<ol>';
+				var beginhtml = $('#publishlist').html('');
+				var mylength = testlist['length'];
+				var pagenum=testlist['pagenum'];
+				
+				$('#pagenum').text(pagenum);
+				$('#nowpage').text(nowpage);
+	
+				for (var i = 0; i<mylength; i++) 
+	            {
+					j=i+1+(nowpage-1)*pagelength;
+					addhtmlmsg=addhtmlmsg+'<li><a href="#" onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></li>';
+					j++;
+	            }
+				addhtmlmsg=addhtmlmsg+'</ol>';
+				$('#publishlist').html(addhtmlmsg);
+	
+	        }
+	    });
+    }
+	
+	 //出版社下一页
+    function nextpage()
+	{
+		var nowpage=$('#nowpage').text();
+		var maxnum=$('#pagenum').text();
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#publishname").val();
+		
+		nowpage=nowpage*1+1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+		 
+		$('#publishlist').html('');
+		
+    	person_sql_publish(nowpage,pagelength,keywords);
+	}
+	
+    //出版社上一页
+	function prepage()
+	{
+		var nowpage=$('#nowpage').text();
+		var maxnum=$('#pagenum').text();
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#publishname").val();
+		
+		nowpage=nowpage*1-1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+ 
+		$('#publishlist').html('');
+		person_sql_publish(nowpage,pagelength,keywords)
+	}
+	
+	//出版社搜索
+	function searchpublish()
+    {
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	var keywords=$("#publishname").val();
+    	$('#publishlist').html('');
+    	person_sql_publish(nowpage,pagelength,keywords);
+    }
   
 </script>
 </body>
