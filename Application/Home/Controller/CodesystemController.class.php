@@ -23,12 +23,12 @@ class CodesystemController extends Controller
   
   public function phpaddCodeSub()
   {
-  	$res=1;
+  	$res=array();
   	
     $code_name=$_POST['code_name'];
     $code_note=$_POST['code_note'];
     $code_price=$_POST['price'];
-    //$code_num=$_POST['code_num'];
+    $end_time=$_POST['endtime'];
     $publishid=$_POST['publishid'];
     $exerciseid=$_POST['exerciseid'];
     $free_test_arr=$_POST['free_test_arr'];
@@ -40,9 +40,10 @@ class CodesystemController extends Controller
     $data['price']=$code_price;
     $data['codename']=$code_name;
     $data['codenote']=$code_note;
-    $data['kind']=0;
+    $data['kind']=2;
     $data['status']=0;
     $data['creattime']= date("Y-m-d h:i:s");
+    $data['endtime']= $end_time;
     $data['userednum']=0;
     $data['publishid']=$publishid;   
     $data['exercises_id']=$exerciseid;
@@ -61,14 +62,16 @@ class CodesystemController extends Controller
     	//校验下 pid和eid必须唯一
  		$codeinfo=$Model->where('publishid='.$data['publishid'].' and exercises_id='.$data['exercises_id'])->find();
  		if(empty($codeinfo)) {
- 			$data['codemsg']=number();
-    		$res=$Model->add($data);
+ 			$res['codemsg']=$data['codemsg']=number();
+    		$res['codeid']=$Model->add($data);
  		} else {
  			$data['id']=$codeinfo['id'];
  			$Model->save($data);
+ 			$res['codemsg']=$codeinfo['codemsg'];
+    		$res['codeid']=$data['id'];
  		}
     }
-    echo $res;
+    echo json_encode($res);
   }
   
   //出版社无刷新加载列表和搜索
@@ -250,6 +253,38 @@ class CodesystemController extends Controller
   {
   	$id=$_GET['codeid'];
   	downloadcode($id);
+  }
+  
+  public function phpupdatacode()
+  {
+    $codeid=$_POST['codeid'];
+    $exerciseid=$_POST['exerciseid'];
+    $test_arr=$_POST['test_arr'];
+    $key_arr=$_POST['key_arr'];
+    
+   // $codeid=19;
+   // $exerciseid=123;
+   // $test_arr='1554,1555,1557';
+   // $key_arr='1,25,27';
+    
+    $Model_code_msg=M('code_msg');
+    $data=$Model_code_msg->where('id='.$codeid)->find();  
+    
+    
+    //`codename`, `codenote`, `free_test_arr`, `free_key_arr`, `userednum`, `price`, `publishdate`, `nownum`
+    
+    
+    $data['publishdate']=$data['publishdate'].','.date("Y-m-d");
+    $data['free_test_arr']= $data['free_test_arr'].'#'.$test_arr;    
+    $data['free_key_arr']= $data['free_key_arr'].'#'.$key_arr;
+    $data['userednum']= $data['userednum'].','.'0';
+    $data['nownum']= $data['nownum']+1;
+    
+    
+    $Model_code_msg->where('id='.$codeid)->save($data);
+    
+   echo 1; 
+    
   }
   
   

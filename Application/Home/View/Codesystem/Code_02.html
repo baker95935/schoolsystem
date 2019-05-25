@@ -6,6 +6,19 @@
     <script src="__PUBLIC__/jquery/jquery.min.js"></script>
     <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+    
+    
+<link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
+<link href="__PUBLIC__/datapickercss/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="__PUBLIC__/datapickercss/css/test.css" rel="stylesheet" />
+
+<script src="__PUBLIC__/datapickercss/bootstrap/js/bootstrap.js"></script>
+<link href="__PUBLIC__/datapickercss/datapicker/css/bootstrap-datepicker3.css" rel="stylesheet">
+<script src="__PUBLIC__/datapickercss/datapicker/js/bootstrap-datepicker.js"></script>
+<script src="__PUBLIC__/datapickercss/datapicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="__PUBLIC__/datapickercss/js/test.js"></script>
+    
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/systemset.css"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style type="text/css">
@@ -147,10 +160,11 @@
                 <br>
                 <br>
                 <input type="hidden" name="codeid" id="codeid">
+                <input type="hidden" name="codemsg" id="codemsg">
                 <input type="text" name="codename" id="codename" placeholder="二维码名称" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;">
                 <input type="text" name="codenote" id="codenote" placeholder="备注内容" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;margin-top:8px;background:#ffffff;">
                 <input type="text" name="price" id="price" placeholder="单价" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;">
-                <input type="text" name="endtime" id="endtime" placeholder="到期时间" style="width:65%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;"><input type="checkbox"><span>&nbsp;&nbsp;永久</span>
+                <input type="text" name="endtime" class="date-picker teacher_input_css" id="endtime" placeholder="到期时间" style="width:65%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;"><input type="checkbox"><span>&nbsp;&nbsp;永久</span>
                 <br><br><span style="margin-left:160px;"><a href="#" onclick="codedo();">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="downloadcode();">下载</a></span>
               </div>
                <div class="row border_bottom" style="height:320px;padding-left:20px;padding-top:30px;">
@@ -331,12 +345,13 @@
 		
 		//第四列初始化
 		$("#free_test_arr").val('');
-		$("#free_key_arr").val();
+		$("#free_key_arr").val('');
 		$("#codename").val('');
 		$("#codenote").val('');
 		$("#price").val('');
 		$("#endtime").val('');
 		$("#codeid").val('');
+		$("#codemsg").val('');
 		
 		var nowpage=1;
     	var pagelength=$('#pagelength').val();
@@ -434,8 +449,6 @@
 	   //把选中的exerciseid给予赋值
 	   $("#exerciseid").val(id);
 	   var publishid=$("#publishid").val();
-	   //查找是否已经添加了二维码信息，如果有展示
-	   detailcodeinfo(publishid,id);
 	   
 	    $.ajax({
 	        url:"{:U('detailexerciseinfo')}",
@@ -455,7 +468,7 @@
 				addhtmlmsg='<ol id="testol">';
 				for (var i = 0; i<re['papernum']; i++) 
 	            {
-					addhtmlmsg=addhtmlmsg+'<li><a  onclick="itemsub(this,'+paperlist[i]['id']+',1)" href="javascript:void(0)">'+paperlist[i]['paper_name']+'</a></li>';
+					addhtmlmsg=addhtmlmsg+'<li id="lipaper_'+paperlist[i]['id']+'"><a id="paper_'+paperlist[i]['id']+'" onclick="itemsub(this,'+paperlist[i]['id']+',1)" href="javascript:void(0)">'+paperlist[i]['paper_name']+'</a></li>';
 	            }
 				addhtmlmsg=addhtmlmsg+'</ol>';
 				$("#paperalllist").html(addhtmlmsg);
@@ -465,7 +478,7 @@
 				addhtmlmsg='<ol id="keyol">';
 				for (var i = 0; i<re['keynum']; i++) 
 	            {
-					addhtmlmsg=addhtmlmsg+'<li><a  onclick="itemsub(this,'+keylist[i]['id']+',2)" href="javascript:void(0)">'+keylist[i]['paper_name']+'</a></li>';
+					addhtmlmsg=addhtmlmsg+'<li id="likey_'+keylist[i]['id']+'"><a id="key_'+keylist[i]['id']+'"  onclick="itemsub(this,'+keylist[i]['id']+',2)" href="javascript:void(0)">'+keylist[i]['paper_name']+'</a></li>';
 	            }
 				addhtmlmsg=addhtmlmsg+'</ol>';
 				$("#key_paperalllist").html(addhtmlmsg);
@@ -475,6 +488,9 @@
 			 
 	        }
 	    });
+	    
+		   //查找是否已经添加了二维码信息，如果有展示
+		   detailcodeinfo(publishid,id);
 	}
   
     //文字颜色和变量赋值
@@ -550,12 +566,15 @@
 		if(publishid && exerciseid && codename) {
 			$.ajax({
 				url:"{:U('phpaddCodeSub')}",
-				data:{codeid:codeid,code_name:code_name,code_note:code_note,price:price,publishid:publishid,exerciseid:exerciseid,free_test_arr:free_test_arr,free_key_arr:free_key_arr},
+				data:{codeid:codeid,code_name:code_name,code_note:code_note,price:price,publishid:publishid,exerciseid:exerciseid,free_test_arr:free_test_arr,free_key_arr:free_key_arr,endtime:endtime},
 				datatype:'json',
 				type:'post',
 				success:function(re){
+				 
 					if(codeid=='') {
-						$("#codeid").val(re);
+						re=eval("("+re+")");
+						$("#codeid").val(re.codeid);
+						$("#codemsg").val(re.codemsg);
 					}
 					alert('处理成功');
 		        }
@@ -573,8 +592,9 @@
 				datatype:'json',
 				type:'post',
 				success:function(re){
-					if(re!='') {
-						//info=eval("("+re+")");
+			 
+					if(re) {
+						re=eval("("+re+")");
 						$("#free_test_arr").val(re.free_test_arr);
 						$("#free_key_arr").val(re.free_key_arr);
 						$("#codename").val(re.codename);
@@ -582,6 +602,19 @@
 						$("#price").val(re.price);
 						$("#endtime").val(re.endtime);
 						$("#codeid").val(re.id);
+						$("#codemsg").val(re.codemsg);
+						
+						//处理已经被选中的
+						var newpaperAry =re.free_test_arr.split(",");
+						for ( var i = 0; i <newpaperAry.length; i++){
+						    $('#paper_'+newpaperAry[i]).attr("class", "red_class");
+						    $('#lipaper_'+newpaperAry[i]).addClass("red_class");
+						}
+						var newkeyAry =re.free_key_arr.split(",");
+						for ( var i = 0; i <newkeyAry.length; i++){
+						    $('#key_'+newkeyAry[i]).attr("class", "red_class");
+						    $('#likey_'+newkeyAry[i]).addClass("red_class");
+						}
 					}
 		        }
 		    });
