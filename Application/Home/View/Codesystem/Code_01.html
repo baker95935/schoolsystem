@@ -103,7 +103,7 @@
       	  <div class="row" style="min-height:690px;">
             <div class="col-xs-4 border_right"  style="min-height:690px;">
               
-              <div  class="row border_bottom" style="height:26px;padding-left:20px;padding-top:2px;"><b><span id="publishname">当前选择的用户</span></b></div>
+              <div  class="row border_bottom" style="height:26px;padding-left:20px;padding-top:2px;"><b><span id="publishnametitle">出版社</span></b></div>
               
               <div id="adddiv" class="row" style="display:none;">
                 <table style="margin-left:10%;width:80%;height:180px;border-bottom:1px solid #000000;">
@@ -126,7 +126,7 @@
               <div id="codecontent" class="row" style="height:600px;overflow-y:auto;">
               
               </div>
-              <div class="row" style="padding-left:90px;margin-top:30px;"><a>上一页</a><span style="margin-left:20px;margin-right:20px;">1/12</span><a>下一页</a></div> 
+              <div class="row" style="padding-left:90px;margin-top:30px;"><a onclick="prepagecode();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpagecode">1</span>/<span id="pagenumcode">0</span></a><a style="margin-left: 4px;" onclick="nextpagecode()" href="javascript:void(0)">下一页</a></div> 
             </div>
           	<div class="col-xs-4 border_right"  style="min-height:690px;">
               <div  class="row border_bottom" style="height:26px;padding-left:20px;padding-top:2px;"><b><span id="exercisename">当前选择的习题册</span></b></div>
@@ -282,17 +282,23 @@
   function codeList()
   {
    	 var publishid=$('#publishid').val();
+   	 var pagelength=$('#pagelength').val();
+   	 var keywords=$("#keywords").val();
+   	 var nowpage=1;
       $.ajax({
 		url:"{:U('phpcodeList')}",
-		data:{publishid:publishid},
+		data:{publishid:publishid,pagelength:pagelength,keywords:keywords,nowpage:nowpage},
 		datatype:'json',
 		type:'post',
 		success:function(re){
-           $('#codecontent').html('');
-          var testlist=eval("("+re+")");
-          var count=testlist['count'];
+          $('#codecontent').html('');
+          
+          re=eval("("+re+")");
+          var testlist=re.list;
+          var count=re['pagelength'];
           var html='';
           var num=0;
+      	 
           for(var i=0;i<count;i++)
           {
             num=i+1;
@@ -302,6 +308,12 @@
             html=html+ '<span  style="margin-left:120px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a href="javascript:void(0)" codename='+testlist[i]['codename']+' codemsg='+testlist[i]['codemsg']+' onclick="mycodesub(this)">下载</a></span> </div>';      
           } 
           $('#codecontent').append(html);
+          
+          //第二列页面标题
+          $("#publishnametitle").text(re['publishname']+"（"+re['count']+"）");
+          //页码
+          $('#pagenumcode').text(re['pagenum']);
+		  $('#nowpagecode').text(nowpage);
         }
        })
      
@@ -599,7 +611,7 @@
 				for (var i = 0; i<mylength; i++) 
 	            {
 					j=i+1+(nowpage-1)*pagelength;
-					addhtmlmsg=addhtmlmsg+'<li><a href="#" onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></li>';
+					addhtmlmsg=addhtmlmsg+'<li><a href="#" onclick="publishsub('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></li>';
 					j++;
 	            }
 				addhtmlmsg=addhtmlmsg+'</ol>';

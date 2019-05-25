@@ -170,13 +170,41 @@ class CodesystemController extends Controller
   	$this->display();
   }
   
+  //二维码列表
   public function phpcodeList()
   {
     //$publishid=10;
-    $publishid=$_POST['publishid'];
-    $Model=M('');
-    $data=$Model->query('select * from code_msg where publishid='.$publishid.' order by creattime desc');
-    $data['count']=sizeof($data);
+ 	$nowpage=$_POST['nowpage'];
+  	$pagelength=$_POST['pagelength'];
+  	$keywords=$_POST['keywords'];
+  	$publishid=$_POST['publishid'];   
+  	
+  	$beginnum=($nowpage-1)*$pagelength+1;
+  	$beginpagenum=$beginnum-1;
+ 
+  	 
+  	$dataarr=array();
+  	!empty($keywords) && $dataarr['codename']=['like',"%".$keywords."%"];
+ 
+  	$publish=M('publish_name');
+  	$model=M('code_msg');
+    $count=$model->where($dataarr)->count();
+  	$data['list']=$model->where($dataarr)->order('creattime desc')->limit($beginpagenum.','.$pagelength)->select();
+   
+  	
+  	
+  	$data['length']=sizeof($data);
+  	$data['pagelength']=$pagelength;
+  	$data['count']=$count;
+  	
+  	//获取出版社数据
+  	if($publishid) {
+  		$tmp=$publish->find($publishid);
+  		$data['publishname']=$tmp['name'];
+  	}
+  	 
+  	$data['pagenum']=ceil($count/$pagelength);
+  	
     echo json_encode($data);
   }
   //
