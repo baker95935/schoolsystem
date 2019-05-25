@@ -89,7 +89,7 @@
           <div class="row border_bottom" style="height:60px;">
             <div class="col-xs-4">
               <div class="row">
-            	<div class="col-xs-6" style="margin-top:17px;padding-left:30px;"><input type="text" value=""  placeholder="二维码名称" style="width:60%;border:0;border-bottom:1px solid #000000;"></div>
+            	<div class="col-xs-6" style="margin-top:17px;padding-left:30px;"><input type="text" name="searchcodename"  onblur="searchcodename()" id="searchcodename"   placeholder="二维码名称" style="width:60%;border:0;border-bottom:1px solid #000000;"></div>
                 <div class="col-xs-6" style="text-align:left;margin-top:24px;"><a id="codemsg" onclick="addcode()">添加新二维码</a></div>
               </div>
             </div>
@@ -226,7 +226,12 @@
     $('#allpaper').text('试卷');
     $('#allkey').text('知识点');
     clearsub();
-    codeList();
+    
+    
+	var nowpage=1;
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#publishname").val();
+    codeList(id,nowpage,pagelength,keywords);
   }
   
 
@@ -279,12 +284,9 @@
        })
   }
   
-  function codeList()
+  function codeList(publishid,nowpage,pagelength,keywords)
   {
-   	 var publishid=$('#publishid').val();
-   	 var pagelength=$('#pagelength').val();
-   	 var keywords=$("#keywords").val();
-   	 var nowpage=1;
+ 
       $.ajax({
 		url:"{:U('phpcodeList')}",
 		data:{publishid:publishid,pagelength:pagelength,keywords:keywords,nowpage:nowpage},
@@ -295,7 +297,7 @@
           
           re=eval("("+re+")");
           var testlist=re.list;
-          var count=re['pagelength'];
+          var count=re['length'];
           var html='';
           var num=0;
       	 
@@ -675,6 +677,65 @@
     	$('#publishlist').html('');
     	person_sql_publish(nowpage,pagelength,keywords);
     }
+	
+	//code下一页
+	function nextpagecode()
+	{
+		var nowpage=$('#nowpagecode').text();
+		var maxnum=$('#pagenumcode').text();
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#searchcodename").val();
+		var publishid=$("#publishid").val();
+ 
+		nowpage=nowpage*1+1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+		 
+		$('#codecontent').html('');
+		
+		codeList(publishid,nowpage,pagelength,keywords);
+	}
+		
+	//code上一页
+	function prepagecode()
+	{
+		var nowpage=$('#nowpagecode').text();
+		var maxnum=$('#pagenumcode').text();
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#searchcodename").val();
+		var publishid=$("#publishid").val();
+		
+		nowpage=nowpage*1-1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+ 
+		$('#codecontent').html('');
+		codeList(publishid,nowpage,pagelength,keywords);
+	}
+		
+	//code搜索
+	function searchcodename()
+	{
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	var keywords=$("#searchcodename").val();
+    	var publishid=$("#publishid").val();
+    	
+    	$('#codecontent').html('');
+    	codeList(publishid,nowpage,pagelength,keywords);
+	}
   
 </script>
 </body>

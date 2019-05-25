@@ -193,7 +193,7 @@ class CodesystemController extends Controller
    
   	
   	
-  	$data['length']=sizeof($data);
+  	$data['length']=sizeof($data['list']);
   	$data['pagelength']=$pagelength;
   	$data['count']=$count;
   	
