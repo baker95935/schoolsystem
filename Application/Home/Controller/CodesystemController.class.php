@@ -33,7 +33,7 @@ class CodesystemController extends Controller
     $data['codename']=$code_name;
     $data['codenote']=$code_note;
     $data['kind']=2;
-    $data['status']=0;
+    $data['status']=1;
     $data['creattime']= date("Y-m-d h:i:s");
     $data['endtime']= $end_time;
     $data['userednum']=0;
@@ -244,6 +244,22 @@ class CodesystemController extends Controller
   	$code=M('code_msg');
   	
   	$res=$code->where('publishid='.$publishid.' and exercises_id='.$exerciseid)->find();
+ 
+  	echo json_encode($res);
+  }
+  
+  //根据ID获得二维码信息
+  public function detailexercisebycodeid()
+  {
+  	$res=array();
+ 	$codeid=$_POST['codeid'];
+  	$code=M('code_msg');
+  	$exercise=M('book_exercises');
+  	
+  	$info=$code->find($codeid);
+  	if($info['exercises_id']) {
+  		$res=$exercise->find($res['exercises_id']);
+  	}
  
   	echo json_encode($res);
   }

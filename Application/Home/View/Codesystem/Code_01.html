@@ -170,6 +170,8 @@
   	 </div>
 </div>
 <input id="pagelength" name="pagelength" type="hidden" value="4">
+<input id="selectedpublishname" name="selectedpublishname" type="hidden" >
+
 
   <input id="codeoper" type="hidden" value="1">
   <input id="publishid" type="hidden" value="0">
@@ -220,7 +222,9 @@
   {
     var name=$('#'+id).attr('publishname');
     $('#publishname').text(name);
+    $('#selectedpublishname').val(name);
     $('#publishid').val(id);
+    
     $('#exercisediv').html('');
     $('#exercisename').text('');
     $('#codeid').val('');
@@ -230,6 +234,8 @@
     $('#allkey').text('知识点');
     clearsub();
     
+    $("#exerciselist").html('');
+    $("#pagenumexercise").text(0);
     
 	var nowpage=1;
 	var pagelength=$('#pagelength').val();
@@ -358,10 +364,22 @@
     
 	  var codename=$(item).attr('codename');
 	  var codeid=$(item).attr('codeid');
-	    	    
+	  
+	  //获取二维码表的信息
+	   $.ajax({
+			url:"{:U('detailexercisebycodeid')}",
+			data:{codeid:codeid},
+			datatype:'json',
+			type:'post',
+			success:function(re){
+				var re=eval("("+re+")");
+				$('#choose_item').text(re.name);
+	        }
+	    });
+	  
 	  $('#codeid').val(codeid);
 	  $('#exercisename').text(codename);
-	  $('#choose_item').text(codename);
+	  
 	  
 	  //习题册数据获取
 	  var nowpage=1;
@@ -603,7 +621,7 @@
 				for (var i = 0; i<mylength; i++) 
 	            {
 					j=i+1+(nowpage-1)*pagelength;
-					addhtmlmsg=addhtmlmsg+'<li><a href="#" onclick="publishsub('+testlist[i]['id']+')">'+testlist[i]['name']+'</a>('+testlist[i]['codenum']+')</li>';
+					addhtmlmsg=addhtmlmsg+'<li><a href="#" id="'+testlist[i]['id']+'" onclick="publishsub('+testlist[i]['id']+')" publishname='+testlist[i]['name']+' >'+testlist[i]['name']+'</a>('+testlist[i]['codenum']+')</li>';
 					j++;
 	            }
 				addhtmlmsg=addhtmlmsg+'</ol>';
@@ -760,7 +778,7 @@
 				for (var i = 0; i<mylength; i++) 
 	            {
 					j=i+1+(nowpage-1)*pagelength;
-					addhtmlmsg=addhtmlmsg+'<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:15px;margin-top:20px;"><span >'+j+'.<a style="color:#000000" href="#" onclick="detailexerciseinfo('+testlist[i]['id']+')" ><b>'+testlist[i]['name']+'</b></a></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：试卷（'+testlist[i]['papernum']+'），知识点（'+testlist[i]['keynum']+'）</span><br></div>';
+					addhtmlmsg=addhtmlmsg+'<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:15px;margin-top:20px;"><span >'+j+'.<a style="color:#000000" href="#" onclick="detailexerciseinfo('+testlist[i]['id']+')"  publishname='+testlist[i]['name']+' ><b>'+testlist[i]['name']+'</b></a></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：试卷（'+testlist[i]['papernum']+'），知识点（'+testlist[i]['keynum']+'）</span><br></div>';
 					j++;
 	            }
 				$("#publishnameinfo").text(testlist['publishname']+'('+testlist['count']+')');
