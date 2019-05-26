@@ -78,7 +78,8 @@ class CodesystemController extends Controller
   	$beginpagenum=$beginnum-1;
   	
   	$model=M('publish_name');
-  	 
+  	$code=M('code_msg');	 
+  	
   	$dataarr=array();
   	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
   	$count=$model->where($dataarr)->count();
@@ -86,15 +87,9 @@ class CodesystemController extends Controller
   	foreach($data as $k=>&$v) {
   		$v['num']=$beginnum;
   		$beginnum=$beginnum+1;
-  		!empty($v['createtime']) && $v['createtime']=date("Y-m-d H:i:s");
-  		$v['status']==1 && $v['newstatus']=2;
-  		$v['status']==2 && $v['newstatus']=1;
-  	
-  		$v['status']==1 && $v['nstatus']='冻结';
-  		$v['status']==2 && $v['nstatus']='启动';
-  		 
-  		$v['status']==1 && $v['status']='启动';
-  		$v['status']==2 && $v['status']='冻结';
+   		
+  		//统计出版社绑定的二维码数量
+  		$v['codenum']=$code->where('publishid='.$v['id'])->count();
   	}
   	
   	
@@ -185,6 +180,7 @@ class CodesystemController extends Controller
   	 
   	$dataarr=array();
   	!empty($keywords) && $dataarr['codename']=['like',"%".$keywords."%"];
+ 	!empty($publishid) && $dataarr['publishid']=$publishid;
  
   	$publish=M('publish_name');
   	$model=M('code_msg');

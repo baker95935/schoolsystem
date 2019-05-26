@@ -94,7 +94,7 @@
               </div>
             </div>
             <div class="col-xs-4">
-            	<input type="text" value="" placeholder="习题册" style="width:40%;border:0;margin-top:18px;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;text-align:center;">
+            	<input type="text" name="exercisename" id="exercisename" onblur="searchexercise();" placeholder="习题册" style="width:40%;border:0;margin-top:18px;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;text-align:center;">
             </div>
             <div class="col-xs-4" style="padding-top:20px;">
               <span>免费使用试卷</span>	<span style="margin-left:40%;"><a href="javascript:void(0)"  onclick="updatasub()">确定</a></span>
@@ -135,9 +135,12 @@
                 <span id="choose_test"></span>
                 <span id="choose_key"></span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span><a id="delmsg" onclick="clearsub()"></a></span>  
               </div>
-              <div id="exercisediv" class="row" style="padding-top:20px;">
+              <div id="exerciselist" class="row" style="padding-top:20px;">
                        
               </div> 
+              
+              <div class="row" style="padding-left:90px;margin-top:30px;"><a onclick="prepageexercise();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpageexercise">1</span>/<span id="pagenumexercise">0</span></a><a style="margin-left: 4px;" onclick="nextpageexercise()" href="javascript:void(0)">下一页</a></div> 
+              
             </div>
             
             
@@ -350,35 +353,21 @@
   
   
   
-   function exerciseList(item)
+  function exerciseList(item)
   {
     
-    var codename=$(item).attr('codename');
-    var codeid=$(item).attr('codeid');
-    
-    $('#codeid').val(codeid);
-    $('#exercisename').text(codename);
-    
-   	 var publishid=$('#publishid').val();
-      $.ajax({
-		url:"{:U('phpexerciseList')}",
-		data:{publishid:publishid},
-		datatype:'json',
-		type:'post',
-		success:function(re){
-          var testlist=eval("("+re+")");
-          var count=testlist['count'];
-          var html='';
-          var num=0;
-          $('#exercisediv').html('');
-          for(var i=0;i<count;i++)
-          {
-            num=i+1;
-            html=html+ '<div class="col-xs-12" style="margin-bottom:20px;"><a style="color:#000000;" href="javascript:void(0)" onclick="choose_exerciseid(this)" exerciseid='+testlist[i]['id']+'  exercisename='+testlist[i]['name']+'>'+num+'.'+testlist[i]['name']+'</a></div>';  
-          } 
-          $('#exercisediv').append(html);
-        }
-       })
+	  var codename=$(item).attr('codename');
+	  var codeid=$(item).attr('codeid');
+	    	    
+	  $('#codeid').val(codeid);
+	  $('#exercisename').text(codename);
+	  
+	  //习题册数据获取
+	  var nowpage=1;
+      var pagelength=$('#pagelength').val();
+      var keywords=$("#exercisehname").val();
+      var publishid=$("#publishid").val();
+      person_sql_exercise(nowpage,pagelength,keywords,publishid);
      
   }
   
@@ -613,7 +602,7 @@
 				for (var i = 0; i<mylength; i++) 
 	            {
 					j=i+1+(nowpage-1)*pagelength;
-					addhtmlmsg=addhtmlmsg+'<li><a href="#" onclick="publishsub('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></li>';
+					addhtmlmsg=addhtmlmsg+'<li><a href="#" onclick="publishsub('+testlist[i]['id']+')">'+testlist[i]['name']+'</a>('+testlist[i]['codenum']+')</li>';
 					j++;
 	            }
 				addhtmlmsg=addhtmlmsg+'</ol>';
@@ -736,6 +725,186 @@
     	$('#codecontent').html('');
     	codeList(publishid,nowpage,pagelength,keywords);
 	}
+	
+	//习题册搜索
+	function searchexercise()
+    {
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	var keywords=$("#exercisename").val();
+    	var publishid=$("#publishid").val();
+    	$('#exerciselist').html('');
+    	person_sql_exercise(nowpage,pagelength,keywords,publishid);
+    }
+	
+	//习题册列表
+	function person_sql_exercise(nowpage,pagelength,keywords,publishid)
+	{
+
+	    $.ajax({
+	        url:"{:U('php_exercise_sql')}",
+	        type: 'POST',
+	        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishid:publishid},
+	        dataType: 'json',
+	        success: function(re) {
+	        	var testlist=re;
+	        	
+				var addhtmlmsg = '';
+				var mylength = testlist['length'];
+				var pagenum=testlist['pagenum'];
+				
+				$('#pagenumexercise').text(pagenum);
+				$('#nowpageexercise').text(nowpage);
+
+				for (var i = 0; i<mylength; i++) 
+	            {
+					j=i+1+(nowpage-1)*pagelength;
+					addhtmlmsg=addhtmlmsg+'<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:15px;margin-top:20px;"><span >'+j+'.<a style="color:#000000" href="#" onclick="detailexerciseinfo('+testlist[i]['id']+')" ><b>'+testlist[i]['name']+'</b></a></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：试卷（'+testlist[i]['papernum']+'），知识点（'+testlist[i]['keynum']+'）</span><br></div>';
+					j++;
+	            }
+				$("#publishnameinfo").text(testlist['publishname']+'('+testlist['count']+')');
+				$('#exerciselist').html(addhtmlmsg);
+	        }
+	    });
+	}
+	
+	//习题册下一页
+	function nextpageexercise()
+	{
+		var nowpage=$('#nowpageexercise').text();
+		var maxnum=$('#pagenumexercise').text();
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#exercisename").val();
+		var publishid=$("#publishid").val();
+		
+		nowpage=nowpage*1+1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+		 
+		$('#exerciselist').html('');
+		
+		person_sql_exercise(nowpage,pagelength,keywords,publishid);
+	}
+	
+	
+	//习题册上一页
+	function prepageexercise()
+	{
+		var nowpage=$('#nowpageexercise').text();
+		var maxnum=$('#pagenumexercise').text();
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#exercisename").val();
+		var publishid=$("#publishid").val();
+		
+		nowpage=nowpage*1-1;
+		if(nowpage>maxnum)
+		{
+			return;
+		}
+		if(nowpage<1)
+		{
+			return;
+		}
+ 
+		$('#exerciselist').html('');
+		person_sql_exercise(nowpage,pagelength,keywords,publishid);
+	}
+	
+	  
+   	//点击习题册  显示对应的试卷和知识点
+	function detailexerciseinfo(id)
+	{
+	   //把选中的exerciseid给予赋值
+	   $("#exerciseid").val(id);
+	   var publishid=$("#publishid").val();
+	   
+	    $.ajax({
+	        url:"{:U('detailexerciseinfo')}",
+	        type: 'POST',
+	        data: {exerciseid:id},
+	        dataType: 'json',
+	        success: function(re) {
+				
+				$('#allpaper').text('试卷（'+re['papernum']+'）');
+				$('#allkey').text('知识点（'+re['keynum']+'）');
+				
+
+				
+				//试卷
+				paperlist=re['paperlist'];
+				//paper
+				addhtmlmsg='<ol id="testol">';
+				for (var i = 0; i<re['papernum']; i++) 
+	            {
+					addhtmlmsg=addhtmlmsg+'<li id="lipaper_'+paperlist[i]['id']+'"><a id="paper_'+paperlist[i]['id']+'" onclick="itemsub(this,'+paperlist[i]['id']+',1)" href="javascript:void(0)">'+paperlist[i]['paper_name']+'</a></li>';
+	            }
+				addhtmlmsg=addhtmlmsg+'</ol>';
+				$("#paperalllist").html(addhtmlmsg);
+				
+				//知识点
+				keylist=re['keylist'];
+				addhtmlmsg='<ol id="keyol">';
+				for (var i = 0; i<re['keynum']; i++) 
+	            {
+					addhtmlmsg=addhtmlmsg+'<li id="likey_'+keylist[i]['id']+'"><a id="key_'+keylist[i]['id']+'"  onclick="itemsub(this,'+keylist[i]['id']+',2)" href="javascript:void(0)">'+keylist[i]['paper_name']+'</a></li>';
+	            }
+				addhtmlmsg=addhtmlmsg+'</ol>';
+				$("#key_paperalllist").html(addhtmlmsg);
+				
+				//练习册标题
+				$("#exercisenameinfo").text(re.exerciseinfo.name);
+			 
+	        }
+	    });
+	    
+	    //查找是否已经添加了二维码信息，如果有展示
+		detailcodeinfo(publishid,id);
+	}
+   	
+	  //根据出版社ID和练习册ID获取已经生成的二维码信息
+    function detailcodeinfo(publishid,exerciseid)
+    {
+    	if(publishid && exerciseid) {
+    		$.ajax({
+				url:"{:U('detailcodemsg')}",
+				data:{publishid:publishid,exerciseid:exerciseid},
+				datatype:'json',
+				type:'post',
+				success:function(re){
+			 
+					if(re) {
+						re=eval("("+re+")");
+						$("#free_test_arr").val(re.free_test_arr);
+						$("#free_key_arr").val(re.free_key_arr);
+						$("#codename").val(re.codename);
+						$("#codenote").val(re.codenote);
+						$("#price").val(re.price);
+						$("#endtime").val(re.endtime);
+						$("#codeid").val(re.id);
+						$("#codemsg").val(re.codemsg);
+						
+						//处理已经被选中的
+						var newpaperAry =re.free_test_arr.split(",");
+						for ( var i = 0; i <newpaperAry.length; i++){
+						    $('#paper_'+newpaperAry[i]).attr("class", "red_class");
+						    $('#lipaper_'+newpaperAry[i]).addClass("red_class");
+						}
+						var newkeyAry =re.free_key_arr.split(",");
+						for ( var i = 0; i <newkeyAry.length; i++){
+						    $('#key_'+newkeyAry[i]).attr("class", "red_class");
+						    $('#likey_'+newkeyAry[i]).addClass("red_class");
+						}
+					}
+		        }
+		    });
+    	}
+    }
   
 </script>
 </body>
