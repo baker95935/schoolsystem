@@ -94,7 +94,7 @@
               </div>
             </div>
             <div class="col-xs-4">
-            	<input type="text" name="exercisename" id="exercisename" onblur="searchexercise();" placeholder="习题册" style="width:40%;border:0;margin-top:18px;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;text-align:center;">
+            	<input type="text" name="searchexercisename" id="searchexercisename" onblur="searchexercise();" placeholder="习题册" style="width:40%;border:0;margin-top:18px;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;text-align:center;">
             </div>
             <div class="col-xs-4" style="padding-top:20px;">
               <span>免费使用试卷</span>	<span style="margin-left:40%;"><a href="javascript:void(0)"  onclick="updatasub()">确定</a></span>
@@ -361,6 +361,7 @@
 	    	    
 	  $('#codeid').val(codeid);
 	  $('#exercisename').text(codename);
+	  $('#choose_item').text(codename);
 	  
 	  //习题册数据获取
 	  var nowpage=1;
@@ -731,7 +732,7 @@
     {
     	var nowpage=1;
     	var pagelength=$('#pagelength').val();
-    	var keywords=$("#exercisename").val();
+    	var keywords=$("#searchexercisename").val();
     	var publishid=$("#publishid").val();
     	$('#exerciselist').html('');
     	person_sql_exercise(nowpage,pagelength,keywords,publishid);
