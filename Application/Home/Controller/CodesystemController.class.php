@@ -13,7 +13,61 @@ class CodesystemController extends Controller
    }
   
   
-  public function phpaddCodeSub()
+  public function phpaddCode01Sub()
+  { 
+    //测试二维码:今天测试:12:832313292019426205126:15:add
+    $code_name=$_POST['code_name'];
+    $code_note=$_POST['code_note'];
+    $code_price=$_POST['code_price'];
+    $code_num=$_POST['code_num'];
+    $publishid=$_POST['publishid'];
+    $operkind=$_POST['operkind'];   
+    $codemsg=$_POST['code_num'];
+    $codeid=$_POST['codeid'];
+    /*
+    $code_name='测试二维码';
+    $code_note='今天测试';
+    $code_price='12';
+    $codemsg='832313292019426205126';
+    $publishid=15;
+    $operkind='add';
+    */
+    if($operkind=='add')
+    {
+     	$end_time='';    
+    	$codedata['codename']=$code_name;
+    	$codedata['codenote']=$code_note;
+    	$codedata['price']=$code_price;
+    	$codedata['codemsg']=$codemsg;
+    	$codedata['kind']=0;
+    	$codedata['status']=1;
+    	$codedata['publishid']=$publishid; 
+    	$codedata['creattime']= date("Y-m-d h:i:s");
+    	$codedata['endtime']= $end_time;
+    	$codedata['nownum']= 0;
+    
+    	$Model_code_msg=M('code_msg');  
+    	$Model_code_msg->add($codedata);
+    
+    	echo 1;
+    }
+    else
+    {
+        $codedata['codename']=$code_name;
+    	$codedata['codenote']=$code_note;
+    	$codedata['price']=$code_price;
+      
+        $Model_code_msg=M('code_msg');  
+    	$Model_code_msg->where('id='.$codeid)->save($codedata);
+      	echo 2;
+    }
+
+    
+   
+
+  }
+  
+   public function phpaddCodeSub()
   {
   	$res=array();
   	
@@ -32,7 +86,7 @@ class CodesystemController extends Controller
     $data['price']=$code_price;
     $data['codename']=$code_name;
     $data['codenote']=$code_note;
-    $data['kind']=2;
+    $data['kind']=1;
     $data['status']=1;
     $data['creattime']= date("Y-m-d h:i:s");
     $data['endtime']= $end_time;
@@ -243,7 +297,7 @@ class CodesystemController extends Controller
   	$exerciseid=$_POST['exerciseid'];
   	$code=M('code_msg');
   	
-  	$res=$code->where('publishid='.$publishid.' and exercises_id='.$exerciseid)->find();
+  	$res=$code->where('publishid='.$publishid.' and exercises_id='.$exerciseid.' and kind=1')->find();
  
   	echo json_encode($res);
   }
@@ -293,30 +347,118 @@ class CodesystemController extends Controller
     $exerciseid=$_POST['exerciseid'];
     $test_arr=$_POST['test_arr'];
     $key_arr=$_POST['key_arr'];
-    
-   // $codeid=19;
+    $kind=$_POST['kind'];
+        //39:123:1554,1555,1556:23,25,27:2
+   // $codeid=39;
    // $exerciseid=123;
-   // $test_arr='1554,1555,1557';
-   // $key_arr='1,25,27';
+   // $test_arr='1554,1555,1556';
+   // $key_arr='23,25,27';
+   // $kind=2;
     
     $Model_code_msg=M('code_msg');
-    $data=$Model_code_msg->where('id='.$codeid)->find();  
     
+
     
-    //`codename`, `codenote`, `free_test_arr`, `free_key_arr`, `userednum`, `price`, `publishdate`, `nownum`
+    if($kind==1)
+    {
+    	$data=$Model_code_msg->where('id='.$codeid)->find();  
+    	//`codename`, `codenote`, `free_test_arr`, `free_key_arr`, `userednum`, `price`, `publishdate`, `nownum`
+      	$data['exercises_id']=$data['exercises_id'].','.$exerciseid;
+    	$data['publishdate']=$data['publishdate'].','.date("Y-m-d");
+    	$data['free_test_arr']= $data['free_test_arr'].'#'.$test_arr;    
+    	$data['free_key_arr']= $data['free_key_arr'].'#'.$key_arr;
+    	$data['userednum']= $data['userednum'].','.'0';
+    	$data['nownum']= $data['nownum']+1;
+      
+      
+    	$Model_code_msg->where('id='.$codeid)->save($data);
+   		echo 1; 
+    }
+    else
+    {
+        $data=$Model_code_msg->where('id='.$codeid)->find();  
+    	//`codename`, `codenote`, `free_test_arr`, `free_key_arr`, `userednum`, `price`, `publishdate`, `nownum`
+      
+      	$publishdate_data=$data['publishdate'];
+        $free_test_arr_data=$data['free_test_arr'];
+        $free_key_arr_data=$data['free_key_arr'];
+      	$exerciseid_data=$data['exercises_id'];
+      	$nownum=$data['nownum'];
+      
+      	$publishdate_data=explode(",", $publishdate_data);
+      	$free_test_arr_data=explode("#", $free_test_arr_data);
+      	$free_key_arr_data=explode("#", $free_key_arr_data);
+      	$exerciseid_data=explode(",", $exerciseid_data);
+      
+        $publishdate_data[$nownum]=date("Y-m-d");
+        $exerciseid_data[$nownum]=$exerciseid;
+      	$free_test_arr_data[$nownum]=$test_arr;
+      	$free_key_arr_data[$nownum]=$key_arr;
+
+      
+      
+        $publishdate = implode(",", $publishdate_data);
+        $exerciseid = implode(",", $exerciseid_data);
+      	$free_test_arr = implode("#", $free_test_arr_data);
+      	$free_key_arr = implode("#", $free_key_arr_data);
+
+      
+		 $newdata['publishdate']=$publishdate;
+         $newdata['exercises_id']= $exerciseid;
+    	 $newdata['free_test_arr']= $free_test_arr;    
+    	 $newdata['free_key_arr']= $free_key_arr;
+      
+    	$Model_code_msg->where('id='.$codeid)->save($newdata);
+   		echo 2; 
+    }
+
     
+  }
+  
+  function phpchoosedcode()
+  {
+    $codeid=$_POST['codeid'];
+    //$codeid=39;
+    $Model_code_msg=M('code_msg');
+    $data=$Model_code_msg->where('id='.$codeid)->find();
+    $exercises_id_data=$data['exercises_id'];
+    $free_test_arr_data=$data['free_test_arr'];
+    $free_key_arr_data=$data['free_key_arr'];
+
     
-    $data['publishdate']=$data['publishdate'].','.date("Y-m-d");
-    $data['free_test_arr']= $data['free_test_arr'].'#'.$test_arr;    
-    $data['free_key_arr']= $data['free_key_arr'].'#'.$key_arr;
-    $data['userednum']= $data['userednum'].','.'0';
-    $data['nownum']= $data['nownum']+1;
-    
-    
-    $Model_code_msg->where('id='.$codeid)->save($data);
-    
-   echo 1; 
-    
+    if($exercises_id_data=='0' || $exercises_id_data=='')
+    {
+      echo 0;
+    }
+    else
+    {
+     
+      $nownum=$data['nownum'];
+      //$nownum=$nownum-1;
+      $exercises_id_data=explode(",", $exercises_id_data);
+      $free_test_arr_data=explode("#", $free_test_arr_data);
+      $free_key_arr_data=explode("#", $free_key_arr_data);
+      
+      $exercises_id=$exercises_id_data[$nownum];
+      $free_test_arr=$free_test_arr_data[$nownum];
+      $free_key_arr=$free_key_arr_data[$nownum];
+      
+      $Model_book_exercises=M('book_exercises');
+      $exercises_data=$Model_book_exercises->where('id='.$exercises_id)->find();
+      $name=$exercises_data['name'];
+      $id=$exercises_data['id'];
+      
+      $redata['id']=$exercises_id;
+      $redata['free_test_arr']=$free_test_arr;
+      $redata['free_key_arr']=$free_key_arr;
+      $redata['name']=$name;
+      
+     // print_r($redata);
+      
+      echo json_encode($redata);
+      
+      
+    }
   }
   
   

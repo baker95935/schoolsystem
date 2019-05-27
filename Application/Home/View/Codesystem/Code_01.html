@@ -90,14 +90,20 @@
             <div class="col-xs-4">
               <div class="row">
             	<div class="col-xs-6" style="margin-top:17px;padding-left:30px;"><input type="text" name="searchcodename"  onblur="searchcodename()" id="searchcodename"   placeholder="二维码名称" style="width:60%;border:0;border-bottom:1px solid #000000;"></div>
-                <div class="col-xs-6" style="text-align:left;margin-top:24px;"><a id="codemsg" onclick="addcode()">添加新二维码</a></div>
+                <div class="col-xs-6" style="text-align:left;margin-top:24px;"><a id="codemsg" onclick="addcode(0)">添加新二维码</a></div>
               </div>
             </div>
             <div class="col-xs-4">
             	<input type="text" name="searchexercisename" id="searchexercisename" onblur="searchexercise();" placeholder="习题册" style="width:40%;border:0;margin-top:18px;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;text-align:center;">
             </div>
             <div class="col-xs-4" style="padding-top:20px;">
-              <span>免费使用试卷</span>	<span style="margin-left:40%;"><a href="javascript:void(0)"  onclick="updatasub()">确定</a></span>
+              <span>免费使用试卷</span>
+              <select id='exerciseupdate' style="margin-left:40%;">
+                <option value="1">添加</option>
+                <option value="2">更新</option>
+              </select>
+              
+              <span style="margin-left:2%;"><a href="javascript:void(0)"  onclick="updatasub()">确定</a></span>
             </div>
           </div>
       	  <div class="row" style="min-height:690px;">
@@ -131,9 +137,9 @@
           	<div class="col-xs-4 border_right"  style="min-height:690px;">
               <div  class="row border_bottom" style="height:26px;padding-left:20px;padding-top:2px;"><b><span id="exercisename">当前选择的习题册</span></b></div>
               <div class="row border_bottom" style="height:120px;padding-left:20px;padding-top:30px;">
-                <b><span id="choose_item"></span></b><br><br>
+                <b><span id="choose_item"></span></b>
                 <span id="choose_test"></span>
-                <span id="choose_key"></span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span><a id="delmsg" onclick="clearsub()"></a></span>  
+                <span id="choose_key"></span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><span><a id="delmsg" onclick="delchooseexercise()"></a></span>  
               </div>
               <div id="exerciselist" class="row" style="padding-top:20px;">
                        
@@ -169,20 +175,21 @@
  	 </div> 
   	 </div>
 </div>
-<input id="pagelength" name="pagelength" type="hidden" value="4">
-<input id="selectedpublishname" name="selectedpublishname" type="hidden" >
+<input id="publishpagelength" name="publishpagelength" type="hidden" value="16">
 
-
+  <input id="pagelength" name="pagelength" type="hidden" value="4">
+  <input id="selectedpublishname" name="selectedpublishname" type="hidden" >
   <input id="codeoper" type="hidden" value="1">
   <input id="publishid" type="hidden" value="0">
   <input id="exerciseid" type="hidden" value="0">
   <input id="codeid" type="hidden" value="0">
   <input id="test_arr" type="hidden" value="0">
   <input id="key_arr" type="hidden" value="0">
+  <input id="operkind" type="hidden" value="add">
 <script>
     $(document).ready(function(){
     	var nowpage=1;
-    	var pagelength=$('#pagelength').val();
+    	var pagelength=$('#publishpagelength').val();
     	var keywords=$("#publishname").val();
     	
     	//页面变量初始化
@@ -199,14 +206,40 @@
      window.location.href="Code_02.html"; 
 	})
   
-  	function addcode()
+  	function addcode(item)
  	{
+      if(item==0)
+      {
+         $('#operkind').val('add');
+      }
+      else
+      {
+        
+        var codeid=$(item).attr('codeid');
+        var codename=$(item).attr('codename');
+        var codenote=$(item).attr('codenote');
+        var codeprice=$(item).attr('codeprice');
+        
+        $('#codeid').val(codeid);
+        $('#code_name').val(codename);
+        $('#code_note').val(codenote);
+        $('#code_price').val(codeprice);
+        
+       // codeid='+testlist[i]['id']+'  codename='+testlist[i]['codename']+'  codenote='+testlist[i]['codenote']+'   codeprice=
+        
+         $('#operkind').val('update');
+        
+        
+        
+      }
+      
       if($('#codeoper').val()==1)
       {
         $('#adddiv').css('display','');
         $('#codecontent').css('display','none');
         $('#codemsg').text('取消添加');
         $('#codeoper').val(0);
+       
       }
       else
       {
@@ -214,7 +247,14 @@
         $('#codecontent').css('display','');
         $('#codemsg').text('添加新二维码');
         $('#codeoper').val(1);
-        codeList();
+    	var id=$('#publishid').val();
+    	var nowpage=1;
+		var pagelength=$('#pagelength').val();
+		var keywords=$("#publishname").val();
+        $('#code_name').val('');
+    	$('#code_note').val('');
+    	$('#code_price').val('');
+    	codeList(id,nowpage,pagelength,keywords);
       }
     	
  	}
@@ -257,6 +297,7 @@
     	var code_name=$('#code_name').val();
     	var code_note=$('#code_note').val();
     	var code_price=$('#code_price').val();
+    	var codeid=$('#codeid').val();
     	var code_num=randomNumber();
     
     	if(code_name=='')
@@ -272,13 +313,17 @@
      		 return;
       
    		 } 
+    
+    	var operkind=$('#operkind').val();
+    
+    
     	$.ajax({
-		url:"{:U('phpaddCodeSub')}",
-		data:{code_name:code_name,code_note:code_note,code_price:code_price,code_num:code_num,publishid:publishid},
+		url:"{:U('phpaddCode01Sub')}",
+		data:{codeid:codeid,code_name:code_name,code_note:code_note,code_price:code_price,code_num:code_num,publishid:publishid,operkind:operkind},
 		datatype:'json',
 		type:'post',
 		success:function(re){
-          if(re>0)
+          if(re==1)
           {
             alert('二维码添加成功！！');
             $('#code_name').val('');
@@ -287,6 +332,10 @@
             var num=$('#span'+publishid).text();
             num=num*1+1;     
             $('#span'+publishid).text(num);
+          }
+          if(re==2)
+          {
+            alert('二维码更新成功！！');
           }
             	
         }
@@ -316,12 +365,12 @@
             html=html+ '<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:20px;margin-top:20px;">';
             html=html+ '<span><b><a href="javascript:void(0)" onclick="exerciseList(this)" codename='+testlist[i]['codename']+'  codeid='+testlist[i]['id']+' style="color:#000000;">'+num+'.'+testlist[i]['codename']+'</a></b></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：'+testlist[i]['codenote']+'</span>';
             html=html+ '<span style="margin-left:20px;display:block;margin-bottom:10px;">'+testlist[i]['creattime']+'&nbsp;&nbsp;&nbsp;&nbsp;¥'+testlist[i]['price']+'</span>';
-            html=html+ '<span  style="margin-left:120px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a>编辑</a></span><span  style="margin-left:20px;"><a href="javascript:void(0)" codename='+testlist[i]['codename']+' codemsg='+testlist[i]['codemsg']+' onclick="mycodesub(this)">下载</a></span> </div>';      
+            html=html+ '<span  style="margin-left:120px;"><a>删除</a></span><span  style="margin-left:20px;"><a>冻结</a></span><span  style="margin-left:20px;"><a href="javascript:void(0)" codeid='+testlist[i]['id']+'  codename='+testlist[i]['codename']+'  codenote='+testlist[i]['codenote']+'   codeprice='+testlist[i]['price']+' onclick="addcode(this)">编辑</a></span><span  style="margin-left:20px;"><a href="javascript:void(0)" nownum='+testlist[i]['nownum']+' codename='+testlist[i]['codename']+' codemsg='+testlist[i]['codemsg']+' onclick="mycodesub(this)">下载</a></span> </div>';      
           } 
           $('#codecontent').append(html);
           
           //第二列页面标题
-          $("#publishnametitle").text(re['publishname']+"（"+re['count']+"）");
+          $("#publishnametitle").text(re['publishname']);
           //页码
           $('#pagenumcode').text(re['pagenum']);
 		  $('#nowpagecode').text(nowpage);
@@ -365,17 +414,9 @@
 	  var codename=$(item).attr('codename');
 	  var codeid=$(item).attr('codeid');
 	  
-	  //获取二维码表的信息
-	   $.ajax({
-			url:"{:U('detailexercisebycodeid')}",
-			data:{codeid:codeid},
-			datatype:'json',
-			type:'post',
-			success:function(re){
-				var re=eval("("+re+")");
-				$('#choose_item').text(re.name);
-	        }
-	    });
+    
+      $('#choose_item').text('');
+      $('#delmsg').text('');
 	  
 	  $('#codeid').val(codeid);
 	  $('#exercisename').text(codename);
@@ -386,8 +427,34 @@
       var pagelength=$('#pagelength').val();
       var keywords=$("#exercisehname").val();
       var publishid=$("#publishid").val();
+    
+      choosedcode(codeid);
       person_sql_exercise(nowpage,pagelength,keywords,publishid);
      
+  }
+  
+  function choosedcode(codeid)
+  {
+      //alert(codeid);
+        $.ajax({
+		url:"{:U('phpchoosedcode')}",
+		data:{codeid:codeid},
+		datatype:'json',
+		type:'post',
+		success:function(re){
+          if(re!=0)
+          {
+            var testlist=eval("("+re+")");
+            $('#test_arr').val(testlist['free_test_arr']);
+            $('#key_arr').val(testlist['free_key_arr']);
+            $('#choose_item').text(testlist['name']);
+            $('#exerciseid').val(testlist['id']);
+             $('#delmsg').text('删除');
+            detailexerciseinfobyid(testlist['id']);
+          }
+          }
+         }
+       )
   }
   
   function choose_exerciseid(item)
@@ -395,72 +462,9 @@
     var exerciseid=$(item).attr('exerciseid');
     var exercisename=$(item).attr('exercisename');
     $('#exerciseid').val(exerciseid);    
-    detailexerciseinfo();
-    $.ajax({
-		url:"{:U('phpChooseExercise')}",
-		data:{exerciseid:exerciseid},
-		datatype:'json',
-		type:'post',
-		success:function(re){
-          
-        //  alert(re);
-          
-   
-          var testlist=eval("("+re+")");
-          var test_num=testlist['test_num'];
-          var key_num=testlist['key_num'];
-         
-          $('#choose_item').text(exercisename);
-          $('#choose_test').text('试卷('+test_num+')');
-          $('#choose_key').text('知识点('+key_num+')');
-          $('#delmsg').text('删除');
- 
-          
-          
-        }
-    }
-   )
-  //  alert(exerciseid);
+    $('#choose_item').text(exercisename);
+    
   }
-  
-  
-    //点击习题册  显示对应的试卷和知识点
-	function detailexerciseinfo()
-	{
-     // var id=123;
-      var id=$('#exerciseid').val();
-	    $.ajax({
-	        url:"{:U('detailexerciseinfo')}",
-	        type: 'POST',
-	        data: {exerciseid:id},
-	        dataType: 'json',
-	        success: function(re) {
-				
-				$('#allpaper').text('试卷（'+re['papernum']+'）');
-				$('#allkey').text('知识点（'+re['keynum']+'）');
-				
-				paperlist=re['paperlist'];
-				//paper
-				addhtmlmsg='<ol>';
-				for (var i = 0; i<re['papernum']; i++) 
-	            {
-					addhtmlmsg=addhtmlmsg+'<li><a name="test" testid='+paperlist[i]['id']+' onclick="itemsub(this)" href="javascript:void(0)">'+paperlist[i]['paper_name']+'</a></li>';
-	            }
-				addhtmlmsg=addhtmlmsg+'</ol>';
-				$("#paperalllist").html(addhtmlmsg);
-              
-              	keylist=re['keylist'];
-				//key
-				addhtmlmsg='<ol>';
-				for (i = 0; i<re['keynum']; i++) 
-	            {
-					addhtmlmsg=addhtmlmsg+'<li><a name="key" keyid='+keylist[i]['id']+'  onclick="itemsub(this)"  href="javascript:void(0)">'+keylist[i]['paper_name']+'</a></li>';
-	            }
-				addhtmlmsg=addhtmlmsg+'</ol>';
-				$("#key_paperalllist").html(addhtmlmsg);
-	        }
-	    });
-	}
   //文字颜色
   function itemsub(item)
   {
@@ -511,6 +515,14 @@
     $('#key_arr').val(keymsg);  
   }
   
+  function delchooseexercise()
+  {
+    var exerciseid=$('#exerciseid').val();
+    var codeid=$('#codeid').val();
+    alert(exerciseid+','+codeid);
+    clearsub();
+  }
+  
   function clearsub(){
        $('#choose_item').text('');
        $('#choose_test').text('');
@@ -531,18 +543,27 @@
     var exerciseid=$('#exerciseid').val();
     var test_arr=$('#test_arr').val();
     var key_arr=$('#key_arr').val();
+    var exerciseupdate=$('#exerciseupdate option:selected') .val();
+    
+   // alert(codeid+':'+exerciseid+':'+test_arr+':'+key_arr+':'+exerciseupdate);
+    
+ 
     
     $.ajax({
 	   url:"{:U('phpupdatacode')}",
 	   type: 'POST',
-	   data: {codeid:codeid,exerciseid:exerciseid,test_arr:test_arr,key_arr:key_arr},
+	   data: {codeid:codeid,exerciseid:exerciseid,test_arr:test_arr,key_arr:key_arr,kind:exerciseupdate},
 	   dataType: 'json',
 	   success: function(re) {
          if(re==1)
          {
            alert('添加成功!!');
          }
-         else
+         if(re==2)
+         {
+           alert('修改成功!!');
+         }
+         if(re!=1 && re!=2)
          {
            alert('添加失败！！');
          }
@@ -621,7 +642,7 @@
 				for (var i = 0; i<mylength; i++) 
 	            {
 					j=i+1+(nowpage-1)*pagelength;
-					addhtmlmsg=addhtmlmsg+'<li><a href="#" id="'+testlist[i]['id']+'" onclick="publishsub('+testlist[i]['id']+')" publishname='+testlist[i]['name']+' >'+testlist[i]['name']+'</a>('+testlist[i]['codenum']+')</li>';
+					addhtmlmsg=addhtmlmsg+'<li><a href="#" id="'+testlist[i]['id']+'" onclick="publishsub('+testlist[i]['id']+')" publishname='+testlist[i]['name']+' >'+testlist[i]['name']+'</a>(<span id="span'+testlist[i]['id']+'">'+testlist[i]['codenum']+'</span>)</li>';
 					j++;
 	            }
 				addhtmlmsg=addhtmlmsg+'</ol>';
@@ -636,7 +657,7 @@
 	{
 		var nowpage=$('#nowpage').text();
 		var maxnum=$('#pagenum').text();
-		var pagelength=$('#pagelength').val();
+		var pagelength=$('#publishpagelength').val();
 		var keywords=$("#publishname").val();
 		
 		nowpage=nowpage*1+1;
@@ -659,7 +680,7 @@
 	{
 		var nowpage=$('#nowpage').text();
 		var maxnum=$('#pagenum').text();
-		var pagelength=$('#pagelength').val();
+		var pagelength=$('#publishpagelength').val();
 		var keywords=$("#publishname").val();
 		
 		nowpage=nowpage*1-1;
@@ -680,7 +701,7 @@
 	function searchpublish()
     {
     	var nowpage=1;
-    	var pagelength=$('#pagelength').val();
+    	var pagelength=$('#publishpagelength').val();
     	var keywords=$("#publishname").val();
     	$('#publishlist').html('');
     	person_sql_publish(nowpage,pagelength,keywords);
@@ -778,10 +799,10 @@
 				for (var i = 0; i<mylength; i++) 
 	            {
 					j=i+1+(nowpage-1)*pagelength;
-					addhtmlmsg=addhtmlmsg+'<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:15px;margin-top:20px;"><span >'+j+'.<a style="color:#000000" href="#" onclick="detailexerciseinfo('+testlist[i]['id']+')"  publishname='+testlist[i]['name']+' ><b>'+testlist[i]['name']+'</b></a></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：试卷（'+testlist[i]['papernum']+'），知识点（'+testlist[i]['keynum']+'）</span><br></div>';
+					addhtmlmsg=addhtmlmsg+'<div class="border_bottom" style="padding-left:20px;padding-right:20px;padding-bottom:15px;margin-top:20px;"><span >'+j+'.<a style="color:#000000" exercisename='+testlist[i]['name']+' exerciseid='+testlist[i]['id']+' href="#" onclick="detailexerciseinfo(this)"  publishname='+testlist[i]['name']+' ><b>'+testlist[i]['name']+'</b></a></span><br><span style="margin-top:10px;display:block;margin-bottom:10px;">备注：试卷（'+testlist[i]['papernum']+'），知识点（'+testlist[i]['keynum']+'）</span><br></div>';
 					j++;
 	            }
-				$("#publishnameinfo").text(testlist['publishname']+'('+testlist['count']+')');
+				//$("#publishnameinfo").text('2323');
 				$('#exerciselist').html(addhtmlmsg);
 	        }
 	    });
@@ -834,14 +855,15 @@
 		$('#exerciselist').html('');
 		person_sql_exercise(nowpage,pagelength,keywords,publishid);
 	}
-	
-	  
+  
    	//点击习题册  显示对应的试卷和知识点
-	function detailexerciseinfo(id)
+	function detailexerciseinfobyid(id)
 	{
 	   //把选中的exerciseid给予赋值
-	   $("#exerciseid").val(id);
-	   var publishid=$("#publishid").val();
+
+      //绑定当前选中的练习册信息
+     // choose_exerciseid(item);
+     
 	   
 	    $.ajax({
 	        url:"{:U('detailexerciseinfo')}",
@@ -861,7 +883,7 @@
 				addhtmlmsg='<ol id="testol">';
 				for (var i = 0; i<re['papernum']; i++) 
 	            {
-					addhtmlmsg=addhtmlmsg+'<li id="lipaper_'+paperlist[i]['id']+'"><a id="paper_'+paperlist[i]['id']+'" onclick="itemsub(this,'+paperlist[i]['id']+',1)" href="javascript:void(0)">'+paperlist[i]['paper_name']+'</a></li>';
+					addhtmlmsg=addhtmlmsg+'<li id="lipaper_'+paperlist[i]['id']+'"><a id="test_'+paperlist[i]['id']+'" name="test" testid='+paperlist[i]['id']+' onclick="itemsub(this)" href="javascript:void(0)">'+paperlist[i]['paper_name']+'</a></li>';
 	            }
 				addhtmlmsg=addhtmlmsg+'</ol>';
 				$("#paperalllist").html(addhtmlmsg);
@@ -871,59 +893,122 @@
 				addhtmlmsg='<ol id="keyol">';
 				for (var i = 0; i<re['keynum']; i++) 
 	            {
-					addhtmlmsg=addhtmlmsg+'<li id="likey_'+keylist[i]['id']+'"><a id="key_'+keylist[i]['id']+'"  onclick="itemsub(this,'+keylist[i]['id']+',2)" href="javascript:void(0)">'+keylist[i]['paper_name']+'</a></li>';
+					addhtmlmsg=addhtmlmsg+'<li id="likey_'+keylist[i]['id']+'"><a id="key_'+keylist[i]['id']+'" name="key" keyid='+keylist[i]['id']+'  onclick="itemsub(this)" href="javascript:void(0)">'+keylist[i]['paper_name']+'</a></li>';
 	            }
 				addhtmlmsg=addhtmlmsg+'</ol>';
 				$("#key_paperalllist").html(addhtmlmsg);
 				
 				//练习册标题
 				$("#exercisenameinfo").text(re.exerciseinfo.name);
+              
+              detailcodeinfo();
 			 
 	        }
 	    });
 	    
 	    //查找是否已经添加了二维码信息，如果有展示
-		detailcodeinfo(publishid,id);
+	
+	}
+	
+	  
+   	//点击习题册  显示对应的试卷和知识点
+	function detailexerciseinfo(item)
+	{
+	   //把选中的exerciseid给予赋值
+      var id=$(item).attr('exerciseid');
+      var exercisename=$(item).attr('exercisename');
+      
+      //绑定当前选中的练习册信息
+     // choose_exerciseid(item);
+      
+      $('#choose_item').text(exercisename);
+      $('#delmsg').text('删除');
+      
+      
+	   $("#exerciseid").val(id);
+	   var publishid=$("#publishid").val();
+	   
+	    $.ajax({
+	        url:"{:U('detailexerciseinfo')}",
+	        type: 'POST',
+	        data: {exerciseid:id},
+	        dataType: 'json',
+	        success: function(re) {
+				
+				$('#allpaper').text('试卷（'+re['papernum']+'）');
+				$('#allkey').text('知识点（'+re['keynum']+'）');
+				
+
+				
+			 //试卷
+				paperlist=re['paperlist'];
+				//paper
+				addhtmlmsg='<ol id="testol">';
+				for (var i = 0; i<re['papernum']; i++) 
+	            {
+					addhtmlmsg=addhtmlmsg+'<li id="lipaper_'+paperlist[i]['id']+'"><a id="test_'+paperlist[i]['id']+'" name="test" testid='+paperlist[i]['id']+' onclick="itemsub(this)" href="javascript:void(0)">'+paperlist[i]['paper_name']+'</a></li>';
+	            }
+				addhtmlmsg=addhtmlmsg+'</ol>';
+				$("#paperalllist").html(addhtmlmsg);
+				
+				//知识点
+				keylist=re['keylist'];
+				addhtmlmsg='<ol id="keyol">';
+				for (var i = 0; i<re['keynum']; i++) 
+	            {
+					addhtmlmsg=addhtmlmsg+'<li id="likey_'+keylist[i]['id']+'"><a id="key_'+keylist[i]['id']+'" name="key" keyid='+keylist[i]['id']+'  onclick="itemsub(this)" href="javascript:void(0)">'+keylist[i]['paper_name']+'</a></li>';
+	            }
+				addhtmlmsg=addhtmlmsg+'</ol>';
+				$("#key_paperalllist").html(addhtmlmsg);
+				
+				//练习册标题
+				$("#exercisenameinfo").text(re.exerciseinfo.name);
+              
+              detailcodeinfo();
+			 
+	        }
+	    });
+	    
+	    //查找是否已经添加了二维码信息，如果有展示
+		
 	}
    	
 	  //根据出版社ID和练习册ID获取已经生成的二维码信息
-    function detailcodeinfo(publishid,exerciseid)
+  
+  function detailcodeinfo()
+  {
+    var test_arr=$('#test_arr').val();
+    var key_arr=$('#key_arr').val();
+    var parttxt='';
+    var txt='';
+    var i=0;
+    
+    var test_arr_data = test_arr.split(",");
+    var key_arr_data = key_arr.split(",");
+    
+    var test_length=test_arr_data.length;
+    var key_length=key_arr_data.length;
+    
+    
+    if(test_length>0)
     {
-    	if(publishid && exerciseid) {
-    		$.ajax({
-				url:"{:U('detailcodemsg')}",
-				data:{publishid:publishid,exerciseid:exerciseid},
-				datatype:'json',
-				type:'post',
-				success:function(re){
-			 
-					if(re) {
-						re=eval("("+re+")");
-						$("#free_test_arr").val(re.free_test_arr);
-						$("#free_key_arr").val(re.free_key_arr);
-						$("#codename").val(re.codename);
-						$("#codenote").val(re.codenote);
-						$("#price").val(re.price);
-						$("#endtime").val(re.endtime);
-						$("#codeid").val(re.id);
-						$("#codemsg").val(re.codemsg);
-						
-						//处理已经被选中的
-						var newpaperAry =re.free_test_arr.split(",");
-						for ( var i = 0; i <newpaperAry.length; i++){
-						    $('#paper_'+newpaperAry[i]).attr("class", "red_class");
-						    $('#lipaper_'+newpaperAry[i]).addClass("red_class");
-						}
-						var newkeyAry =re.free_key_arr.split(",");
-						for ( var i = 0; i <newkeyAry.length; i++){
-						    $('#key_'+newkeyAry[i]).attr("class", "red_class");
-						    $('#likey_'+newkeyAry[i]).addClass("red_class");
-						}
-					}
-		        }
-		    });
-    	}
+      for(i=0;i<test_length;i++)
+      {
+         $('#test_'+test_arr_data[i]).attr("class", "red_class");
+      }
     }
+    
+  if(key_length>0)
+    {
+      for(i=0;i<key_length;i++)
+      {
+         $('#key_'+key_arr_data[i]).attr("class", "red_class");
+      }
+    }
+    
+
+  }
+ 
   
 </script>
 </body>

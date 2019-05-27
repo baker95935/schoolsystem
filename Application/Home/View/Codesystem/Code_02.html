@@ -2,8 +2,9 @@
 <html class="login-bg">
 <head>
     <title>CTB-CODE</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+      <script src="__PUBLIC__/jquery/jquery.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.qrcode.min.js"></script>
     <link href="__PUBLIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="__PUBLIC__/bootstrap/js/bootstrap.min.js"></script>
     
@@ -47,6 +48,8 @@
     </style>
 </head>
 <body>
+<div id="qrcodeTable" style="display:none;"></div>
+<img class="showImg"  style="display:none;">
 <div class="container" style="width: 100%;">
 	<div class="row border_bottom" style="height:100px;">
       		<div class="col-xs-6" style="padding-top:16px;padding-left:30px;">
@@ -165,7 +168,7 @@
                 <input type="text" name="codenote" id="codenote" placeholder="备注内容" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;margin-top:8px;background:#ffffff;">
                 <input type="text" name="price" id="price" placeholder="单价" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;">
                 <input type="text" name="endtime" class="date-picker teacher_input_css" id="endtime" placeholder="到期时间" style="width:65%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;"><input type="checkbox"><span>&nbsp;&nbsp;永久</span>
-                <br><br><span style="margin-left:160px;"><a href="#" onclick="codedo();">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="downloadcode();">下载</a></span>
+                <br><br><span style="margin-left:160px;"><a href="#" onclick="codedo();">确定</a>&nbsp;&nbsp;&nbsp;&nbsp;<a id="code2_kind_2"  codename="" codemsg="" href="javascript:void(0)" onclick="mycodesub(this);">下载</a></span>
               </div>
                <div class="row border_bottom" style="height:320px;padding-left:20px;padding-top:30px;">
                 <br>
@@ -176,7 +179,7 @@
                 <input type="text" value="" placeholder="单价" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;">
                 <input type="text" value="" placeholder="生成时间" style="width:80%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;">
                 <input type="text" value="" placeholder="到期时间" style="width:65%;border:0;border-bottom:1px solid #000000;margin-left:14px;background:#ffffff;margin-top:8px;"><input type="checkbox"><span>&nbsp;&nbsp;永久</span>
-                <br><br><span style="margin-left:160px;"><a>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a>下载</a></span>
+                <br><br><span style="margin-left:160px;"><a>确定</a>&nbsp;&nbsp;&nbsp;&nbsp;<a id="code2_kind_3"  codename="" codemsg=""  href="javascript:void(0)"  onclick="mycodesub(this);">下载</a></span>
               </div>
             </div>
 
@@ -187,6 +190,7 @@
   	 </div>
   
 </div>
+<input id="publishpagelength" name="publishpagelength" type="hidden" value="16">
 <input id="pagelength" name="pagelength" type="hidden" value="4">
 <input id="publishid" name="publishid" type="hidden" >
 <input id="exerciseid" name="exerciseid" type="hidden" >
@@ -197,7 +201,7 @@
 
     $(document).ready(function(){
     	var nowpage=1;
-    	var pagelength=$('#pagelength').val();
+    	var pagelength=$('#publishpagelength').val();
     	var keywords=$("#publishname").val();
     	
     	//页面变量初始化
@@ -252,7 +256,7 @@
 	{
 		var nowpage=$('#nowpage').text();
 		var maxnum=$('#pagenum').text();
-		var pagelength=$('#pagelength').val();
+		var pagelength=$('#publishpagelength').val();
 		var keywords=$("#publishname").val();
 		
 		nowpage=nowpage*1+1;
@@ -274,7 +278,7 @@
 	{
 		var nowpage=$('#nowpage').text();
 		var maxnum=$('#pagenum').text();
-		var pagelength=$('#pagelength').val();
+		var pagelength=$('#publishpagelength').val();
 		var keywords=$("#publishname").val();
 		
 		nowpage=nowpage*1-1;
@@ -295,7 +299,7 @@
 	function searchpublish()
     {
     	var nowpage=1;
-    	var pagelength=$('#pagelength').val();
+    	var pagelength=$('#publishpagelength').val();
     	var keywords=$("#publishname").val();
     	$('#publishlist').html('');
     	person_sql_publish(nowpage,pagelength,keywords);
@@ -334,8 +338,7 @@
 	
 	//点击出版社 显示对应的习题册
 	function detailexercise(id)
-	{
-		
+	{		
 		//第三和第三 数据初始化
 		$("#exercisenameinfo").text('');
 		$("#paperalllist").html('');
@@ -355,7 +358,7 @@
 		
 		var nowpage=1;
     	var pagelength=$('#pagelength').val();
-    	var keywords=$("#exercisename").val();
+    	var keywords=$("#exercisehname").val();
     	$("#publishid").val(id);
     	var publishid=id;
     	person_sql_exercise(nowpage,pagelength,keywords,publishid);
@@ -569,13 +572,19 @@
 				data:{codeid:codeid,code_name:code_name,code_note:code_note,price:price,publishid:publishid,exerciseid:exerciseid,free_test_arr:free_test_arr,free_key_arr:free_key_arr,endtime:endtime},
 				datatype:'json',
 				type:'post',
-				success:function(re){
-				 
+				success:function(re){		 
 					if(codeid=='') {
 						re=eval("("+re+")");
 						$("#codeid").val(re.codeid);
 						$("#codemsg").val(re.codemsg);
+                      
+                        $('#code2_kind_2').attr('codename',$("#codename").val());
+                      	$('#code2_kind_2').attr('codemsg',re.codemsg);
 					}
+                  else
+                  {
+                        $('#code2_kind_2').attr('codename',$("#codename").val());
+                  }
 					alert('处理成功');
 		        }
 		    });
@@ -603,6 +612,10 @@
 						$("#endtime").val(re.endtime);
 						$("#codeid").val(re.id);
 						$("#codemsg").val(re.codemsg);
+                      
+                      	$('#code2_kind_2').attr('codename',re.codename);
+                      	$('#code2_kind_2').attr('codemsg',re.codemsg);
+                      
 						
 						//处理已经被选中的
 						var newpaperAry =re.free_test_arr.split(",");
@@ -621,18 +634,48 @@
     	}
     }
     
-    //下载二维码
-    function downloadcode()
-    {
-    	var codeid=$('#codeid').val();
-    	if(codeid) {
-			var url="/index.php/Home/Codesystem/downloadcode/codeid/"+codeid;
-			window.open(url);
-		       
-    	} else {
-    		alert('请先提交二维码信息');
-    	}
-    }
+    //下载二维码  
+    function mycodesub(item)
+  {
+    
+    var codename=$(item).attr('codename');
+    var codemsg=$(item).attr('codemsg');
+    
+    $('#qrcodeTable').qrcode({  //生成普通二维码
+		         render    : "canvas",                //二维码生成方式
+		         text    : codemsg , //二维码地址
+		         width : "200",               //二维码的宽度
+                 height : "200",			  //二维码的高度
+                // src: 'zhcw.jpg' 
+	}); 
+    
+    var type = 'png';
+	var canvas = document.querySelector("#qrcodeTable").children[0];
+	var imgData = canvas.toDataURL(type);
+    
+    
+	type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+	var r = type.match(/png|jpeg|bmp|gif/)[0];
+	var _fixType ='image/' + r;
+    
+    imgData = imgData.replace(_fixType,'image/octet-stream');
+	$(".showImg").attr("src",imgData);
+    
+    var filename=codename+'.'+type;
+    
+    saveFile(imgData,filename);
+    
+  }
+  	function saveFile(data, filename){
+      
+     // alert(data);
+		var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+		save_link.href = data;
+		save_link.download = filename;		   
+		var event = document.createEvent('MouseEvents');
+		event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+		save_link.dispatchEvent(event);
+	};
 </script>
 </body>
 </html>
