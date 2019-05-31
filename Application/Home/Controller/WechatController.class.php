@@ -322,41 +322,103 @@ class WechatController extends Controller
     $model_mytest=M('mytest');
     $model_paper_msg_data=M('paper_msg_data');
     $model_key_paper_msg_data=M('key_paper_msg_data');
-   // $codemsg='<exercises_id>12302</exercises_id><code>abc3</code><kind>1</kind><status>1</status><name>习题册8</name>';
-    //$userid=15;
     
-    $codemsg=$_GET['code'];
+   // $codemsg='1903340420194272236';
+   // $userid=15;
+    
+    $codemsg=$_GET['codemsg'];
     $userid=$_GET['userid'];
     
-    $exercises_id=msg_cut_mid_part('<exercises_id>','</exercises_id>',$codemsg);
-    $code=msg_cut_mid_part('<code>','</code>',$codemsg);
-    $kind=msg_cut_mid_part('<kind>','</kind>',$codemsg);
-    $status=msg_cut_mid_part('<status>','</status>',$codemsg);
-    $name=msg_cut_mid_part('<name>','</name>',$codemsg);
+   // echo $userid;
+    
+    $onecode['codemsg']=$codemsg;
+    
+    $CodeData=$model_code->where($onecode)->find();
+    
+  //  print_r($CodeData);
+    
+  //  return;
+    
+    
+    $kind=$CodeData['kind'];//种类，0为多次码1对多，1为一对一
+    $exercises_id_data=$CodeData['exercises_id'];//练习册id
+    $status=$CodeData['status'];//状态，1可用，0不可用
+    $publishid=$CodeData['publishid'];//出版社id
+    $creattime=$CodeData['creattime'];//创建时间
+    $endtime=$CodeData['endtime'];//终止时间
+    $codename=$CodeData['codename'];//二维码名称
+    $codenote=$CodeData['codenote'];//二维码提示
+    $free_test_arr_data=$CodeData['free_test_arr'];//免费的习题册
+    $free_key_arr_data=$CodeData['free_key_arr'];//免费的知识点
+    $userednum=$CodeData['userednum'];//使用者使用次数
+    $price=$CodeData['price'];//单价
+    $publishdate_data=$CodeData['publishdate'];//发布时间，暂时不用
+    $nownum=$CodeData['nownum'];//当前编辑的信息
+       
+    
+    
+    if($kind==0)
+    {
+      $exercises_id_data=explode(",", $exercises_id_data);
+      $free_test_arr_data=explode("#", $free_test_arr_data);
+      $free_key_arr_data=explode("#", $free_key_arr_data);
+      $publishdate_data=explode(",", $publishdate_data);
+      $exercises_id=$exercises_id_data[$nownum];
+      $free_test_arr=explode(",",$free_test_arr_data[$nownum]);
+      $free_key_arr=explode(",",$free_key_arr_data[$nownum]);
+      $publishdate=$publishdate_data[$nownum];
+    }
+    else
+    {
+      $exercises_id=$exercises_id_data;
+      $free_test_arr=explode(",",$free_test_arr_data);
+      $free_key_arr=explode(",",$free_key_arr_data);
+      $publishdate=$publishdate_data;
+    }
+    
+ 
+    //`codemsg`, `kind`, `exercises_id`, `status`, `publishid`, `creattime`, `endtime`, `codename`, `codenote`, `free_test_arr`, `free_key_arr`, `userednum`,`price`, `publishdate`, `nownum`
+ /*  */
    
     //$return_num 0 无效二维码。1 可用二维码 2，已经存在二维码
     
     //kind 1 一对一码。2 一对多码（可以变换的）
+    //验证二维码是否还有效，开始用return_num=0,如果有效，就修改return_num>0
     
+
+   // echo $status;
     $return_num=0;
     //状态可用
     if($status==1)
     {
-      $data_code['codemsg']=$code;
-      $data_num=$model_code->where($data_code)->count();     
-      if($data_num>=1)
-      {
-        
         $data_mytest['userid']=$userid;
         $data_mytest['exerciseid']=$exercises_id;
         $data_num=$model_mytest->where($data_mytest)->count();
         
+        $data_delmytest['deleted']=0;
+        $data_delmytest['userid']=$userid;
+        $data_delmytest['exerciseid']=$exercises_id;
+        
+        $delete_num=$model_mytest->where($data_delmytest)->count();
+        //判断是否有数据
         if($data_num>=1)
         {
-          $return_num=2;
+          //如果数据中，存在未被删除的数据，表示已经有这种习题
+          if($delete_num>0)
+          {
+             $return_num=2;
+          }
+          else
+          {
+            //如果数据中，数据被删除，则进行更新
+            $deleted_data['deleted']=0;
+            $model_mytest->where($data_mytest)->save($deleted_data);
+            $return_num=1;
+          }
         }
+         
         else
-        {
+        {   
           $data_paper_msg_data['exerciseid']=$exercises_id;
           $data_result_paper_msg=$model_paper_msg_data->where($data_paper_msg_data)->select();
           $count=sizeof($data_result_paper_msg);
@@ -374,6 +436,21 @@ class WechatController extends Controller
             $data_add['deleted']=0;    
             $data_add['orderid']=$data_result_paper_msg[$i]['orderid'];
             $data_add['keyornot']=0;
+            
+            $free=ctb_in_array($data_add['testid'],$free_test_arr);
+            
+          //  echo $price.'<hr>';
+            
+            if($free>-1 || $price==0)
+            {
+              $free=1;
+            }
+            else
+            {
+              $free=0;
+            }
+              
+            $data_add['free']=$free;    
             $model_mytest->add($data_add);
           }
              
@@ -394,17 +471,39 @@ class WechatController extends Controller
             $data_key_add['deleted']=0;    
             $data_key_add['orderid']=$data_result_key_paper_msg[$i]['orderid'];
             $data_key_add['keyornot']=1;
+                 
+            $free=ctb_in_array($data_key_add['testid'],$free_key_arr);
+            
+            
+            if($free>-1 || $price==0)
+            {
+              $free=1;
+            }
+            else
+            {
+              $free=0;
+            }
+            
+            $data_key_add['free']=$free;
             $model_mytest->add($data_key_add);
           }
           $return_num=1;
+          
+           $Model_user_code=M('user_code');
+           $user_code['codemsg']=$codemsg;
+           $user_code['creattime']=date("y-m-d",time());
+           $user_code['price']=$price;
+           $user_code['userid']=$userid;
+           $user_code['exerciseid']=$exerciseid;
+           $Model_user_code->add($user_code);          
         }
-      }
-      else
-      {
-         $return_num=0;
-      }
     }
     else
+    {
+      $return_num=0;
+    }
+    
+    if($nownum==-1)
     {
       $return_num=0;
     }
@@ -419,9 +518,18 @@ class WechatController extends Controller
     $exerciseid=$_GET['exerciseid'];
     $userid=$_GET['userid'];
     
+  //  $exerciseid=123;
+   // $userid=15;
+    
     $model_book_exercises=M('book_exercises');
     $model_publish_name=M('publish_name');
     $model_mytest=M('mytest');
+    $model_user_code=M('user_code');
+    
+    $user_code_data=$model_user_code->where('exerciseid='.$exerciseid.' and userid='.$userid)->find(); 
+    $price=$user_code_data['price'];
+    
+    
 
     
     $book_data['id']=$exerciseid;
@@ -430,6 +538,9 @@ class WechatController extends Controller
     $data_publish=$model_publish_name->where('id='.$publishid)->find(); 
     $publishname=$data_publish['name'];
     $data_book_exercises['publishname']=$publishname;
+    $data_book_exercises['price']=$price;
+    
+  //  print_r($data_book_exercises);
     
     echo json_encode($data_book_exercises);
   }
@@ -447,11 +558,12 @@ class WechatController extends Controller
     $keyornot=$_GET['keyornot'];
     $page=$_GET['page'];
     $pagesize=$_GET['pagesize'];
-    //$exerciseid=123;
-    //$userid=15;
-    //$keyornot=0;
-    //$page=1;
-    //$pagesize=4;
+     
+   // $exerciseid=123;
+   // $userid=15;
+   // $keyornot=1;
+   // $page=1;
+   // $pagesize=4;
      
     $endnum=$page*$pagesize;
         
@@ -500,15 +612,18 @@ class WechatController extends Controller
              $data[$i]['testid']=$data_mytest[$i]['testid'];
            	 $data[$i]['num']=($i+1).'/'.$all_count;
            	 $data[$i]['id']=$data_mytest[$i]['id'];
-           	 if($data[$i]['shareornot']==0 && $buyornot==0)
-             {
+           
+           //修改此处
+           
+           if($data_mytest[$i]['free']==0 && $buyornot==0)
+           {
                $data[$i]['lock']='bottom_view_lock';
-             }
+           }
            else
            {
               $data[$i]['lock']='';
            }
-           
+
            
            
            $bgnum=$i%3;
@@ -540,6 +655,19 @@ class WechatController extends Controller
           	$data[$i]['keynote']='('.$data_onekeynote['keynotemsg'].')';
             $data[$i]['id']=$data_mytest[$i]['id'];
           
+          //  echo $data_paper[$i]['free'].'<hr>';
+          
+          //修改此处
+          
+           if($data_mytest[$i]['free']==0 && $buyornot==0)
+           {
+               $data[$i]['lock']='bottom_view_lock';
+           }
+           else
+           {
+              $data[$i]['lock']='';
+           }
+          /*
             if($data[$i]['shareornot']==0  && $buyornot==0)
              {
                $data[$i]['lock']='bottom_view_lock';
@@ -548,6 +676,7 @@ class WechatController extends Controller
            {
               $data[$i]['lock']='';
            }
+           */
           
           // $data[$i]['lock']='bottom_view_lock';
           
@@ -574,7 +703,7 @@ class WechatController extends Controller
      $result_data['all_count']=$all_count;
      $result_data['buymsg']=$buymsg;
        // echo $maxpage;
-     //print_r($result_data);
+    // print_r($result_data);
      echo json_encode($result_data);
     
     
@@ -2135,7 +2264,8 @@ class WechatController extends Controller
    	   $data=$Model->query('Select id,testid,exerciseid,lastreadtime,keyornot,nowtesttime,nowtestnum, case keyornot  when 0 then (select paper_name from paper_msg_data where id=a.testid) when 1 then (select paper_name from key_paper_msg_data where id=a.testid) end as paper_name,1 testkindnum,(select name from book_exercises where id=a.exerciseid) as bookname From  mytest as a  where userid='.$userid.' and a.deleted=1  union all select id,0 exerciseid,id as testid,lastreadtime,keyornot,nowtesttime,nowtestnum,paper_name,2 testkindnum,2 bookname from stumytest as m  where userid='.$userid.' and m.deleted=1 order by lastreadtime desc LIMIT '.$startnum.','.$endnum);
     }
    
-
+    $paper=M('paper_msg_data');
+    $key=M('key_paper_msg_data');
    
    $j=$startnum+1;
    for($i=0;$i<sizeof($data);$i++)
@@ -2143,6 +2273,10 @@ class WechatController extends Controller
      
      $data[$i]['num']=$j;
      $j=$j+1;
+     
+     //计算各种的 试卷和知识点数量
+     $data[$i]['papernum']=$paper->where('exerciseid='.$data[$i]['exerciseid'])->count();
+     $data[$i]['keynum']=$key->where('exerciseid='.$data[$i]['exerciseid'])->count();
      
      if($data[$i]['testkindnum']==1)
      {
