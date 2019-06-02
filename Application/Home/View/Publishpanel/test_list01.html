@@ -345,7 +345,7 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid)
         dataType: 'json',
         success: function(re) {
         	var testlist=re;
-			var addhtmlmsg = '<tr style="height: 45px;"><th>序号</th><th>习题册</th><th>出版社</th><th>时间</th><th>进度(未完成/已完成)</th><th>二维码</th></tr>';
+			var addhtmlmsg = '<tr style="height: 45px;"><th>序号</th><th>习题册</th><th>出版社</th><th>时间</th><th>进度(未完成/已完成)</th></tr>';
 			var beginhtml = $('#exercisediv').html();
 			var mylength = testlist['length'];
 			var pagenum=testlist['pagenum'];
@@ -355,7 +355,7 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid)
 			for (var i = 0; i<mylength; i++) 
             {
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="{$testdata.id}"></td><td ><a onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['createtime']+'</td><td>('+testlist[i]['uncount']+'/'+testlist[i]['count']+')</td> <td><a href="#"><input type="button" value="二维码"></a></td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="{$testdata.id}"></td><td ><a href="#" onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['createtime']+'</td><td>('+testlist[i]['uncount']+'/'+testlist[i]['count']+')</td> </tr>';
 				$('#exercisediv').html(beginhtml + addhtmlmsg);
 				j++;
             }

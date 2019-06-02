@@ -235,6 +235,7 @@ class CodesystemController extends Controller
   	$dataarr=array();
   	!empty($keywords) && $dataarr['codename']=['like',"%".$keywords."%"];
  	!empty($publishid) && $dataarr['publishid']=$publishid;
+    $dataarr['kind']=0;
  
   	$publish=M('publish_name');
   	$model=M('code_msg');
@@ -281,6 +282,10 @@ class CodesystemController extends Controller
   	
   	//计算各种的 试卷和知识点数量
   	$res['paperlist']=$paper->where('exerciseid='.$exerciseid)->select();
+  	foreach($res['paperlist'] as $k=>&$v) {
+  		  	$v['statusmsg']==0 && $v['paper_name']=$v['paper_name'].'(未完成)';
+	    	$v['statusmsg']>0 && $v['paper_name']=$v['paper_name'].'(已完成)';
+  	}
   	$res['papernum']=$paper->where('exerciseid='.$exerciseid)->count();
   	$res['keylist']=$key->where('exerciseid='.$exerciseid)->select();
   	$res['keynum']=$key->where('exerciseid='.$exerciseid)->count();

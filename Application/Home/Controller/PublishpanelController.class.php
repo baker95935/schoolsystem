@@ -1922,12 +1922,12 @@ class PublishpanelController extends Controller
             $imgxy=imgxy($ta[src]);
             $tdata[$i]['rationa']=round((int)$imgxy[x]/1200,3);
             $tdata[$i]['rationb']=round((int)$imgxy[x]/150,3);
-            if($ta[answerid]=='' || $ta[answerid]==0)
-            {
+            //if($ta[answerid]=='' || $ta[answerid]==0)
+            //{
 
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 $aa=$model1->where('id='.$ta[answerid])->find();
                 $adata[$i][id]=$ta[answerid];
                 $adata[$i][src]=usersrc($aa[src]);
@@ -1951,7 +1951,7 @@ class PublishpanelController extends Controller
                 $adata[$i]['rationa']=round($imgxy[x]/1200,3);
                 $adata[$i]['rationb']=round($imgxy[x]/150,3);
 
-            }
+            //}
         }
         
         $subject=M('subject_data');

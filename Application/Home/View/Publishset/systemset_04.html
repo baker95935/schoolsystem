@@ -71,7 +71,11 @@
     </div>
     <div class="row" style="height: 43px;"></div>
     <div class="row framelist" style="min-height: 26px;border: 1px solid #eaf0f2;text-align: right;font-size: 12px;padding-top: 4px;padding-bottom: 4px;padding-right: 28px;">
-       <input id="chapter_part1" name="chapter_part" type="radio" value="part"  checked="checked" onclick="divshow(1);"><span>试卷（2/6）</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><input id="chapter_part2" type="radio"  name="chapter_part"  value="chapter" onclick="divshow(2)"  ><span>知识点（3/20）</span>
+    	<select name="orderdata" id="orderdata" onchange="orderdata();"> 
+    	<option value="num">从小到大</option>
+    	<option value="time">时间排序</option>
+    	</select>&nbsp;&nbsp;
+       <input id="chapter_part1" name="chapter_part" type="radio" value="part"  checked="checked" onclick="divshow(1);"><span>试卷（{$count_u}/{$count_a}）</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><input id="chapter_part2" type="radio"  name="chapter_part"  value="chapter" onclick="divshow(2)"  ><span>知识点（{$key_count_u}/{$key_count_a}）</span>
       <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
     </div>
     <div class="row" style="height: 15px;"></div>
@@ -130,8 +134,9 @@
             <div class="row" style="font-size: 16px;margin-left: 8%;">
                 <div class="col-xs-5"><b>操作：上传知识点原始试卷</b></div>
                 <div class="col-xs-4">
-                    <div name="aprogressdiv">
+                    <div name="aprogressdiv" style="overflow:hidden">
                         <progress id="ap" value="0" style="width: 50%;float:left;"></progress><span id="aprogress" style="margin-left: 2px;"></span>
+                        &nbsp;<input style="margin-left:10px;background-color:transparent;border:1px solid #e3e3e3;width:75px;"  type="button" onclick="addkeypaper();"  value="信息更新">
                     </div>
                 </div>
                 <div class="col-xs-3"> </div>
@@ -160,9 +165,9 @@
                     <input type="hidden" name="kind" id="kind" value="1">
                      <div class="row"  style="margin-top: 10px;">
                     <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" id="input_bt" type="button"    value="图文处理">
-                     <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;"  type="button" onclick="addkeypaper();"  value="信息更新">
+                     
                     </div>
-                  
+                    <div id="alldoneok"></div>
                  
                 </div>
                 <div id="keynote_div" class="col-xs-9" style="border-left:1px solid #000000;height: 250px; overflow-y: auto;">
@@ -196,6 +201,16 @@
 <script type="text/javascript">
 $(function(){
 	divshow(1);
+	
+	//绑定回车事件
+	$(document).keydown(function(event){
+		　　if(event.keyCode==13){
+		　　$("#input_bt").click();
+		　　}
+		});
+	
+	//清除上传成功的提示
+	$("#alldoneok").html("");
 })
 
 function searchexercise()
@@ -285,13 +300,13 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname)
     });
 }
 
-function detailexercise(id)
+function detailexercise(id,order='order')
 {
 	if(id) {
     	 $.ajax({
              url: "{:U('detailexercise')}",
              type: 'POST',
-             data: {id:id},
+             data: {id:id,order:order},
              dataType: 'json',
              success: function (re) {
              	$("#newexercisename").val(re.name);
@@ -307,7 +322,7 @@ function detailexercise(id)
     			for (var i = 0; i<mylength; i++) 
                 {
     				j=i+1;
-    				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailexercisepaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td>"+testlist[i]['creat_time']+"</td><td id='examimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td id='answerimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a onclick='orderkeypaper("+testlist[i]['id']+","+testlist[i]['preid']+",1,1)'>向上</a><a onclick='orderkeypaper("+testlist[i]['id']+","+testlist[i]['nextid']+",2,1)'>向下</a><a onclick='deletekeypaper("+testlist[i]['id']+",1)'>删除</a></td></tr>";
+    				var appendhtml=appendhtml+"<tr id='paper"+testlist[i]['id']+"' class='change'><td>"+j+"</td><td id='papername"+testlist[i]['id']+"'> <a href=# onclick='detailexercisepaper("+testlist[i]['id']+")'>"+testlist[i]['paper_name']+"</a></td><td>"+testlist[i]['creat_time']+"</td><td id='examimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['examimg']+"'><img width='30px' width='30px' src='"+testlist[i]['examimg']+"'></a></td><td id='answerimg"+testlist[i]['id']+"'><a target='_blank' href='"+testlist[i]['answerimg']+"'><img width='30px' width='30px' src='"+testlist[i]['answerimg']+"'></a></td><td><a href='#' onclick='orderkeypaper("+testlist[i]['id']+","+testlist[i]['preid']+",1,1)'>向上</a><a href='#' onclick='orderkeypaper("+testlist[i]['id']+","+testlist[i]['nextid']+",2,1)'>向下</a><a href='#' onclick='deletekeypaper("+testlist[i]['id']+",1)'>删除</a></td></tr>";
     				j++;
                 }
     			$("#exerciselistdiv").append(appendhtml);
@@ -427,7 +442,9 @@ function detailexercise(id)
                 $('#aprogress').html('');
                 $('#preview_div').html('');
                 $('#preview_answer_div').html('');
-                alert('上传成功');
+                //alert('上传成功');
+                
+                $("#alldoneok").html("<font color='blue'>上传成功!</font>");
                 
                 //添加到右侧列表  知识点和试卷
                 if(kind==2) {
@@ -455,6 +472,10 @@ function detailexercise(id)
     }
 
     function previewFiles() {
+    	
+    	//清楚提醒
+    	$("#alldoneok").html('');
+    	
         var preview = document.querySelector('#preview_div');
         var files = document.querySelector('input[id=file_exercise]').files;
 
@@ -831,21 +852,28 @@ function detailexercise(id)
                    success: function (re) {
                        if(re==1) {
                       	
+                    	   if(kind==1) {
+                            	var exerciseid=$("#exerciseid").val();
+                         		detailexercise(exerciseid);
+                         	 }
+                         	 if(kind==2) {
+                             	var kpointid=$("#kpointid").val();
+                             	detailkpoint(kpointid);
+                          	 }
                        }
                    }
                });
-          	 if(kind==1) {
-             	var exerciseid=$("#exerciseid").val();
-          		detailexercise(exerciseid);
-          	 }
-          	 if(kind==2) {
-              	var kpointid=$("#kpointid").val();
-              	detailkpoint(kpointid);
-           	 }
+          	 
       	}
     }
     
-   
+   //数据排序
+   function orderdata()
+   {
+	   var order=$("#orderdata").val();
+	   var exerciseid=$("#exerciseid").val();
+	   detailexercise(exerciseid,order);
+   }
  
 </script>
 </html>
