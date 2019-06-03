@@ -245,6 +245,13 @@ class PublishpanelController extends Controller
     	$publish=M('publish_name');
     	$msg['id']=$_POST[id];
     	$status=$_POST['status'];
+    	
+    	//当前页
+    	$nowpage=$_POST['nowpage'];
+    	$pagelength=$_POST['pagelength'];//分页长度
+    	
+    	$beginnum=($nowpage-1)*$pagelength+1;
+    	$beginpagenum=$beginnum-1;
     
     	$info=$model->find($msg['id']);
     	if($info['publishid']) {
@@ -262,20 +269,30 @@ class PublishpanelController extends Controller
     	//获取下 未完成的数量
     	$uncount=0;
     	$uncount=$paper->where('exerciseid='.$msg['id'].' and statusmsg=0')->count();
-    	$info['uncount']=$uncount;
-    	$list=$paper->where('exerciseid='.$msg['id'])->order('orderid asc,creat_time asc')->select();
-    	foreach($list as  $k=>&$v) {
+    	
+    	$data=array();
+    	$msg['id'] && $data['exerciseid']=$msg['id'];
+     
+    	if($status>0) {
+    		$status==1 && $data['statusmsg']=0;
+    		$status==2 && $data['statusmsg']=array('neq',0);
+    	}
+    	
+    	$count=$paper->where($data)->count();
+     
+    	$data=$paper->where($data)->order('orderid asc,creat_time asc')->limit($beginpagenum.','.$pagelength)->select();
+    	foreach($data as  $k=>&$v) {
     		//已完成
 	    	if($status==2) {
 	    		if($v['statusmsg']==0) {
-	    			unset($list[$k]);
+	    			unset($data[$k]);
 	    		}
 	    	}
 	    		
 	    	//未完成
 	    	if($status==1) {
 	    		if($v['statusmsg']!=0) {
-	    			unset($list[$k]);
+	    			unset($data[$k]);
 	    		}
 	    	}
 	    	
@@ -283,11 +300,16 @@ class PublishpanelController extends Controller
 	    	$v['statusmsg']>0 && $v['statusmsg']='已完成';
     	}
     
-    	!empty($list) && $info['list']=$list;
-    	$info['count']=0;
-    	!empty($list) && $info['count']=count($list);
+    	
+    	$data['length']=sizeof($data);
+    	$data['pagelength']=$pagelength;
+    	$data['count']=$count;
+    	$data['uncount']=$uncount;
+    	
+    	$data['pagenum']=ceil($count/$pagelength);
+    	
+    	echo json_encode($data);
     	 
-    	echo json_encode($info);
     }
     
     public function detailkpoint()
@@ -299,6 +321,14 @@ class PublishpanelController extends Controller
     	$status=$_POST['status'];
     	$info=$model->find($msg['id']);
     	 
+    	//当前页
+    	$nowpage=$_POST['nowpage'];
+    	$pagelength=$_POST['pagelength'];//分页长度
+    	 
+    	$beginnum=($nowpage-1)*$pagelength+1;
+    	$beginpagenum=$beginnum-1;
+    	
+    	
     	//获取出版社和习题册的名字
     	if(!empty($info['publishid'])) {
     		$tmp=$publish->find($info['publishid']);
@@ -318,8 +348,20 @@ class PublishpanelController extends Controller
     	$uncount=0;
     	$uncount=$keynote->where('keynote_id='.$msg['id'].' and statusmsg=0')->count();
     	$info['uncount']=$uncount;
-    	$list=$keynote->where('keynote_id='.$msg['id'])->order('orderid asc,creat_time asc')->select();
-    	foreach($list as  $k=>&$v) {
+    	
+    	$where=array();
+    	$msg['id'] && $where['keynote_id']=$msg['id'];
+    	 
+    	if($status>0) {
+    		$status==1 && $where['statusmsg']=0;
+    		$status==2 && $where['statusmsg']=array('neq',0);
+    	}
+    	
+    	$count=$keynote->where($where)->count();
+    	
+    	$data=$keynote->where($where)->order('orderid asc,creat_time asc')->limit($beginpagenum.','.$pagelength)->select();
+ 
+    	foreach($data as  $k=>&$v) {
     		$v['statusmsg']==0 && $v['statusmsg']='未完成';
     		$v['statusmsg']>0 && $v['statusmsg']='已完成';
     		
@@ -338,10 +380,14 @@ class PublishpanelController extends Controller
 	    	}
     	}
     	
-    	!empty($list) && $info['list']=$list;
-    	$info['count']=0;
-    	!empty($list) && $info['count']=count($list);
-    	echo json_encode($info);
+    	$data['length']=sizeof($data);
+    	$data['pagelength']=$pagelength;
+    	$data['count']=$count;
+    	$data['uncount']=$uncount;
+    	
+    	$data['pagenum']=ceil($count/$pagelength);
+    	
+    	echo json_encode($data);
     }
     
     //删除
@@ -1922,12 +1968,12 @@ class PublishpanelController extends Controller
             $imgxy=imgxy($ta[src]);
             $tdata[$i]['rationa']=round((int)$imgxy[x]/1200,3);
             $tdata[$i]['rationb']=round((int)$imgxy[x]/150,3);
-            if($ta[answerid]=='' || $ta[answerid]==0)
-            {
+            //if($ta[answerid]=='' || $ta[answerid]==0)
+            //{
 
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 $aa=$model1->where('id='.$ta[answerid])->find();
                 $adata[$i][id]=$ta[answerid];
                 $adata[$i][src]=usersrc($aa[src]);
@@ -1951,7 +1997,7 @@ class PublishpanelController extends Controller
                 $adata[$i]['rationa']=round($imgxy[x]/1200,3);
                 $adata[$i]['rationb']=round($imgxy[x]/150,3);
 
-            }
+            //}
         }
         
         $subject=M('subject_data');

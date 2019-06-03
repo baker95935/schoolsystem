@@ -132,8 +132,8 @@
         <table id="exerciselistdiv" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
             
         </table>
-            <hr style="margin-top: 0px;">
-            <div style="padding-right: 0px;"><div class="result page">{$page}</div></div>
+			<hr style="margin-top: 0px;">
+            <div style="padding-right: 0px;"><div class="result page"><a onclick="exerciseprepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="exercisenowpage">1</span>/<span id="exercisepagenum">0</span></a><a style="margin-left: 4px;" onclick="exercisenextpage()" href="javascript:void(0)">下一页</a></div></div>
         </div>
         
          </div>
@@ -345,7 +345,7 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid)
         dataType: 'json',
         success: function(re) {
         	var testlist=re;
-			var addhtmlmsg = '<tr style="height: 45px;"><th>序号</th><th>习题册</th><th>出版社</th><th>时间</th><th>进度(未完成/已完成)</th><th>二维码</th></tr>';
+			var addhtmlmsg = '<tr style="height: 45px;"><th>序号</th><th>习题册</th><th>出版社</th><th>时间</th><th>进度(未完成/已完成)</th></tr>';
 			var beginhtml = $('#exercisediv').html();
 			var mylength = testlist['length'];
 			var pagenum=testlist['pagenum'];
@@ -355,7 +355,7 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid)
 			for (var i = 0; i<mylength; i++) 
             {
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="{$testdata.id}"></td><td ><a onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['createtime']+'</td><td>('+testlist[i]['uncount']+'/'+testlist[i]['count']+')</td> <td><a href="#"><input type="button" value="二维码"></a></td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="{$testdata.id}"></td><td ><a href="#" onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['createtime']+'</td><td>('+testlist[i]['uncount']+'/'+testlist[i]['count']+')</td> </tr>';
 				$('#exercisediv').html(beginhtml + addhtmlmsg);
 				j++;
             }
@@ -363,26 +363,29 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid)
         }
     });
 }
-function detailexercise(id,status='')
+
+function detailexercise(id,status='',nowpage=1,pagelength=6)
 {
 	if(id) {
     	 $.ajax({
              url: "{:U('detailexercise')}",
              type: 'POST',
-             data: {id:id,status:status},
+             data: {id:id,status:status,nowpage:nowpage,pagelength:pagelength},
              dataType: 'json',
              success: function (re) {
-            	 
+            	var testlist=re;
           		$("#direxercisename").html(re.name);
                	$("#dirpublishname").html(re.publishname);
                	$("#dirnum").html(re.count);
                	
-               	$("#exerciseid").val(re.id);
+        		$('#exercisepagenum').text(re.pagenum);
+    			$('#exercisenowpage').text(nowpage);
+               	
+               	$("#exerciseid").val(id);
              	  
-               	testlist=re['list'];
                 $("#exerciselistdiv").html('<tr style="height: 45px;"><th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成 </th><th>操作</th></tr>');
                 
-                var mylength = re['count'];
+                var mylength = re['length'];
                 var appendhtml='';
     			for (var i = 0; i<mylength; i++) 
                 {
@@ -418,7 +421,7 @@ function person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename,
             {
               var filesernum=testlist[i]['filesernum'];
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td><a onclick="detailkpoint('+testlist[i]['id']+')">'+testlist[i]['keynotemsg']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['uncount']+'/'+testlist[i]['count']+'<a href="/index.php/Home/Publishpanel/test_whole02/filesernum/'+filesernum+'/kind/school/oldstatus/0">进行处理</a></td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td><a href="#"onclick="detailkpoint('+testlist[i]['id']+')">'+testlist[i]['keynotemsg']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['uncount']+'/'+testlist[i]['count']+'<a href="/index.php/Home/Publishpanel/test_whole02/filesernum/'+filesernum+'/kind/school/oldstatus/0">进行处理</a></td></tr>';
 				$('#kpointdiv').html(beginhtml + addhtmlmsg);
 				j++;
             }
@@ -481,25 +484,28 @@ function kprepage()
 	}
 	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename,kstatusid);
 }
-function detailkpoint(id,status='')
+function detailkpoint(id,status='',nowpage=1,pagelength=6)
 {
 	if(id) {
     	 $.ajax({
              url: "{:U('detailkpoint')}",
              type: 'POST',
-             data: {id:id,status:status},
+             data: {id:id,status:status,nowpage:nowpage,pagelength:pagelength},
              dataType: 'json',
              success: function (re) {
            		$("#direxercisename").html(re.name);
                	$("#dirpublishname").html(re.publishname);
                	$("#dirnum").html(re.count);
                	
-               	$("#kpointid").val(re.id);
-             	  
-               	testlist=re['list'];
+               	$("#kpointid").val(id);
+             	
+            	$('#exercisepagenum').text(re.pagenum);
+    			$('#exercisenowpage').text(nowpage);
+               	
+               	var testlist=re;
                	
                 $("#exerciselistdiv").html('<tr style="height: 45px;"><th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成</th><th>操作</th></tr>');
-                var mylength = re['count'];
+                var mylength = re['length'];
                 var appendhtml='';
     			for (var i = 0; i<mylength; i++) 
                 {
@@ -538,14 +544,90 @@ function papersearch()
 	if(kind==1) {
      	var exerciseid=$("#exerciseid").val();
      	var paperstatusid=$('#paperstatusid').val();
-  		detailexercise(exerciseid,paperstatusid);
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	
+  		detailexercise(exerciseid,paperstatusid,nowpage,pagelength);
   	 }
   	 if(kind==2) {
       	var kpointid=$("#kpointid").val();
       	var paperstatusid=$('#paperstatusid').val();
+      	
+      	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
       
-      	detailkpoint(kpointid,paperstatusid);
+      	detailkpoint(kpointid,paperstatusid,nowpage,pagelength);
    	 }
+}
+
+//习题册下一页
+function exercisenextpage()
+{
+	var kind=$("#kind").val();
+	
+	var nowpage=$('#exercisenowpage').text();
+	var maxnum=$('#exercisepagenum').text();
+	var pagelength=$('#pagelength').val();
+
+ 	var exerciseid=$("#exerciseid").val();
+ 	var paperstatusid=$('#paperstatusid').val();
+ 	
+ 	var kpointid=$("#kpointid").val();
+	
+	nowpage=nowpage*1+1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	 
+	//习题
+	if(kind==1) {
+		detailexercise(exerciseid,paperstatusid,nowpage,pagelength);
+	}
+	
+	//知识点
+	if(kind==2) {
+		detailkpoint(kpointid,paperstatusid,nowpage,pagelength);
+	}
+}
+
+//习题上一页
+function exerciseprepage()
+{
+	var kind=$("#kind").val();
+	
+	var nowpage=$('#exercisenowpage').text();
+	var maxnum=$('#exercisepagenum').text();
+	var pagelength=$('#pagelength').val();
+	
+ 	var exerciseid=$("#exerciseid").val();
+ 	var paperstatusid=$('#paperstatusid').val();
+ 	
+ 	var kpointid=$("#kpointid").val();
+	
+	nowpage=nowpage*1-1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	
+	//习题
+	if(kind==1) {
+		detailexercise(exerciseid,paperstatusid,nowpage,pagelength);
+	}
+	
+	//知识点
+	if(kind==2) {
+		detailkpoint(kpointid,paperstatusid,nowpage,pagelength);
+	}
 }
 </script>
 </body>
