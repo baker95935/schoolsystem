@@ -283,11 +283,11 @@ class DownloadController extends Controller
   public function loadsubphp()
   {
 
-    // $username=$_POST['phone'];
-    // $seccode=$_POST['seccode'];
+     $phone=$_POST['phone'];
+     $seccode=$_POST['seccode'];
     
-   	$phone=18902182280;
-    $seccode=1234;
+  // 	$phone=18902182280;
+   // $seccode=1234;
     
      $model=M('weixin_users');
      $data=$model->where(array('phone'=>$phone,'seccode'=>$seccode))->find();
@@ -307,11 +307,23 @@ class DownloadController extends Controller
   {
  
     $userid=$_POST['userid'];
-    $userid=15;
+    //$userid=15;
     $nowpage=$_POST['nowpage'];
     $pagelength=$_POST['pagelength'];
     $printnum=$_POST['printnum'];
     $paperkind=$_POST['paperkind'];
+    
+    //$printnum=2;
+   // 15,1,10,1,ctb
+    /*
+    $userid=15;
+    $nowpage=1;
+    $pagelength=10;
+    $printnum=1;
+    $paperkind='init';
+    */
+    
+
     
     $beginnum=($nowpage-1)*$pagelength+1;
     $beginpagenum=$beginnum-1;
@@ -320,22 +332,28 @@ class DownloadController extends Controller
     $Model=M('');
     //$data=$Model->query('Select id,testid,lastreadtime,keyornot,nowtesttime,nowtestnum,printnum, case keyornot  when 0 then (select paper_name from paper_msg_data where id=a.testid) when 1 then (select paper_name from key_paper_msg_data where id=a.testid) end as paper_name,1 testkindnum  From  mytest as a  where userid='.$userid.' and printnum='.$printnum.'  union all select id,id as testid,lastreadtime,keyornot,nowtesttime,nowtestnum,paper_name,2 testkindnum,printnum from stumytest  where userid='.$userid.' and printnum='.$printnum.'  order by nowtesttime asc LIMIT '.$startnum.','.$endnum);
    	//错题本
-   	if($paperkind=='ctb') {
+   	if($paperkind=='init') {
+   // echo 123;
     	$sql='Select id,testid,lastreadtime,keyornot,nowtesttime,nowtestnum,printnum, case keyornot  when 0 then (select paper_name from paper_msg_data where id=a.testid) when 1 then (select paper_name from key_paper_msg_data where id=a.testid) end as paper_name,1 testkindnum  From  mytest as a  where userid='.$userid;
     	$printnum!=3 && $sql=$sql.' and printnum='.$printnum;
    	}
    	//原始习题
-   	if($paperkind=='init') {
+   	if($paperkind=='ctb') {
+       // echo 123;
    		$sql1='Select id,testid,lastreadtime,keyornot,nowtesttime,nowtestnum,printnum, case keyornot  when 0 then (select paper_name from paper_msg_data where id=a.testid) when 1 then (select paper_name from key_paper_msg_data where id=a.testid) end as paper_name,1 testkindnum  From  mytest as a  where userid='.$userid;
    		$sql2=' union all select id,id as testid,lastreadtime,keyornot,nowtesttime,nowtestnum,paper_name,printnum ,2 testkindnum from stumytest  where userid='.$userid;
    		$printnum!=3 && $sql1=$sql1.' and printnum='.$printnum;
    		$printnum!=3 && $sql2=$sql2.' and printnum='.$printnum;
    		$sql=$sql1.$sql2;
    	}
+    
+    
  
-   	$data=$Model->query($sql.' order by nowtesttime asc LIMIT '.$beginnum.','.$pagelength);
+   	$data=$Model->query($sql.' order by id desc LIMIT '.$beginnum.','.$pagelength);
    	$countdata=$Model->query($sql);
     $count=sizeof($countdata);
+    
+   // print_r($data);
     
     $j=$beginnum;
     for($i=0;$i<sizeof($data);$i++)
@@ -390,7 +408,7 @@ class DownloadController extends Controller
         if($data[$i]['keyornot']==0)
         {
           $newdata[$i]['testkind']='testctb';
-          if($datakind=='test')
+          if($paperkind=='init')
           {
              $newdata[$i]['testkindmsg']='习题册原题';
           }
@@ -403,7 +421,7 @@ class DownloadController extends Controller
         else
         {
           $newdata[$i]['testkind']='keyctb';
-          if($datakind=='test')
+          if($paperkind=='init')
           {
              $newdata[$i]['testkindmsg']='知识点原题';
           }
@@ -432,15 +450,15 @@ class DownloadController extends Controller
     }
     
    
-    $data=$newdata;
-    $data['length']=sizeof($data);
-    $data['pagelength']=$pagelength;
-    $data['count']=$count;
+    $returndata=$newdata;
+    $returndata['length']=sizeof($data);
+    $returndata['pagelength']=$pagelength;
+    $returndata['count']=$count;
      
-    $data['pagenum']=ceil($count/$pagelength);
+    $returndata['pagenum']=ceil($count/$pagelength);
     // $data['kind']=$kind;
-    echo json_encode($data);
-   // echo json_encode($newdata);
+    echo json_encode($returndata);
+
  }
   
   
@@ -456,15 +474,18 @@ class DownloadController extends Controller
       	$inittestid=$_GET['inittestid'];
         $testtime='生成时间：'.date('Y-m-d h:i:s',time());
 
+        if(empty($inittestid)) {
+        	return 0;
+        }
             
      // testid 181;outkind I papername 和平区2017-2018年度第二学期九年级节课质量调查数学考试；testkind:testctb;paperkind ctb;
       
-      $testid=182;
-      $outkind='I';
-      $paper_name='和平区2017-2018年度第二学期九年级节课质量调查数学考试';
-      $testkind='testctb';
-      $paperkind='init';
-      $inittestid=1559;
+     // $testid=182;
+     // $outkind='I';
+     // $paper_name='和平区2017-2018年度第二学期九年级节课质量调查数学考试';
+     // $testkind='testctb';
+     // $paperkind='init';
+     // $inittestid=1559;
       
       /*
    
@@ -479,11 +500,18 @@ class DownloadController extends Controller
       return;
       
      */
+      
+     $Model=M('');
+     $savedata['printnum']=2;
+     $savedata['lastreadtime']=date('Y-m-d h:i:s',time());
+
       if($paperkind=='init')
       {
+        // $model_mytest=M('mytest');
+        // $model_mytest->where('id='.$testid)->save($savedata);
          if($testkind=='testctb')
           {
-           $Model=M('');
+          // $Model=M('');
            $newtestdata=$Model->query('SELECT b.id,b.in_ser,b.typeid,b.srcid,b.pic1,b.pic2,b.pic3,b.pic4,b.ctbname,b.inputval,b.typeid,b.tsernum,b.ctbname,b.kind,b.picsum,b.inputname,b.inputval,b.filesernum,b.align,b.imgdisplay,b.questionscore FROM paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum where a.id='.$inittestid.' order by in_ser asc');   
               
          	for($i=0;$i<sizeof($newtestdata);$i++)
@@ -495,33 +523,29 @@ class DownloadController extends Controller
         
           if($testkind=='keyctb')
           {
-             $model_key_test_public=M('key_test_public_data');
+          // $Model=M('');
+           	$newtestdata=$Model->query('SELECT b.id,b.in_ser,b.typeid,b.srcid,b.pic1,b.pic2,b.pic3,b.pic4,b.ctbname,b.inputval,b.typeid,b.tsernum,b.ctbname,b.kind,b.picsum,b.inputname,b.inputval,b.filesernum,b.align,b.imgdisplay,b.questionscore FROM key_paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum where a.id='.$inittestid.' order by in_ser asc');   
               
+         	for($i=0;$i<sizeof($newtestdata);$i++)
+        	 {
+           		$newtestdata[$i]['inputval']=cuttitle($newtestdata[$i]['inputval']);
+         	 }
           }
-        
-        
-        
-       // print_r($newtestdata);
-        
-      //  return;
-
-
-
-   // $data=$model->where('id='.$testid)->find();
-//
-  //		$newtestdata=persontest_to_standtest($inittestid,'public');
-
       }
 
-      
+     
       if($paperkind=='ctb')
       {
          if($testkind=='testctb' || $testkind=='keyctb')
         	{
+           		$model_mytest=M('mytest');
+           		$model_mytest->where('id='.$testid)->save($savedata);
            		$newtestdata=persontest_to_standtest($testid,'public');
         	}
         	else
         	{
+                $model_stumytest=M('stumytest');
+           		$model_stumytest->where('id='.$testid)->save($savedata);
        	   		$newtestdata=persontest_to_standtest($testid);
         	}
       }
@@ -537,22 +561,71 @@ class DownloadController extends Controller
         $paper_name=$_GET['paper_name'].'答案';
         $testtime=$_GET['$testtime'];//试卷种类
         $testtime='生成时间：'.date('Y-m-d h:i:s',time());
+        $inittestid=$_GET['inittestid'];
+        $paperkind=$_GET['paperkind'];
       
       //	$testid=179;
      // 	$testkind=0;
       //	$outkind='I'; 
      // 	$paper_name='123';
+        
+        
+     //  echo $paperkind.'<hr>';
+     //  echo $inittestid.'<hr>';
+     //  echo $outkind.'<hr>'; 
+     //  echo $paper_name.'<hr>';
+     //   echo $testkind.'<hr>';
+     //   return;
+        
+       // $paperkind='init';
+       // $inittestid=1555;
+       // $outkind='I'; 
+       // $paper_name='123';
+       // $testkind='testctb';
      
         //$newtestdata=persontest_to_standtest($testid);
         
-        if($testkind=='testctb' || $testkind=='keyctb')
-        {
-           $newtestdata=persontest_to_standtest($testid,'public');
-        }
-        else
-        {
-        $newtestdata=persontest_to_standtest($testid);
-        }
+      if($paperkind=='init')
+      {
+         if($testkind=='testctb')
+          {
+           $Model=M('');
+           $newtestdata=$Model->query('SELECT b.id,b.in_ser,b.typeid,b.srcid,b.pic1,b.pic2,b.pic3,b.pic4,b.ctbname,b.inputval,b.typeid,b.tsernum,b.ctbname,b.kind,b.picsum,b.inputname,b.inputval,b.filesernum,b.align,b.imgdisplay,b.questionscore FROM paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum where a.id='.$inittestid.' order by in_ser asc');   
+              
+         	for($i=0;$i<sizeof($newtestdata);$i++)
+        	 {
+           		$newtestdata[$i]['inputval']=cuttitle($newtestdata[$i]['inputval']);
+         	 }
+         
+          }
+        
+          if($testkind=='keyctb')
+          {
+           $Model=M('');
+           	$newtestdata=$Model->query('SELECT b.id,b.in_ser,b.typeid,b.srcid,b.pic1,b.pic2,b.pic3,b.pic4,b.ctbname,b.inputval,b.typeid,b.tsernum,b.ctbname,b.kind,b.picsum,b.inputname,b.inputval,b.filesernum,b.align,b.imgdisplay,b.questionscore FROM key_paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum where a.id='.$inittestid.' order by in_ser asc');   
+              
+         	for($i=0;$i<sizeof($newtestdata);$i++)
+        	 {
+           		$newtestdata[$i]['inputval']=cuttitle($newtestdata[$i]['inputval']);
+         	 }
+          }
+     	}
+        //
+     //   print_r($newtestdata);
+        
+         if($paperkind=='ctb')
+         {       
+                 if($testkind=='testctb' || $testkind=='keyctb')
+        		{
+           			$newtestdata=persontest_to_standtest($testid,'public');
+        		}
+        			else
+        		{
+        			$newtestdata=persontest_to_standtest($testid);
+        		}
+             
+           }
+        
       	persontest_to_answerpdf($newtestdata,$paper_name,$outkind);
     }
   
