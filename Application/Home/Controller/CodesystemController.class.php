@@ -235,6 +235,7 @@ class CodesystemController extends Controller
   	$dataarr=array();
   	!empty($keywords) && $dataarr['codename']=['like',"%".$keywords."%"];
  	!empty($publishid) && $dataarr['publishid']=$publishid;
+    $dataarr['kind']=0;
  
   	$publish=M('publish_name');
   	$model=M('code_msg');
@@ -281,6 +282,10 @@ class CodesystemController extends Controller
   	
   	//计算各种的 试卷和知识点数量
   	$res['paperlist']=$paper->where('exerciseid='.$exerciseid)->select();
+  	foreach($res['paperlist'] as $k=>&$v) {
+  		  	$v['statusmsg']==0 && $v['paper_name']=$v['paper_name'].'(未完成)';
+	    	$v['statusmsg']>0 && $v['paper_name']=$v['paper_name'].'(已完成)';
+  	}
   	$res['papernum']=$paper->where('exerciseid='.$exerciseid)->count();
   	$res['keylist']=$key->where('exerciseid='.$exerciseid)->select();
   	$res['keynum']=$key->where('exerciseid='.$exerciseid)->count();
@@ -348,11 +353,19 @@ class CodesystemController extends Controller
     $test_arr=$_POST['test_arr'];
     $key_arr=$_POST['key_arr'];
     $kind=$_POST['kind'];
+    $testsum=$_POST['testsum'];
+    $keysum=$_POST['keysum'];
         //39:123:1554,1555,1556:23,25,27:2
-   // $codeid=39;
-   // $exerciseid=123;
-   // $test_arr='1554,1555,1556';
-   // $key_arr='23,25,27';
+    
+   // 1:12307:1,3,4,5,7:0:1:69:0
+    
+   // $codeid=1;
+   // $exerciseid=12307;
+   // $test_arr='1,3,4,5';
+   // $key_arr='0';
+   // $kind=2;
+   // $testsum=60;
+   // $keysum=0;
    // $kind=2;
     
     $Model_code_msg=M('code_msg');
@@ -369,6 +382,8 @@ class CodesystemController extends Controller
     	$data['free_key_arr']= $data['free_key_arr'].'#'.$key_arr;
     	$data['userednum']= $data['userednum'].','.'0';
     	$data['nownum']= $data['nownum']+1;
+        $data['testsum']=$data['testsum'].','.$testsum;
+        $data['keysum']=$data['keysum'].','.$keysum;
       
       
     	$Model_code_msg->where('id='.$codeid)->save($data);
@@ -383,15 +398,22 @@ class CodesystemController extends Controller
         $free_test_arr_data=$data['free_test_arr'];
         $free_key_arr_data=$data['free_key_arr'];
       	$exerciseid_data=$data['exercises_id'];
+      	$testsum_data=$data['testsum'];
+      	$keysum_data=$data['keysum'];
       	$nownum=$data['nownum'];
       
       	$publishdate_data=explode(",", $publishdate_data);
       	$free_test_arr_data=explode("#", $free_test_arr_data);
       	$free_key_arr_data=explode("#", $free_key_arr_data);
       	$exerciseid_data=explode(",", $exerciseid_data);
+        $testsum_data=explode(",", $testsum_data);
+        $keysum_data=explode(",", $keysum_data);
+      
       
         $publishdate_data[$nownum]=date("Y-m-d");
         $exerciseid_data[$nownum]=$exerciseid;
+      	$testsum_data[$nownum]=$testsum;
+        $keysum_data[$nownum]=$keysum;
       	$free_test_arr_data[$nownum]=$test_arr;
       	$free_key_arr_data[$nownum]=$key_arr;
 
@@ -399,12 +421,16 @@ class CodesystemController extends Controller
       
         $publishdate = implode(",", $publishdate_data);
         $exerciseid = implode(",", $exerciseid_data);
+      	$testsum = implode(",", $testsum_data);
+      	$keysum = implode(",", $keysum_data);
       	$free_test_arr = implode("#", $free_test_arr_data);
       	$free_key_arr = implode("#", $free_key_arr_data);
 
       
 		 $newdata['publishdate']=$publishdate;
          $newdata['exercises_id']= $exerciseid;
+         $newdata['testsum']= $testsum;
+         $newdata['keysum']= $keysum;
     	 $newdata['free_test_arr']= $free_test_arr;    
     	 $newdata['free_key_arr']= $free_key_arr;
       
@@ -462,7 +488,15 @@ class CodesystemController extends Controller
   }
   
   
- 
+ public function testmail()
+ {
+ 	
+ 	$email='baker95935@qq.com';
+ 	$title='测试的标题';
+ 	$content='测试的内容，支持html格式';
+ 	email($email,$title,$content);
+ }
   
+ 
  
 }

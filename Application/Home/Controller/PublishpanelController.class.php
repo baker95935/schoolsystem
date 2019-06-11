@@ -245,6 +245,11 @@ class PublishpanelController extends Controller
     	$publish=M('publish_name');
     	$msg['id']=$_POST[id];
     	$status=$_POST['status'];
+      
+      if($status=='')
+      {
+        $status=1;
+      }
     	
     	//当前页
     	$nowpage=$_POST['nowpage'];
