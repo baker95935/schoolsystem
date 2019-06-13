@@ -212,6 +212,8 @@ class PublishsetController extends Controller
       	$model=M('book_exercises');
       	$publish=M('publish_name');
       	
+      	$paper=M('paper_msg_data');
+      	
       	$dataarr=array();
       	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
       	
@@ -254,6 +256,8 @@ class PublishsetController extends Controller
 	      		$v['publishname']=$tmp['name'];
 	      	}
 	      	
+	      	//试卷数
+	      	$v['papernum']=$paper->where('exerciseid='.$v['id'])->count();
 	    }
   
   	 
@@ -279,6 +283,12 @@ class PublishsetController extends Controller
     	$model=M('book_exercises');
     	$publish=M('publish_name');
     	$msg['id']=$_POST[id];
+    	
+    	
+    	$orderby="orderid asc";
+    	$order=$_POST['order'];
+    	$order=='time' && $orderby="creat_time desc";
+    	
     	$info=$model->find($msg['id']);
     	if($info['publishid']) {
 	    	$tmp=$publish->find($info['publishid']);
@@ -292,8 +302,9 @@ class PublishsetController extends Controller
     	//获取知识点对应的试卷
     	$paper=M('paper_msg_data');
     	$img=M("paper_img_data");
-    	$list=$paper->where('exerciseid='.$msg['id'])->order('orderid asc,creat_time asc')->select();
-    	foreach($list as $k=>&$v) {
+    	$list=$paper->where('exerciseid='.$msg['id'])->order($orderby)->select();
+ 
+    	foreach($list as $k=>&$v) { 
     		//获取试卷和答案
     		if(!empty($v['filesernum'])) {
     			$imglist=$img->where("filesernum='".$v['filesernum']."'")->order(' id desc')->select();
@@ -1248,7 +1259,21 @@ class PublishsetController extends Controller
         $grade_data=$model_grade_data->where('levelnum=2')->select();
         $school_data=$model_school_data->select();
         $questiontypes=$model_questiontypes->select();
+        
+        //获取总数 未完成总数  试卷
+        //获取总数                         知识点
+        $model_key = M('key_paper_msg_data'); // 实例化Data数据对象
+        $key_count_u= $model_key->where('statusmsg=0')->count(); 
+        $key_count_a= $model_key->count(); 
+        $this->assign('key_count_u',$key_count_u);
+        $this->assign('key_count_a',$key_count_a);
 
+        $paper=M('paper_msg_data');
+        $count_u=$paper->where('statusmsg=0')->count(); 
+        $count_a=$paper->count(); 
+        
+        $this->assign('count_u',$count_u);
+        $this->assign('count_a',$count_a);
 
         $this->assign('subject_data',$subject_data);
         $this->assign('grade_data',$grade_data);
@@ -1725,5 +1750,20 @@ class PublishsetController extends Controller
     	}  
     	echo json_encode($res);
     }
-  
+    
+    //号码生成算法
+    public function number()
+    {
+    	$time=date('YmdHis');
+    	$a=rand(0,9);
+    	$b=rand(0,9);
+    	$c=$a+$b;
+    	 
+    	if(($a+$b)>=10){
+    		$c=$a+$b-10;
+    	}
+    
+    	$str=$a.mt_rand(100,999).$b.mt_rand(10,99).$c.$time;
+    	echo $str;
+    }
 }
