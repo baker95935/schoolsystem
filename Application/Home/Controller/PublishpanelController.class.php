@@ -387,6 +387,10 @@ class PublishpanelController extends Controller
 	    			unset($list[$k]);
 	    		}
 	    	}
+	    	
+	    	$v['preid']=$v['nextid']=0;
+	    	isset($data[$k-1]['id']) && $v['preid']=$data[$k-1]['id'];
+	    	isset($data[$k+1]['id']) && $v['nextid']=$data[$k+1]['id'];
     	}
     	
     	$data['length']=sizeof($data);
