@@ -799,12 +799,18 @@ class PublishsetController extends Controller
     	$exercise=M('book_exercises');
     	$exerciselist=$exercise->where('status=1')->select();
     	
+    	//学科
     	$subject=M('subject_data');
-    	$classlist=$subject->select();
+    	$subjectlist=$subject->select();
+    	
+    	//年级
+    	$grade=M('grade_data');
+    	$gradelist=$grade->select();
     	
     	$this->assign('classlist',$classlist);
     	$this->assign('publishlist',$publishlist);
-    	$this->assign('classlist',$classlist);
+    	$this->assign('subjectlist',$subjectlist);
+    	$this->assign('gradelist',$gradelist);
     	$this->assign('exerciselist',$exerciselist);
     	$this->display();
     }
@@ -1765,5 +1771,45 @@ class PublishsetController extends Controller
     
     	$str=$a.mt_rand(100,999).$b.mt_rand(10,99).$c.$time;
     	echo $str;
+    }
+    
+    //获取知识点列表
+    public function getpoint()
+    {
+    	$res=array();
+    	
+    	$gradeid=$_POST['gradeid'];
+    	$subjectid=$_POST['subjectid'];
+    	
+    	$one=M('onekeynote');
+    	if($gradeid && $subjectid) {
+    		$data=array();
+    		$data['gradeid']=$gradeid;
+    		$data['subjectid']=$subjectid;
+    		$data['status']=1;
+    		$res['list']=$one->where($data)->select();
+    		$res['count']=$one->where($data)->count();
+    	}
+    	
+    	echo json_encode($res);
+    }
+    
+    //获取知识点列表
+    public function getpaperbypoint()
+    {
+    	$res=array();
+    	
+    	$pointid=$_POST['pointid'];
+    	 
+    	
+    	$key=M('key_paper_msg_data');
+    	if($pointid) {
+    		$data=array();
+    		$data['keynote_id']=$pointid;
+    		$res['list']=$key->where($data)->select();
+    		$res['count']=$key->where($data)->count();
+    	}
+    	
+    	echo json_encode($res);
     }
 }

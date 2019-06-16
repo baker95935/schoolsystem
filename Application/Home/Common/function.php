@@ -4867,24 +4867,31 @@ function persontest_to_standtest($testid,$usertestkind)
 {
     //试卷id，试卷是教师生成试卷，还是学生个人生成试卷
 
-    if($usertestkind=='stu')
+    if($usertestkind=='public')
     {
-        $model=M('stumytest');
+       $model=M('mytest');
+       
     }else{
-        $model=M('mytest');
+        $model=M('stumytest');
     }
 //调出数据
     $model_test_public=M('test_public_data');
     $data=$model->where('id='.$testid)->find();
+  
+  //print_r($data);
+  
+  //return;
 
 //    $paper_name=$data['paper_name'];
-    if($usertestkind=='stu')
+    if($usertestkind=='public')
     {
-        $ctbquestionid=$data['ctbquestionid'];
-        $typeidarr=$data['typeidarr'];
-    }else{
         $ctbquestionid=$data['ctbtestid'];
         $typeidarr=$data['typeidarr'];
+    }else{
+      
+        $ctbquestionid=$data['ctbquestionid'];
+        $typeidarr=$data['typeidarr'];
+
     }
 
     $ctbquestionarr=explode(',',$ctbquestionid);
@@ -8122,6 +8129,61 @@ function downloadcode($id)
 	header('Content-Length:'.filesize($filename));
 	//读取文件并写入到输出缓冲
 	readfile($filename);
+}
+
+function email($email,$title,$content)
+{
+	//邮件发送服务器
+	$emailHost='smtp.163.com';
+	//邮件发送端口
+	$emailPort='25';
+	
+	//邮件发送超时时间
+	$emailTimeout='20';
+	//发件人邮箱
+	$emailUserName='hzjooctb@163.com';
+	//发件人邮箱密码
+	$emailPassword='fangzheng123456';
+	//发件人姓名
+	$emailFormName='abc';
+	//收件人邮箱
+	$toemail=$email;
+	//邮件标题
+	$subject=$title;
+	//邮件内容
+	$message=$content;
+
+	vendor('phpmailer.class#phpmailer'); //从PHPMailer目录导class.phpmailer.php类文件
+	vendor('SMTP');
+	$mailer=new phpmailer();
+
+	//邮件配置
+	$mailer->SetLanguage('zh_cn');
+	$mailer->Host = $emailHost;
+	//$mailer->Port = $emailPort;
+	$mailer->SMTPSecure = 'ssl';
+	$mailer->Port = 465;
+	$mailer->Timeout = $emailTimeout;
+	$mailer->ContentType = 'text/html';//设置html格式
+	$mailer->SMTPAuth = true;
+	$mailer->Username = $emailUserName;
+	$mailer->Password = $emailPassword;
+	$mailer->IsSMTP();
+	$mailer->From = $mailer->Username; // 发件人邮箱
+	$mailer->FromName =$emailFormName;
+	$mailer->AddReplyTo( $mailer->Username );
+	$mailer->CharSet = 'UTF-8';
+
+	// 发送邮件
+	$mailer->AddAddress( $toemail );
+	$mailer->Subject = $subject;
+	$mailer->Body = $message;
+	if ($mailer->Send() === true) {
+		return true;
+	} else {
+		$error = $mailer->ErrorInfo;
+		return false;
+	}
 }
 
 ?>

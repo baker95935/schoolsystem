@@ -38,14 +38,14 @@
 					<option value="1">待打印</option> 
 					<option value="2">已打印</option>
 					<option value="0">未进入打印</option>
-					<option value="3">全部</option>
+					<option value="3" selected="selected">全部</option>
           </select>
 		</div>
 
 		<div class="col-xs-3">
                    <select id="paperkind" class="blackselect" style="text-align:center;" onchange="search();">
-					<option value="1">错题本</option> 
-					<option value="2">原始习题</option>
+					<option value="ctb">错题本</option> 
+					<option value="init">原始习题</option>
 				 </select>
 		</div>
 		<div class="col-xs-3">
@@ -54,7 +54,7 @@
           
 		</div>
 		<div class="row">
-        <div class="col-xs-12" style="padding-left: 0px;padding-right: 0px;height: 532px;overflow-x: auto;">
+        <div class="col-xs-12" style="padding-left: 0px;padding-right: 0px;">
 			<ol id="list1" style="list-style-type:none;font-size: 15px;margin-left:30px;margin-right:30px;padding-top: 10px;">
 			
              </ol>
@@ -100,6 +100,7 @@
       
       		var nickname=getCookie('nickName');
       		var userid=getCookie('userid');
+      
       
       testdata(userid,nowpage,pagelength,printnum,paperkind);
       
@@ -268,20 +269,7 @@
 	}
 	function testtopdf()
 	{
-//		var testarr=$('testarrid').val();
-//		$.ajax({
-//			url: "{:U('papertopdf')}",
-//			type: 'POST',
-//			async:false,
-//			data: {testarr:testarr},
-//			dataType: 'json',
-//			success: function (re) {
-//				alert('下载成功！！');
-//
-//
-//
-//			}
-//		})
+
 	}
 	
 	function search()
@@ -300,59 +288,67 @@
 	
 	function testdata(userid,nowpage,pagelength,printnum,paperkind)
 	{
-		$.ajax({
-			url:"{:U('phpdata1')}",
-			data:{userid:userid,nowpage:nowpage,pagelength:pagelength,printnum:printnum,paperkind:paperkind},
-			datatype:'json',
-			type:'post',
-			success:function(re){
-				var testlist=eval("("+re+")");
-				var addhtmlmsg = '';
-				var beginhtml = $('#list1').html();
-				var mylength = testlist['length'];
-				var id = '';
-				var pagenum=testlist['pagenum'];
-				$('#pagenum').text(pagenum);
-				$('#nowpage').text(nowpage);
-				var kind=testlist['kind'];
-				$('#totalinfo').html(testlist['totalinfo']);
-				 
-				for (var i = 0; i < mylength; i++) {
-					j=i+1;
-					id=testlist[i]['id'];
-                  var testkind;
-					//var ahtml='/index.php/Home/Student/testchecked0102/testid/'+testid+'/userid/'+$('#userid').val()+'/paper_name/'+testlist[i]['paper_name']+'/username/'+$('#username').val()+'/realname/'+$('#realname').val()+'/subjectid/'+testlist[i]['subjectid']+'/testkind/stu'+'.html';
-					var ahtml='javascript:void(0)';
-					//不同类型下的 下载地址
-					testkind=testlist[i]['testkind'];
-                  
-					var aahtml='http://d.hzjoo.com/index.php/Home/Student/phpmanagepaperdetailpdf/testid/'+id+'/outkind/I/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-					var bbhtml='http://d.hzjoo.com/index.php/Home/Student/php_managepaperanswerpdf/testid/'+id+'/outkind/I/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-                    
-		//			if(ckind==2 || ckind==5) {
-		//				var aahtml='http://d.hzjoo.com/index.php/Home/Student/phpmanagelistdownloadpdf/testid/'+id+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-		//				var bbhtml='http://d.hzjoo.com/index.php/Home/Student/phpmanagelistdownloadanswerpdf/testid/'+id+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-		//			}
-					
-		//			if(ckind==3) {
-		//				var aahtml='http://d.hzjoo.com/index.php/Home/Student/php_mykeymanagepaperdetailpdf/testid/'+id+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-		//				var bbhtml='http://d.hzjoo.com/index.php/Home/Student/php_mykeymanagepaperanswerpdf/testid/'+id+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind;
-		//			}
-					
-                  if(testlist[i]['nowtesttime']==null)
-                  {
-                    testlist[i]['nowtesttime']='--';
-                  }
-					
-					addhtmlmsg=addhtmlmsg+'<li><div class="row"><div class="col-xs-9"><a style="color: #000000;" href="'+ahtml+'">'+testlist[i]['num']+'.'+testlist[i]['paper_name']+'</a><span style="margin-left:5%;"> '+testlist[i]['nowtestnummsg']+testlist[i]['nowtesttime']+'&nbsp;&nbsp;&nbsp;&nbsp;'+testlist[i]['testkindmsg']+'&nbsp;&nbsp;&nbsp;&nbsp;（'+testlist[i]['printmsg']+'）</span></div><div class="col-xs-3"><a href="'+aahtml+'" style="color: #000000;margin-left:15%;">习题下载</a><a  href="'+bbhtml+'"  style="margin-left: 15px;color: #000000;">答案下载</a></div></div></li><hr>';
-					$('#list1').html(beginhtml + addhtmlmsg);
-					j++;
+		if(userid) {
+			$.ajax({
+				url:"{:U('phpdata1')}",
+				data:{userid:userid,nowpage:nowpage,pagelength:pagelength,printnum:printnum,paperkind:paperkind},
+				datatype:'json',
+				type:'post',
+				success:function(re){
+	              	var paperkind=$('#paperkind').val();  
+					var testlist=eval("("+re+")");
+					var addhtmlmsg = '';
+					var beginhtml = $('#list1').html();
+					var mylength = testlist['length'];
+					var id = '';
+	              	var inittestid='';
+					var pagenum=testlist['pagenum'];
+					$('#pagenum').text(pagenum);
+					$('#nowpage').text(nowpage);
+					var kind=testlist['kind'];
+					$('#totalinfo').html(testlist['totalinfo']);
+					 
+					for (var i = 0; i < mylength; i++) {
+						j=i+1;
+						id=testlist[i]['id'];
+	                  	inittestid=testlist[i]['testid'];
+	                  var testkind;
+						//var ahtml='/index.php/Home/Student/testchecked0102/testid/'+testid+'/userid/'+$('#userid').val()+'/paper_name/'+testlist[i]['paper_name']+'/username/'+$('#username').val()+'/realname/'+$('#realname').val()+'/subjectid/'+testlist[i]['subjectid']+'/testkind/stu'+'.html';
+						var ahtml='javascript:void(0)';
+						//不同类型下的 下载地址
+						testkind=testlist[i]['testkind'];
+	                  
+						var aahtml='http://file.hzjoo.com/index.php/home/Download/phpmanagepaperdetailpdf/testid/'+id+'/inittestid/'+inittestid+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind+'/paperkind/'+paperkind;
+						var bbhtml='http://file.hzjoo.com/index.php/Home/Download/php_managepaperanswerpdf/testid/'+id+'/inittestid/'+inittestid+'/outkind/D/paper_name/'+testlist[i]['paper_name']+'/testkind/'+testkind+'/paperkind/'+paperkind;
+	                   // aahtml='';
+						
+	                  if(testlist[i]['nowtesttime']==null)
+	                  {
+	                    testlist[i]['nowtesttime']='--';
+	                  }
+						
+						addhtmlmsg=addhtmlmsg+'<li><div class="row"><div class="col-xs-9"><a style="color: #000000;" href="'+ahtml+'">'+testlist[i]['num']+'.'+testlist[i]['paper_name']+'</a><span style="margin-left:5%;"> '+testlist[i]['nowtestnummsg']+testlist[i]['nowtesttime']+'&nbsp;&nbsp;&nbsp;&nbsp;'+testlist[i]['testkindmsg']+'&nbsp;&nbsp;&nbsp;&nbsp;（<span id=print'+id+'>'+testlist[i]['printmsg']+'</span>）</span></div><div class="col-xs-3"><a id="'+id+'" onclick="updatasub('+id+')" href="'+aahtml+'" style="color: #000000;margin-left:15%;">习题下载</a><a  href="'+bbhtml+'"  style="margin-left: 15px;color: #000000;">答案下载</a></div></div></li><hr>';
+						$('#list1').html(beginhtml + addhtmlmsg);
+						j++;
+					}
+	
 				}
-
-			}
-
-		})
+	
+			});
+		}
 	}
+  
+  function updatasub(id)
+  {
+    // alert(id);
+    if($('#paperkind').val()=='ctb')
+    {
+         var printid='#print'+id;
+    	$(printid).text('打印完成');
+    }
+
+   
+  }
 	
 
 </script>

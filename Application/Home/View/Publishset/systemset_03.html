@@ -194,28 +194,30 @@
            
                          <li >
                             <span class="sysset_marginleft28">科目</span>
-                            <select onchange="exerciseinfo();" id="publishid">
-                                <option value ="0">科目一</option>
-                             	<option value ="0">科目二</option>
+                            <select  onchange="get_point();" id="subjectid">
+                                <foreach name="subjectlist" item="item">
+                             	<option value ="{$item.id}">{$item.subjectmsg}</option>
+                             	</foreach>
                             </select>
                         </li>
                         <li >
                             <span class="sysset_marginleft28">年级</span>
-                            <select onchange="exerciseinfo();" id="publishid">
-                                <option value ="0">初一</option>
-                             	<option value ="0">初二</option>
+                            <select onchange="get_point();" id="gradeid">
+                                <foreach name="gradelist" item="item">
+                             	<option value ="{$item.id}">{$item.grademsg}</option>
+                             	</foreach>
                             </select>
                         </li>
                         <li >
                             <span class="sysset_marginleft28">知识点</span>
-                            <select onchange="exerciseinfo();" id="publishid">
+                            <select onchange="get_paper();" id="pointid">
                                 <option value ="0">三角形</option>
                              	<option value ="0">知识点二</option>
                             </select>
                         </li>
                        <li >
                            <span >知识点习题册：</span> 
-                           <select onchange="exerciseinfo();" id="publishid">
+                           <select  id="paperid">
                                 <option value ="0">a卷</option>
                              	<option value ="0">b卷</option>
                             </select>
@@ -610,6 +612,64 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname)
            
         }
     });
+}
+
+//根据年级和科目触发 显示知识点
+function get_point()
+{
+	var gradeid=$("#gradeid").val();
+	var subjectid=$("#subjectid").val();
+	
+	if(gradeid && subjectid) {
+		
+	    $.ajax({
+	        url:"{:U('getpoint')}",
+	        type: 'POST',
+	        data: {subjectid:subjectid,gradeid:gradeid},
+	        dataType: 'json',
+	        success: function(re) {
+	        	var testlist=re['list'];
+	        	var mylength=re['count'];
+	        	
+				var str="<option value=0>未选择</option>";
+				for (var i = 0; i<mylength; i++) 
+	            {
+					str+="<option value='"+testlist[i]['id']+"'>"+testlist[i]['keynotemsg']+"</option>";
+	            }
+
+				$('#pointid').html(str);
+	        }
+	    });
+	}
+}
+
+
+//根据年级和科目触发 显示知识点
+function get_paper()
+{
+	var pointid=$("#pointid").val();
+ 
+	if(pointid) {
+		
+	    $.ajax({
+	        url:"{:U('getpaperbypoint')}",
+	        type: 'POST',
+	        data: {pointid:pointid},
+	        dataType: 'json',
+	        success: function(re) {
+	        	var testlist=re['list'];
+	        	var mylength=re['count'];
+	        	
+				var str="<option value=0>未选择</option>";
+				for (var i = 0; i<mylength; i++) 
+	            {
+					str+="<option value='"+testlist[i]['id']+">"+testlist[i]['paper_name']+"</option>";
+	            }
+
+				$('#paperid').html(str);
+	        }
+	    });
+	}
 }
 </script>
 </html>

@@ -396,7 +396,9 @@ function detailexercise(id,status='',nowpage=1,pagelength=6)
                 {
     				j=i+1;
     				var filesernum=testlist[i]['filesernum'];
+ 
     				var appendhtml=appendhtml+'<tr id="paper1'+testlist[i]['id']+'" class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>'+testlist[i]['statusmsg']+'</td><td><a onclick="deletepaper('+testlist[i]['id']+',1)">删除</a>&nbsp;&nbsp;<a href="/index.php/Home/Publishpanel/test_whole02/filesernum/'+filesernum+'/kind/school/oldstatus/0">进行处理</a>&nbsp;<a href="#" onclick="orderkeypaper('+testlist[i]['id']+','+testlist[i]['preid']+',1,1)">向上</a>&nbsp;<a href="#" onclick="orderkeypaper('+testlist[i]['id']+','+testlist[i]['nextid']+',2,1)">向下</a></td></tr>';
+ 
     				j++;
                 }
     			$("#exerciselistdiv").append(appendhtml);
@@ -516,7 +518,9 @@ function detailkpoint(id,status='',nowpage=1,pagelength=6)
                 {
     				j=i+1;
     				var filesernum=testlist[i]['filesernum'];
+ 
     				var appendhtml=appendhtml+'<tr class="change" id="paper2'+testlist[i]['id']+'"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>'+testlist[i]['statusmsg']+'</td><td><a onclick="deletepaper('+testlist[i]['id']+',2)">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/index.php/Home/Publishpanel/test_whole02/filesernum/'+filesernum+'/kind/key/oldstatus/0">进行处理</a> <a href="#" onclick="orderkeypaper('+testlist[i]['id']+','+testlist[i]['preid']+',1,2)">向上</a>&nbsp;<a href="#" onclick="orderkeypaper('+testlist[i]['id']+','+testlist[i]['nextid']+',2,2)">向下</a></td></tr>';
+ 
     				j++;
                 }
     			$("#exerciselistdiv").append(appendhtml);
