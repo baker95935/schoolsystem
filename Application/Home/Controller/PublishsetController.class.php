@@ -1855,7 +1855,7 @@ class PublishsetController extends Controller
     	
     	  	
     	//获取习题册对应的习题
-    	$paper=M('paper_msg_data');
+    	$paper=M('key_paper_msg_data');
     	$one=M('onekeynote');
      	$relation=M('exercise_relation_test');
      	

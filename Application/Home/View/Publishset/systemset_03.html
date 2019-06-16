@@ -661,7 +661,8 @@ function get_paper()
 	        	var testlist=re['list'];
 	        	var mylength=re['count'];
 	        	
-				var str="<option value=0>未选择</option>";
+	        	var  str='';
+				str="<option value=0>未选择</option>";
 				for (var i = 0; i<mylength; i++) 
 	            {
 					str+="<option value='"+testlist[i]['id']+">"+testlist[i]['paper_name']+"</option>";
@@ -713,7 +714,7 @@ function editexercise(id)
 	        	$("#exercisetitle").text(re.name);
 	        	
 	        	var testlist=re['list'];
-	        	var mylength=re['count'];
+	        	var mylength=re['length'];
 	        	
 				$('#pointpagenum').text(re['pagenum']);
 				$('#pointnowpage').text(1);
