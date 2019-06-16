@@ -1812,4 +1812,105 @@ class PublishsetController extends Controller
     	
     	echo json_encode($res);
     }
+    
+    
+    //知识点添加
+    function addpoint()
+    {
+    	$data=array();
+    	$exerciseid=$_POST['exerciseid'];
+    	$paperid=$_POST['paperid'];
+    	$pointid=$_POST['pointid'];
+    	
+    	$data['exercise_id']=$exerciseid;
+    	$data['paper_id']=$paperid;
+    	$data['point_id']=$pointid;
+    	$data['ctime']=time();
+    	
+    	$e=M('exercise_relation_test');
+    	$max=$e->max('orderid');
+        $max=$max+1;
+        $data['orderid']=$max;
+    	
+    	$result=$e->add($data);
+    	echo $result;
+    	
+    }
+    
+    
+    //一对多关系的习题册详情
+    function newdetailexercise() 
+    {
+    	$model=M('book_exercises');
+    	$publish=M('publish_name');
+    	$msg['id']=$_POST[id];
+    	
+    	$pagelength=$_POST['pagelength'];
+    	
+    	$info=$model->find($msg['id']);
+    	if($info['publishid']) {
+	    	$tmp=$publish->find($info['publishid']);
+	    	$info['publishname']=$tmp['name'];
+    	}
+    	
+    	  	
+    	//获取习题册对应的习题
+    	$paper=M('paper_msg_data');
+    	$one=M('onekeynote');
+     	$relation=M('exercise_relation_test');
+     	
+    	$list=$relation->where('exercise_id='.$msg['id'])->limit('0,'.$pagelength)->order(' orderid desc')->select();
+ 		$listcount=$relation->where('exercise_id='.$msg['id'])->count();
+    	foreach($list as $k=>&$v) { 
+    	 
+    		//获取paperinfo
+    		$v['paperinfo']=$paper->find($v['paper_id']);
+    		//获取pointinfo
+    		$v['pointinfo']=$one->find($v['point_id']);
+    		$v['ctime']=date('Y-m-d',$v['ctime']);
+    		$v['preid']=$v['nextid']=0;
+    		isset($list[$k-1]['id']) && $v['preid']=$list[$k-1]['id'];
+    		isset($list[$k+1]['id']) && $v['nextid']=$list[$k+1]['id'];
+    	}
+    	!empty($list) && $info['list']=$list;
+    	$info['count']=0;
+    	!empty($list) && $info['count']=$listcount;
+    	
+    	$info['length']=sizeof($info['list']);
+    	$info['pagelength']=$pagelength;
+    	$info['count']=$info['count'];
+    	 
+    	$info['pagenum']=ceil($info['count']/$pagelength);
+    	echo json_encode($info);
+    }
+    
+    //删除关系
+    function deleterelation()
+    {
+    	$id=$_POST['id'];
+    	$model=M('exercise_relation_test');
+        $msg['id']=$_POST[id];
+        $mm=$model->where($msg)->delete();
+        echo $mm;
+    }
+    
+    //关系排序
+    public function orderrelation()
+    {
+    	$id=$_POST['id'];
+    	$iid=$_POST['iid'];
+    	if($id && $iid) {
+    		$keypaper=M('exercise_relation_test');
+    		$info=$keypaper->find($id);
+    		$infon=$keypaper->find($iid);
+    		$data=$ndata=array();
+    		$data['orderid']=$infon['orderid'];
+    		$ndata['orderid']=$info['orderid'];
+    		$keypaper->where('id='.$id)->save($data);
+ 
+    		$keypaper->where('id='.$iid)->save($ndata);
+     
+    	}
+    	echo 1;
+    }
 }

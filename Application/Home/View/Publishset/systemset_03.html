@@ -83,7 +83,7 @@
           
         	</table>
               
-              <div><span style="color:red;">	5•3天天练.小学数学四年级（下册）--物理出版社1	</span></div><br>
+              <div><span style="color:red;" id="exercisetitle">	 	</span></div><br>
                <table id="list2" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
               <tr><th>序号</th><th>知识习题</th><th>所属知识点</th><th>时间</th><th>操作</th><th>编辑</th></tr>
               <tr>
@@ -97,7 +97,7 @@
               
               
                 <input id="part_begin" type="hidden" value="1">
-                <div id="part_page_a" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="prepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="nowpage">1</span>/<span id="pagenum">0</span></a><a style="margin-left: 4px;" onclick="nextpage()" href="javascript:void(0)">下一页</a></div></div>
+                <div id="part_page_a" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="pointprepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="pointnowpage">1</span>/<span id="pointpagenum">0</span></a><a style="margin-left: 4px;" onclick="pointnextpage()" href="javascript:void(0)">下一页</a></div></div>
    
                
             </div>
@@ -216,7 +216,7 @@
                             </select>
                         </li>
                        <li >
-                           <span >知识点习题册：</span> 
+                           <span >知识点习题：</span> 
                            <select  id="paperid">
                                 <option value ="0">a卷</option>
                              	<option value ="0">b卷</option>
@@ -233,7 +233,7 @@
                             <input id="kid" name="kid"   type="hidden" value="0">
                         </li>
                         <li>
-                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" onclick="addkpoint();" type="button"  value="确认">
+                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" onclick="addpoint();" type="button"  value="确认">
                            <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" onclick="cancle();" type="button"  value="取消">
                         </li>
                        
@@ -250,6 +250,7 @@
 
 </div>
 <input id="pagelength" name="pagelength" type="hidden" value="6">
+<input id="hexerciseid" name="hexerciseid" type="hidden" value="0">
 
 </body>
 <script type="text/javascript">
@@ -604,7 +605,7 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname)
 			for (var i = 0; i<mylength; i++) 
             {
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailexercise('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['papernum']+'</td><td>'+testlist[i]['createtime']+'</td><td> &nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editexercise('+testlist[i]['id']+','+testlist[i]['newstatus']+');" href="#}">编辑</a></td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailexercise('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['papernum']+'</td><td>'+testlist[i]['createtime']+'</td><td> &nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editexercise('+testlist[i]['id']+');" href="#}">编辑</a></td></tr>';
 				$('#list3').html(beginhtml + addhtmlmsg);
 				j++;
             }
@@ -671,5 +672,112 @@ function get_paper()
 	    });
 	}
 }
+
+function addpoint() 
+{
+	var exerciseid=$("#hexerciseid").val();
+	var pointid=$("#pointid").val();
+	var paperid=$("#paperid").val();
+	
+	if(exerciseid && pointid && paperid) {
+	    $.ajax({
+	        url:"{:U('addpoint')}",
+	        type: 'POST',
+	        data: {pointid:pointid,paperid:paperid,exerciseid:exerciseid},
+	        dataType: 'json',
+	        success: function(re) {
+	        	if(re) {
+	        		alert('添加成功');
+	        		editexercise(exerciseid);
+	        	}
+	         
+	        }
+	    });
+	}
+}
+
+//编辑习题册
+function editexercise(id)
+{
+	$("#hexerciseid").val(id);
+	
+	var pagelength=$('#pagelength').val();
+	
+	if(id) {
+		$.ajax({
+	        url:"{:U('newdetailexercise')}",
+	        type: 'POST',
+	        data: {id:id,pagelength:pagelength},
+	        dataType: 'json',
+	        success: function(re) {
+	        	$("#exercisetitle").text(re.name);
+	        	
+	        	var testlist=re['list'];
+	        	var mylength=re['count'];
+	        	
+				$('#pointpagenum').text(re['pagenum']);
+				$('#pointnowpage').text(1);
+	        	
+	        	var addhtmlmsg = '<tr><th>序号</th><th>知识习题</th><th>所属知识点</th><th>时间</th><th>操作</th><th>编辑</th></tr>';
+				var beginhtml = $('#list2').html();
+				
+
+				for (var i = 0; i<mylength; i++) 
+	            {
+					j=i+1;
+					addhtmlmsg=addhtmlmsg+"<tr><td>"+j+"</td><td>"+testlist[i]['paperinfo']['paper_name']+"</td><td>"+testlist[i]['pointinfo']['keynotemsg']+"</td><td>"+testlist[i]['ctime']+"</td><td><a href='#' onclick='orderrelation("+testlist[i]['id']+","+testlist[i]['preid']+")'>向上</a><a href='#' onclick='orderrelation("+testlist[i]['id']+","+testlist[i]['nextid']+")'>向下</a></td><td><a href='#' onclick='deleterelation("+testlist[i]['id']+");'>删除</a></td></tr>";
+					j++;
+	            }
+				$('#list2').html(addhtmlmsg);
+	         
+	        }
+		});
+	}
+}
+
+//删除已绑定的 关系
+function deleterelation(id) 
+{
+	var exerciseid=$("#hexerciseid").val();
+	
+	if(id) {
+		$.ajax({
+	        url:"{:U('deleterelation')}",
+	        type: 'POST',
+	        data: {id:id},
+	        dataType: 'json',
+	        success: function(re) {
+	        	if(re) {
+	        		alert('删除成功');
+	        		editexercise(exerciseid);
+	        	}
+	         
+	        }
+	    });
+	}
+}
+
+//排序 1向上 2向下3是区分知识点和试卷
+function orderrelation(id,iid)
+{
+   	if(id && iid) {
+      	 $.ajax({
+               url: "{:U('orderrelation')}",
+               type: 'POST',
+               data: {id:id,iid:iid},
+               dataType: 'json',
+               success: function (re) {
+                   if(re==1) {
+                  	
+                  		var exerciseid=$("#hexerciseid").val();
+                  		editexercise(exerciseid);
+                     	 
+                   }
+               }
+           });
+      	 
+  	}
+}
+
 </script>
 </html>
