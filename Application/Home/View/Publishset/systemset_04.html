@@ -290,7 +290,7 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname)
 			for (var i = 0; i<mylength; i++) 
             {
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#"  onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>1</td><td>'+testlist[i]['createtime']+'</td><td>2</td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#"  onclick="detailexercise('+testlist[i]['id']+')">'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['papernum']+'</td><td>'+testlist[i]['createtime']+'</td><td>2</td></tr>';
 				$('#exercisediv').html(beginhtml + addhtmlmsg);
 				j++;
             }

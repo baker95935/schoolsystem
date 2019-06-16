@@ -212,6 +212,8 @@ class PublishsetController extends Controller
       	$model=M('book_exercises');
       	$publish=M('publish_name');
       	
+      	$paper=M('paper_msg_data');
+      	
       	$dataarr=array();
       	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
       	
@@ -254,6 +256,8 @@ class PublishsetController extends Controller
 	      		$v['publishname']=$tmp['name'];
 	      	}
 	      	
+	      	//试卷数
+	      	$v['papernum']=$paper->where('exerciseid='.$v['id'])->count();
 	    }
   
   	 

@@ -75,11 +75,23 @@
     <div class="row" style="height: 15px;"></div>
     <div class="row">
         <div class="col-xs-6" style="height: 660px;border-right:1px solid #C3C3C3;">
-            <div class="row sysset_blue" style="clear: left;"><span  id="chapter_part_msg" style="font-size: 16px;margin-left: 8%;"><b>知识点列表</b></span><input onblur="searchkpoint();" name="publishname" id="publishname"  type="text" placeholder="出版社名称" class="input_css" style="margin-left:200px;"> <input onblur="searchkpoint();" name="exercisename" id="exercisename"   type="text" placeholder="习题册名称"  class="input_css"> <input onblur="searchkpoint();" name="keywords" id="keywords"   type="text" placeholder="知识点"  class="input_css"></div>
+            <div class="row sysset_blue" style="clear: left;"><span  id="chapter_part_msg" style="font-size: 16px;margin-left: 8%;"><b>已选知识点习题册</b></span><input onblur="searchkpoint();" name="publishname" id="publishname"  type="text" placeholder="出版社名称" class="input_css" style="margin-left:200px;"> <input onblur="searchkpoint();" name="exercisename" id="exercisename"   type="text" placeholder="习题册名称"  class="input_css"> <input onblur="searchkpoint();" name="keywords" id="keywords"   type="text" placeholder="知识点"  class="input_css"></div>
             <hr style="margin-left: 6%;">
             <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
                
-            <table id="list1" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
+            <table id="list1" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;display:none;" class="sysset_msgtable" >
+          
+        	</table>
+              
+              <div><span style="color:red;">	5•3天天练.小学数学四年级（下册）--物理出版社1	</span></div><br>
+               <table id="list2" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
+              <tr><th>序号</th><th>知识习题</th><th>所属知识点</th><th>时间</th><th>操作</th><th>编辑</th></tr>
+              <tr>
+                <td>1</td><td>a卷</td><td>三角形</td><td>2019-01-12</td><td>向上 向下</td><td>删除</td>
+              </tr>
+              <tr>
+                <td>2</td><td>b卷</td><td>三角形</td><td>2019-11-12</td><td>向上 向下</td><td>删除</td>
+              </tr>
           
         	</table>
               
@@ -89,16 +101,30 @@
    
                
             </div>
+          <hr  style="margin-left: 6%;">
+          <div class="row sysset_blue" style="clear: left;"><span  id="chapter_part_msg" style="font-size: 16px;margin-left: 8%;"><b>习题册列表</b></span><input onblur="searchexercise();" name="nextpublishname" id="nextpublishname"  type="text" placeholder="出版社名称" class="input_css" style="margin-left:200px;"> <input onblur="searchexercise();" name="nextexercisename" id="nextexercisename"   type="text" placeholder="习题册名称"  class="input_css"></div>
+          <hr  style="margin-left: 6%;">
+          
+           <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
+            <table id="list3" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
+     
+          
+        	</table>
+              
+            <input id="part_begin_01" type="hidden" value="1">
+            <div id="part_page_01" class="row"><div class="result page" style="margin-left: 20px;margin-top: 0px;"><a onclick="exerciseprepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="exercisenowpage">1</span>/<span id="exercisepagenum">0</span></a><a style="margin-left: 4px;" onclick="exercisenextpage()" href="javascript:void(0)">下一页</a></div></div>
+          
+          </div>
 
         </div>
 
         <div class="col-xs-6" style="height: 660px;border-right:1px solid #C3C3C3;">
-            <div class="row sysset_blue" style="clear: left;"><span style="font-size: 16px;margin-left: 8%;"><b>添加新知识点<span id="kpointstatus">(添加)</span></b></span><span style="margin-left: 62%"></span><a id="questiontypes_ok" onclick="newquestiontypesdata('questiontypes')"  href="javascript:void(0)">Add</a></div>
+            <div class="row sysset_blue" style="clear: left;"><span style="font-size: 16px;margin-left: 8%;"><b>添加新知识点习题册<span id="kpointstatus">(添加)</span></b></span><span style="margin-left: 62%"></span><a id="questiontypes_ok" onclick="newquestiontypesdata('questiontypes')"  href="javascript:void(0)">Add</a></div>
             <hr style="margin-left: 6%;">
             <div class="row" style="height: 600px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
 
-                <div class="sysset_msgli" id="questiontypes_msgli" >
-                      <ol>
+                <div class="sysset_msgli" id="questiontypes_msgli">
+                      <ol  style="display:none;" >
                         <li >
                            <span >知识点名称：</span> <input id="name" id="name"   type="text">
                         </li>
@@ -159,6 +185,59 @@
                         </li>
                        
                     </ol>
+                  
+                  
+                  
+                  
+                     <ol>
+
+           
+                         <li >
+                            <span class="sysset_marginleft28">科目</span>
+                            <select onchange="exerciseinfo();" id="publishid">
+                                <option value ="0">科目一</option>
+                             	<option value ="0">科目二</option>
+                            </select>
+                        </li>
+                        <li >
+                            <span class="sysset_marginleft28">年级</span>
+                            <select onchange="exerciseinfo();" id="publishid">
+                                <option value ="0">初一</option>
+                             	<option value ="0">初二</option>
+                            </select>
+                        </li>
+                        <li >
+                            <span class="sysset_marginleft28">知识点</span>
+                            <select onchange="exerciseinfo();" id="publishid">
+                                <option value ="0">三角形</option>
+                             	<option value ="0">知识点二</option>
+                            </select>
+                        </li>
+                       <li >
+                           <span >知识点习题册：</span> 
+                           <select onchange="exerciseinfo();" id="publishid">
+                                <option value ="0">a卷</option>
+                             	<option value ="0">b卷</option>
+                            </select>
+                        </li>
+
+                         <li >
+                            <span class="sysset_marginleft28">习题数量：</span>
+                            <input id="other" id="other"     type="text" value="20">
+                        </li>
+                             
+                        <li >
+                            <span >其他说明：</span> <input id="other" id="other"     type="text" value="">
+                            <input id="kid" name="kid"   type="hidden" value="0">
+                        </li>
+                        <li>
+                           <input style="margin-top:60px;margin-left:120px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" onclick="addkpoint();" type="button"  value="确认">
+                           <input style="margin-left:30px;background-color:transparent;border:1px solid #e3e3e3;width:70px;" onclick="cancle();" type="button"  value="取消">
+                        </li>
+                       
+                    </ol>
+                  
+                  
                 </div>
 
             </div>
@@ -179,9 +258,8 @@ $(function(){
 	var pagelength=$('#pagelength').val();
 	var keywords=$("#keywords").val();
 	var publishname=$("#publishname").val();
-	var exercisename=$("#exercisename").val();
+	person_sql_exercise(nowpage,pagelength,keywords,publishname);
 	
-	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename);
 })
 
 function searchkpoint()
@@ -438,6 +516,100 @@ function exerciseinfo()
             }
         })
 	}
+}
+
+
+//习题册搜索
+function searchexercise()
+{
+   	var nowpage=1;
+   	var pagelength=$('#pagelength').val();
+   	var keywords=$("#nextexercisename").val();
+   	var publishname=$("#nextpublishname").val();
+ 
+   	$('#list3').html('');
+   	person_sql_exercise(nowpage,pagelength,keywords,publishname);
+}
+
+//习题册下一页
+function exercisenextpage()
+{
+	var nowpage=$('#exercisenowpage').text();
+	var maxnum=$('#exercisepagenum').text();
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#nextexercisename").val();
+	var publishname=$("#nextpublishname").val();
+	
+	nowpage=nowpage*1+1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	 
+	$('#list3').html('');
+	
+	person_sql_exercise(nowpage,pagelength,keywords,publishname);
+}
+
+//习题册上一页
+function exerciseprepage()
+{
+	var nowpage=$('#exercisenowpage').text();
+	var maxnum=$('#exercisepagenum').text();
+	var pagelength=$('#pagelength').val();
+	var keywords=$("#nextexercisename").val();
+	var publishname=$("#nextpublishname").val();
+	
+	nowpage=nowpage*1-1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+
+	$('#list3').html('');
+	person_sql_exercise(nowpage,pagelength,keywords,publishname);
+}
+
+ 
+ 
+//习题册分页
+function person_sql_exercise(nowpage,pagelength,keywords,publishname)
+{
+
+    $.ajax({
+        url:"{:U('php_exercise_sql')}",
+        type: 'POST',
+        data: {nowpage:nowpage,pagelength:pagelength,keywords:keywords,publishname:publishname},
+        dataType: 'json',
+        success: function(re) {
+        	var testlist=re;
+			var addhtmlmsg = '<tr><th>序号</th><th>习题册</th><th>出版社</th><th>知识点个数</th><th>时间</th><th>操作</th></tr>';
+			var beginhtml = $('#list3').html();
+			var mylength = testlist['length'];
+			var pagenum=testlist['pagenum'];
+			
+			$('#exercisepagenum').text(pagenum);
+			$('#exercisenowpage').text(nowpage);
+
+			for (var i = 0; i<mylength; i++) 
+            {
+				j=i+1;
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailexercise('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['papernum']+'</td><td>'+testlist[i]['createtime']+'</td><td> &nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editexercise('+testlist[i]['id']+','+testlist[i]['newstatus']+');" href="#}">编辑</a></td></tr>';
+				$('#list3').html(beginhtml + addhtmlmsg);
+				j++;
+            }
+
+           
+        }
+    });
 }
 </script>
 </html>

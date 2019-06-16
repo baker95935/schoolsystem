@@ -57,8 +57,11 @@
    
        	<span id="searchkpointdiv">
  		<select onchange="searchkpoint();" id="kstatusid" name="kstatusid" style="width:80px;height:20px;font-size:12px;background: transparent; border: none;border-radius: 2px;border: 1px solid #cccccc;margin-left:15px;">
-          <option value="0">全部</option>
-          <option value="1">未完成</option>
+         
+      
+          
+           <option value="0">全部</option>
+              <option value="1">未完成</option>
           <option value="2">完成</option>
          </select>
         <input onblur="searchkpoint();" id="kpoint" name="kpoint" class="page_input_css"  value="" type="text" placeholder="知识点">
@@ -68,8 +71,11 @@
          
         <span id="searchexexcisediv">
         <select onchange="searchexercise();" id="statusid" name="statusid" style="width:80px;height:20px;font-size:12px;background: transparent; border: none;border-radius: 2px;border: 1px solid #cccccc;margin-left:15px;">
-          <option value="0">全部</option>
+          
+           <option value="0">全部</option>
+          
           <option value="1">未完成</option>
+                
           <option value="2">完成</option>
          </select>
        	
@@ -97,12 +103,7 @@
             <div style="padding-right: 0px;"><div class="result page"><a onclick="kprepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="knowpage">1</span>/<span id="kpagenum">0</span></a><a style="margin-left: 4px;" onclick="knextpage()" href="javascript:void(0)">下一页</a></div></div>
         </div>
     </div>
-
-
-
-
-
-    </div>
+  </div>
   
   
     <div class="col-xs-7">
@@ -116,8 +117,12 @@
             <hr>
            <span style="margin-left:40px;font-size:16px;color:red;display:block;margin-top:30px;"><span id="dirpublishname">北京交通大学出版社</span>—><span id="direxercisename">初中物理练习册</span>—><span id="dirnum">36</span>           
           <select onchange="papersearch();" name="paperstatusid" id="paperstatusid" style="width:80px;height:20px;font-size:12px;color:#000000;background: transparent; border: none;border-radius: 2px;border: 1px solid #cccccc;margin-left:15px;">
-	          <option value="0">全部</option>
-	          <option value="1">未完成</option>
+
+            
+            <option value="0">全部</option>
+            
+            	         <option value="1" selected>未完成</option>  
+	         
 	          <option value="2">完成</option>
           </select>
           <input type="hidden" name="exerciseid" id="exerciseid" value=0>
@@ -132,8 +137,8 @@
         <table id="exerciselistdiv" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;">
             
         </table>
-            <hr style="margin-top: 0px;">
-            <div style="padding-right: 0px;"><div class="result page">{$page}</div></div>
+			<hr style="margin-top: 0px;">
+            <div style="padding-right: 0px;"><div class="result page"><a onclick="exerciseprepage();" href="javascript:void(0)">上一页</a><a style="margin-left: 4px;"><span id="exercisenowpage">1</span>/<span id="exercisepagenum">0</span></a><a style="margin-left: 4px;" onclick="exercisenextpage()" href="javascript:void(0)">下一页</a></div></div>
         </div>
         
          </div>
@@ -363,32 +368,35 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname,statusid)
         }
     });
 }
-function detailexercise(id,status='')
+
+function detailexercise(id,status='',nowpage=1,pagelength=6)
 {
 	if(id) {
     	 $.ajax({
              url: "{:U('detailexercise')}",
              type: 'POST',
-             data: {id:id,status:status},
+             data: {id:id,status:status,nowpage:nowpage,pagelength:pagelength},
              dataType: 'json',
              success: function (re) {
-            	 
+            	var testlist=re;
           		$("#direxercisename").html(re.name);
                	$("#dirpublishname").html(re.publishname);
                	$("#dirnum").html(re.count);
                	
-               	$("#exerciseid").val(re.id);
+        		$('#exercisepagenum').text(re.pagenum);
+    			$('#exercisenowpage').text(nowpage);
+               	
+               	$("#exerciseid").val(id);
              	  
-               	testlist=re['list'];
                 $("#exerciselistdiv").html('<tr style="height: 45px;"><th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成 </th><th>操作</th></tr>');
                 
-                var mylength = re['count'];
+                var mylength = re['length'];
                 var appendhtml='';
     			for (var i = 0; i<mylength; i++) 
                 {
     				j=i+1;
     				var filesernum=testlist[i]['filesernum'];
-    				var appendhtml=appendhtml+'<tr id="paper1'+testlist[i]['id']+'" class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>'+testlist[i]['statusmsg']+'</td><td><a onclick="deletepaper('+testlist[i]['id']+',1)">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/index.php/Home/Publishpanel/test_whole02/filesernum/'+filesernum+'/kind/school/oldstatus/0">进行处理</a></td></tr>';
+    				var appendhtml=appendhtml+'<tr id="paper1'+testlist[i]['id']+'" class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>'+testlist[i]['statusmsg']+'</td><td><a onclick="deletepaper('+testlist[i]['id']+',1)">删除</a>&nbsp;&nbsp;<a href="/index.php/Home/Publishpanel/test_whole02/filesernum/'+filesernum+'/kind/school/oldstatus/0">进行处理</a>&nbsp;<a href="#" onclick="orderkeypaper('+testlist[i]['id']+','+testlist[i]['preid']+',1,1)">向上</a>&nbsp;<a href="#" onclick="orderkeypaper('+testlist[i]['id']+','+testlist[i]['nextid']+',2,1)">向下</a></td></tr>';
     				j++;
                 }
     			$("#exerciselistdiv").append(appendhtml);
@@ -418,7 +426,7 @@ function person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename,
             {
               var filesernum=testlist[i]['filesernum'];
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td><a onclick="detailkpoint('+testlist[i]['id']+')">'+testlist[i]['keynotemsg']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['uncount']+'/'+testlist[i]['count']+'<a href="/index.php/Home/Publishpanel/test_whole02/filesernum/'+filesernum+'/kind/school/oldstatus/0">进行处理</a></td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td><a href="#"onclick="detailkpoint('+testlist[i]['id']+')">'+testlist[i]['keynotemsg']+'</a></td><td>'+testlist[i]['exercisename']+'</td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['uncount']+'/'+testlist[i]['count']+'<a href="/index.php/Home/Publishpanel/test_whole02/filesernum/'+filesernum+'/kind/school/oldstatus/0">进行处理</a></td></tr>';
 				$('#kpointdiv').html(beginhtml + addhtmlmsg);
 				j++;
             }
@@ -481,31 +489,34 @@ function kprepage()
 	}
 	person_sql_kpoint(nowpage,pagelength,keywords,publishname,exercisename,kstatusid);
 }
-function detailkpoint(id,status='')
+function detailkpoint(id,status='',nowpage=1,pagelength=6)
 {
 	if(id) {
     	 $.ajax({
              url: "{:U('detailkpoint')}",
              type: 'POST',
-             data: {id:id,status:status},
+             data: {id:id,status:status,nowpage:nowpage,pagelength:pagelength},
              dataType: 'json',
              success: function (re) {
            		$("#direxercisename").html(re.name);
                	$("#dirpublishname").html(re.publishname);
                	$("#dirnum").html(re.count);
                	
-               	$("#kpointid").val(re.id);
-             	  
-               	testlist=re['list'];
+               	$("#kpointid").val(id);
+             	
+            	$('#exercisepagenum').text(re.pagenum);
+    			$('#exercisenowpage').text(nowpage);
+               	
+               	var testlist=re;
                	
                 $("#exerciselistdiv").html('<tr style="height: 45px;"><th>序号</th><th>试卷名称</th><th>时间</th><th>是否完成</th><th>操作</th></tr>');
-                var mylength = re['count'];
+                var mylength = re['length'];
                 var appendhtml='';
     			for (var i = 0; i<mylength; i++) 
                 {
     				j=i+1;
     				var filesernum=testlist[i]['filesernum'];
-    				var appendhtml=appendhtml+'<tr class="change" id="paper2'+testlist[i]['id']+'"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>'+testlist[i]['statusmsg']+'</td><td><a onclick="deletepaper('+testlist[i]['id']+',2)">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/index.php/Home/Publishpanel/test_whole02/filesernum/'+filesernum+'/kind/key/oldstatus/0">进行处理</a></td></tr>';
+    				var appendhtml=appendhtml+'<tr class="change" id="paper2'+testlist[i]['id']+'"><td >'+j+'<input type="hidden" value="{$testdata.id}"></td><td >'+testlist[i]['paper_name']+'</td><td>'+testlist[i]['creat_time']+'</td><td>'+testlist[i]['statusmsg']+'</td><td><a onclick="deletepaper('+testlist[i]['id']+',2)">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/index.php/Home/Publishpanel/test_whole02/filesernum/'+filesernum+'/kind/key/oldstatus/0">进行处理</a> <a href="#" onclick="orderkeypaper('+testlist[i]['id']+','+testlist[i]['preid']+',1,2)">向上</a>&nbsp;<a href="#" onclick="orderkeypaper('+testlist[i]['id']+','+testlist[i]['nextid']+',2,2)">向下</a></td></tr>';
     				j++;
                 }
     			$("#exerciselistdiv").append(appendhtml);
@@ -538,14 +549,119 @@ function papersearch()
 	if(kind==1) {
      	var exerciseid=$("#exerciseid").val();
      	var paperstatusid=$('#paperstatusid').val();
-  		detailexercise(exerciseid,paperstatusid);
+    	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
+    	
+  		detailexercise(exerciseid,paperstatusid,nowpage,pagelength);
   	 }
   	 if(kind==2) {
       	var kpointid=$("#kpointid").val();
       	var paperstatusid=$('#paperstatusid').val();
+      	
+      	var nowpage=1;
+    	var pagelength=$('#pagelength').val();
       
-      	detailkpoint(kpointid,paperstatusid);
+      	detailkpoint(kpointid,paperstatusid,nowpage,pagelength);
    	 }
+}
+
+//习题册下一页
+function exercisenextpage()
+{
+	var kind=$("#kind").val();
+	
+	var nowpage=$('#exercisenowpage').text();
+	var maxnum=$('#exercisepagenum').text();
+	var pagelength=$('#pagelength').val();
+
+ 	var exerciseid=$("#exerciseid").val();
+ 	var paperstatusid=$('#paperstatusid').val();
+ 	
+ 	var kpointid=$("#kpointid").val();
+	
+	nowpage=nowpage*1+1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	 
+	//习题
+	if(kind==1) {
+		detailexercise(exerciseid,paperstatusid,nowpage,pagelength);
+	}
+	
+	//知识点
+	if(kind==2) {
+		detailkpoint(kpointid,paperstatusid,nowpage,pagelength);
+	}
+}
+
+//习题上一页
+function exerciseprepage()
+{
+	var kind=$("#kind").val();
+	
+	var nowpage=$('#exercisenowpage').text();
+	var maxnum=$('#exercisepagenum').text();
+	var pagelength=$('#pagelength').val();
+	
+ 	var exerciseid=$("#exerciseid").val();
+ 	var paperstatusid=$('#paperstatusid').val();
+ 	
+ 	var kpointid=$("#kpointid").val();
+	
+	nowpage=nowpage*1-1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	
+	//习题
+	if(kind==1) {
+		detailexercise(exerciseid,paperstatusid,nowpage,pagelength);
+	}
+	
+	//知识点
+	if(kind==2) {
+		detailkpoint(kpointid,paperstatusid,nowpage,pagelength);
+	}
+}
+
+
+
+//排序 1向上 2向下3是区分知识点和试卷
+function orderkeypaper(id,iid,status,kind)
+{
+   	if(id && kind && iid) {
+      	 $.ajax({
+               url: "{:U('orderkeypaper')}",
+               type: 'POST',
+               data: {id:id,kind:kind,iid:iid},
+               dataType: 'json',
+               success: function (re) {
+                   if(re==1) {
+                  	
+                	   if(kind==1) {
+                        	var exerciseid=$("#exerciseid").val();
+                     		detailexercise(exerciseid);
+                     	 }
+                     	 if(kind==2) {
+                         	var kpointid=$("#kpointid").val();
+                         	detailkpoint(kpointid);
+                      	 }
+                   }
+               }
+           });
+      	 
+  	}
 }
 </script>
 </body>
