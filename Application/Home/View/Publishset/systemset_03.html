@@ -598,7 +598,7 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname)
 			for (var i = 0; i<mylength; i++) 
             {
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailexercise('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['papernum']+'</td><td>'+testlist[i]['createtime']+'</td><td> &nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editexercise('+testlist[i]['id']+');" href="#}">编辑</a></td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailexercise('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['papernum']+'</td><td>'+testlist[i]['createtime']+'</td><td> &nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editexercise('+testlist[i]['id']+');" href="#">编辑</a></td></tr>';
 				$('#list3').html(beginhtml + addhtmlmsg);
 				j++;
             }
@@ -790,13 +790,13 @@ function orderrelation(id,iid)
 
 
 //习题册分页
-function person_sql_relation(nowpage,pagelength,pointname,papername)
+function person_sql_relation(nowpage,pagelength,pointname,papername,exerciseid)
 {
 
   $.ajax({
       url:"{:U('php_relation_sql')}",
       type: 'POST',
-      data: {nowpage:nowpage,pagelength:pagelength,pointname:pointname,papername:papername},
+      data: {nowpage:nowpage,pagelength:pagelength,pointname:pointname,papername:papername,exerciseid:exerciseid},
       dataType: 'json',
       success: function(re) {
       		var testlist=re;
@@ -834,8 +834,11 @@ function searchpoint()
  	
 	var papername=$("#papername").val();
 	var pointname=$("#pointname").val();
+	
+	 
+	var exerciseid=$("#hexerciseid").val();
 
-	person_sql_relation(nowpage,pagelength,pointname,papername);
+	person_sql_relation(nowpage,pagelength,pointname,papername,exerciseid);
 }
 
 //习题册下一页
@@ -848,6 +851,8 @@ function pointnextpage()
 	var papername=$("#papername").val();
 	var pointname=$("#pointname").val();
 	
+	var exerciseid=$("#hexerciseid").val();
+	
 	nowpage=nowpage*1+1;
  
 	if(nowpage>maxnum)
@@ -859,7 +864,7 @@ function pointnextpage()
 		return;
 	}
 	$('#list2').html('');
-	person_sql_relation(nowpage,pagelength,pointname,papername);
+	person_sql_relation(nowpage,pagelength,pointname,papername,exerciseid);
 }
 
 //习题册上一页
@@ -872,6 +877,8 @@ function pointprepage()
 	var papername=$("#papername").val();
 	var pointname=$("#pointname").val();
 	
+	var exerciseid=$("#hexerciseid").val();
+	
 	nowpage=nowpage*1-1;
 	if(nowpage>maxnum)
 	{
@@ -883,7 +890,7 @@ function pointprepage()
 	}
 	$('#list2').html('');
  
-	person_sql_relation(nowpage,pagelength,pointname,papername);
+	person_sql_relation(nowpage,pagelength,pointname,papername,exerciseid);
 }
 </script>
 </html>

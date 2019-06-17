@@ -212,7 +212,7 @@ class PublishsetController extends Controller
       	$model=M('book_exercises');
       	$publish=M('publish_name');
       	
-      	$paper=M('paper_msg_data');
+      	$relation=M('exercise_relation_test');
       	
       	$dataarr=array();
       	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
@@ -256,8 +256,8 @@ class PublishsetController extends Controller
 	      		$v['publishname']=$tmp['name'];
 	      	}
 	      	
-	      	//试卷数
-	      	$v['papernum']=$paper->where('exerciseid='.$v['id'])->count();
+	      	//知识点
+	      	$v['papernum']=$relation->where('exercise_id='.$v['id'])->count();
 	    }
   
   	 
@@ -1921,6 +1921,8 @@ class PublishsetController extends Controller
     	$pagelength=$_POST['pagelength'];
     	$pointname=$_POST['pointname'];
     	$papername=$_POST['papername'];
+    	
+    	$exerciseid=$_POST['exerciseid'];
     
     	 
     	$beginnum=($nowpage-1)*$pagelength+1;
@@ -1946,6 +1948,7 @@ class PublishsetController extends Controller
     		!empty($info) && $dataarr['paper_id']=$info['id'];
     	}
     	
+    	!empty($exerciseid) && $dataarr['exercise_id']=$exerciseid;
     	
     	$count=$relation->where($dataarr)->count();
     	$data=$relation->where($dataarr)->order('orderid desc')->limit($beginpagenum.','.$pagelength)->select();
