@@ -429,12 +429,13 @@ class SystemsetController extends Controller
             $subjectid = $keynotedata[$i]['subjectid'];
             $gradeid = $keynotedata[$i]['gradeid'];
 
-            $grade = $model_grade->where('id=' . $gradeid)->find();
+            !empty($gradeid) && $grade = $model_grade->where('id=' . $gradeid)->find();
 
-            $subject = $model_subject->where('id=' . $subjectid)->find();
-            $keynotedata[$i]['subjectmsg'] = $subject['subjectmsg'];
-            $keynotedata[$i]['grademsg'] = $grade['grademsg'];
-            $keynotedata[$i]['levelmsg'] = $grade['levelmsg'];
+            !empty($subjectid) && $subject = $model_subject->where('id=' . $subjectid)->find();
+            
+            !empty($subject) && $keynotedata[$i]['subjectmsg'] = $subject['subjectmsg'];
+            !empty($grade) && $keynotedata[$i]['grademsg'] = $grade['grademsg'];
+            !empty($grade) && $keynotedata[$i]['levelmsg'] = $grade['levelmsg'];
 
         }
         $keynotedata['onekeynote_begin_page'] = $keynote_begin_page;
