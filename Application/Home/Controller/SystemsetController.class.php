@@ -429,12 +429,13 @@ class SystemsetController extends Controller
             $subjectid = $keynotedata[$i]['subjectid'];
             $gradeid = $keynotedata[$i]['gradeid'];
 
-            $grade = $model_grade->where('id=' . $gradeid)->find();
+            !empty($gradeid) && $grade = $model_grade->where('id=' . $gradeid)->find();
 
-            $subject = $model_subject->where('id=' . $subjectid)->find();
-            $keynotedata[$i]['subjectmsg'] = $subject['subjectmsg'];
-            $keynotedata[$i]['grademsg'] = $grade['grademsg'];
-            $keynotedata[$i]['levelmsg'] = $grade['levelmsg'];
+            !empty($subjectid) && $subject = $model_subject->where('id=' . $subjectid)->find();
+            
+            !empty($subject) && $keynotedata[$i]['subjectmsg'] = $subject['subjectmsg'];
+            !empty($grade) && $keynotedata[$i]['grademsg'] = $grade['grademsg'];
+            !empty($grade) && $keynotedata[$i]['levelmsg'] = $grade['levelmsg'];
 
         }
         $keynotedata['onekeynote_begin_page'] = $keynote_begin_page;
@@ -969,5 +970,92 @@ class SystemsetController extends Controller
 	    	M('class_data')->where('school_id='.$id)->delete();
     	}
     	echo $res;
+    }
+    
+    
+    //数据获取分页知识点题库
+    public function php_pointpaper_sql()
+    {
+    	$nowpage=$_POST['nowpage'];
+    	$pagelength=$_POST['pagelength'];
+    	$keywords=$_POST['keywords'];
+ 
+    
+    	$beginnum=($nowpage-1)*$pagelength+1;
+    	$beginpagenum=$beginnum-1;
+    
+    	$model=M('onekeynote');
+    	$paperpoint=M('key_paper_msg_data');
+    
+    	$dataarr=array();
+    	
+    	//查找出版社的名字
+    	$publishinfo=array();
+    	if($keywords) {
+    		$pointlist=$model->where("keynotemsg like '%".$keywords."%'")->field('id')->select();
+    		if(!empty($pointlist)) {
+    			foreach($pointlist as $k=>$v) {
+    				$pointinfo[]=$v['id'];
+    			}
+    		}
+    	
+    		if(!empty($pointinfo)){
+    			$dataarr['keynote_id']=array('in',$pointinfo);
+    		}  
+    	}
+    
+    	$count=$paperpoint->where($dataarr)->count();
+    	$data=$paperpoint->where($dataarr)->order('orderid desc')->limit($beginpagenum.','.$pagelength)->select();
+    	foreach($data as $k=>&$v) {
+    		$v['num']=$beginnum;
+    		$beginnum=$beginnum+1;
+    	 	if($v['keynote_id']) {
+    	 		$tmp=$model->find($v['keynote_id']);
+    	 		$v['keynote_name']=$tmp['keynotemsg'];
+    	 	}
+    	 	
+    	 	$v['preid']=$v['nextid']=0;
+    		isset($data[$k-1]['id']) && $v['preid']=$data[$k-1]['id'];
+    		isset($data[$k+1]['id']) && $v['nextid']=$data[$k+1]['id'];
+    	}
+    
+    
+    	$data['length']=sizeof($data);
+    	$data['pagelength']=$pagelength;
+    	$data['count']=$count;
+    
+    	$data['pagenum']=ceil($count/$pagelength);
+    	echo json_encode($data);
+    }
+    
+    
+	//删除知识点题库deletepointpaper
+   public function deletepointpaper()
+    {
+    	$id=$_POST['id'];
+    	$model=M('key_paper_msg_data');
+        $msg['id']=$_POST[id];
+        $mm=$model->where($msg)->delete();
+        echo $mm;
+    }
+    
+    //知识点题库排序
+    public function orderpaperpoint()
+    {
+    	$id=$_POST['id'];
+    	$iid=$_POST['iid'];
+    	if($id && $iid) {
+    		$keypaper=M('key_paper_msg_data');
+    		$info=$keypaper->find($id);
+    		$infon=$keypaper->find($iid);
+    		$data=$ndata=array();
+    		$data['orderid']=$infon['orderid'];
+    		$ndata['orderid']=$info['orderid'];
+    		$keypaper->where('id='.$id)->save($data);
+ 
+    		$keypaper->where('id='.$iid)->save($ndata);
+     
+    	}
+    	echo 1;
     }
 }
