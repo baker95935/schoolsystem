@@ -75,7 +75,7 @@
     <div class="row" style="height: 15px;"></div>
     <div class="row">
         <div class="col-xs-6" style="height: 660px;border-right:1px solid #C3C3C3;">
-            <div class="row sysset_blue" style="clear: left;"><span  id="chapter_part_msg" style="font-size: 16px;margin-left: 8%;"><b>已选知识点习题册</b></span><input onblur="searchkpoint();" name="publishname" id="publishname"  type="text" placeholder="出版社名称" class="input_css" style="margin-left:200px;"> <input onblur="searchkpoint();" name="exercisename" id="exercisename"   type="text" placeholder="习题册名称"  class="input_css"> <input onblur="searchkpoint();" name="keywords" id="keywords"   type="text" placeholder="知识点"  class="input_css"></div>
+            <div class="row sysset_blue" style="clear: left;"><span  id="chapter_part_msg" style="font-size: 16px;margin-left: 8%;"><b>已选知识点习题册</b></span> <input onblur="searchpoint();" name="papername" id="papername"   type="text" placeholder="习题名称"  class="input_css"> <input onblur="searchpoint();" name="pointname" id="pointname"   type="text" placeholder="知识点"  class="input_css"></div>
             <hr style="margin-left: 6%;">
             <div class="row" style="height: 250px; overflow-y: auto;padding-left: 8%;padding-right: 2%">
                
@@ -86,13 +86,6 @@
               <div><span style="color:red;" id="exercisetitle">	 	</span></div><br>
                <table id="list2" style="width: 100%;margin-left:0px; margin-right:0px;border: 1px;" class="sysset_msgtable" >
               <tr><th>序号</th><th>知识习题</th><th>所属知识点</th><th>时间</th><th>操作</th><th>编辑</th></tr>
-              <tr>
-                <td>1</td><td>a卷</td><td>三角形</td><td>2019-01-12</td><td>向上 向下</td><td>删除</td>
-              </tr>
-              <tr>
-                <td>2</td><td>b卷</td><td>三角形</td><td>2019-11-12</td><td>向上 向下</td><td>删除</td>
-              </tr>
-          
         	</table>
               
               
@@ -605,7 +598,7 @@ function person_sql_exercise(nowpage,pagelength,keywords,publishname)
 			for (var i = 0; i<mylength; i++) 
             {
 				j=i+1;
-				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailexercise('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['papernum']+'</td><td>'+testlist[i]['createtime']+'</td><td> &nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editexercise('+testlist[i]['id']+');" href="#}">编辑</a></td></tr>';
+				addhtmlmsg=addhtmlmsg+'<tr class="change"><td>'+j+'<input type="hidden" value="1"></td><td><a href="#" onclick="detailexercise('+testlist[i]['id']+')" >'+testlist[i]['name']+'</a></td><td>'+testlist[i]['publishname']+'</td><td>'+testlist[i]['papernum']+'</td><td>'+testlist[i]['createtime']+'</td><td> &nbsp;&nbsp;&nbsp;&nbsp;<a onclick="editexercise('+testlist[i]['id']+');" href="#">编辑</a></td></tr>';
 				$('#list3').html(beginhtml + addhtmlmsg);
 				j++;
             }
@@ -680,6 +673,21 @@ function addpoint()
 	var pointid=$("#pointid").val();
 	var paperid=$("#paperid").val();
 	
+	if(exerciseid==0) {
+		alert('请选择习题册');
+		return;
+	}
+	
+	if(pointid==0) {
+		alert('请选择知识点');
+		return;
+	}
+	
+	if(paperid==0) {
+		alert('请选择试卷');
+		return;
+	}
+	
 	if(exerciseid && pointid && paperid) {
 	    $.ajax({
 	        url:"{:U('addpoint')}",
@@ -694,7 +702,7 @@ function addpoint()
 	         
 	        }
 	    });
-	}
+	} 
 }
 
 //编辑习题册
@@ -780,5 +788,109 @@ function orderrelation(id,iid)
   	}
 }
 
+
+//习题册分页
+function person_sql_relation(nowpage,pagelength,pointname,papername,exerciseid)
+{
+
+  $.ajax({
+      url:"{:U('php_relation_sql')}",
+      type: 'POST',
+      data: {nowpage:nowpage,pagelength:pagelength,pointname:pointname,papername:papername,exerciseid:exerciseid},
+      dataType: 'json',
+      success: function(re) {
+      		var testlist=re;
+      		
+    		var addhtmlmsg = '<tr><th>序号</th><th>知识习题</th><th>所属知识点</th><th>时间</th><th>操作</th><th>编辑</th></tr>';
+		 
+			var mylength = testlist['length'];
+			var pagenum=testlist['pagenum'];
+			
+			$('#pointpagenum').text(pagenum);
+			$('#pointnowpage').text(nowpage);
+	 
+			for (var i = 0; i<mylength; i++) 
+            {
+				j=i+1;
+				addhtmlmsg=addhtmlmsg+"<tr><td>"+j+"</td><td>"+testlist[i]['paperinfo']['paper_name']+"</td><td>"+testlist[i]['pointinfo']['keynotemsg']+"</td><td>"+testlist[i]['ctime']+"</td><td><a href='#' onclick='orderrelation("+testlist[i]['id']+","+testlist[i]['preid']+")'>向上</a><a href='#' onclick='orderrelation("+testlist[i]['id']+","+testlist[i]['nextid']+")'>向下</a></td><td><a href='#' onclick='deleterelation("+testlist[i]['id']+");'>删除</a></td></tr>";
+				j++;
+            }
+		 
+			$('#list2').html(addhtmlmsg);
+
+         
+      }
+  });
+}
+
+
+
+
+//习题册搜索
+function searchpoint()
+{
+ 	var nowpage=1;
+ 	var pagelength=$('#pagelength').val();
+ 	
+	var papername=$("#papername").val();
+	var pointname=$("#pointname").val();
+	
+	 
+	var exerciseid=$("#hexerciseid").val();
+
+	person_sql_relation(nowpage,pagelength,pointname,papername,exerciseid);
+}
+
+//习题册下一页
+function pointnextpage()
+{
+	var nowpage=$('#pointnowpage').text();
+	var maxnum=$('#pointpagenum').text();
+	var pagelength=$('#pagelength').val();
+	
+	var papername=$("#papername").val();
+	var pointname=$("#pointname").val();
+	
+	var exerciseid=$("#hexerciseid").val();
+	
+	nowpage=nowpage*1+1;
+ 
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	$('#list2').html('');
+	person_sql_relation(nowpage,pagelength,pointname,papername,exerciseid);
+}
+
+//习题册上一页
+function pointprepage()
+{
+	var nowpage=$('#pointnowpage').text(); 
+	var maxnum=$('#pointpagenum').text();
+	var pagelength=$('#pagelength').val();
+	
+	var papername=$("#papername").val();
+	var pointname=$("#pointname").val();
+	
+	var exerciseid=$("#hexerciseid").val();
+	
+	nowpage=nowpage*1-1;
+	if(nowpage>maxnum)
+	{
+		return;
+	}
+	if(nowpage<1)
+	{
+		return;
+	}
+	$('#list2').html('');
+ 
+	person_sql_relation(nowpage,pagelength,pointname,papername,exerciseid);
+}
 </script>
 </html>

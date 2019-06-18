@@ -212,7 +212,7 @@ class PublishsetController extends Controller
       	$model=M('book_exercises');
       	$publish=M('publish_name');
       	
-      	$paper=M('paper_msg_data');
+      	$relation=M('exercise_relation_test');
       	
       	$dataarr=array();
       	!empty($keywords) && $dataarr['name']=['like',"%".$keywords."%"];
@@ -256,8 +256,8 @@ class PublishsetController extends Controller
 	      		$v['publishname']=$tmp['name'];
 	      	}
 	      	
-	      	//试卷数
-	      	$v['papernum']=$paper->where('exerciseid='.$v['id'])->count();
+	      	//知识点
+	      	$v['papernum']=$relation->where('exercise_id='.$v['id'])->count();
 	    }
   
   	 
@@ -1912,5 +1912,68 @@ class PublishsetController extends Controller
      
     	}
     	echo 1;
+    }
+    
+    //习题册和知识点绑定查询
+    public function php_relation_sql()
+    {
+    	$nowpage=$_POST['nowpage'];
+    	$pagelength=$_POST['pagelength'];
+    	$pointname=$_POST['pointname'];
+    	$papername=$_POST['papername'];
+    	
+    	$exerciseid=$_POST['exerciseid'];
+    
+    	 
+    	$beginnum=($nowpage-1)*$pagelength+1;
+    	$beginpagenum=$beginnum-1;
+    
+    	//获取习题册对应的习题
+    	$paper=M('key_paper_msg_data');
+    	$one=M('onekeynote');
+    	$relation=M('exercise_relation_test');
+    	 
+    	$dataarr=array();
+    	if(!empty($pointname)){
+    		$data=array();
+    		$data['keynotemsg']=['like',"%".$pointname."%"];
+    		$info=$one->where($data)->find();
+    		!empty($info) && $dataarr['point_id']=$info['id'];
+    		
+    	}
+    	if(!empty($papername)){
+    		$data=array();
+    		$data['paper_name']=['like',"%".$papername."%"];
+    		$info=$paper->where($data)->find();
+    		!empty($info) && $dataarr['paper_id']=$info['id'];
+    	}
+    	
+    	!empty($exerciseid) && $dataarr['exercise_id']=$exerciseid;
+    	
+    	$count=$relation->where($dataarr)->count();
+    	$data=$relation->where($dataarr)->order('orderid desc')->limit($beginpagenum.','.$pagelength)->select();
+    	foreach($data as $k=>&$v) {
+    		$v['num']=$beginnum;
+    		$beginnum=$beginnum+1;
+    		
+    		//获取paperinfo
+    		$v['paperinfo']=$paper->find($v['paper_id']);
+    		//获取pointinfo
+    		$v['pointinfo']=$one->find($v['point_id']);
+    		$v['ctime']=date('Y-m-d',$v['ctime']);
+    		$v['preid']=$v['nextid']=0;
+    		isset($data[$k-1]['id']) && $v['preid']=$data[$k-1]['id'];
+    		isset($data[$k+1]['id']) && $v['nextid']=$data[$k+1]['id'];
+    		
+    		
+    	}
+    
+    
+    	$data['length']=sizeof($data);
+    	$data['pagelength']=$pagelength;
+    	$data['count']=$count;
+    	 
+    	$data['pagenum']=ceil($count/$pagelength);
+    	echo json_encode($data);
     }
 }
