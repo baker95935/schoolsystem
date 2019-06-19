@@ -1814,7 +1814,7 @@ class PublishsetController extends Controller
     }
     
     
-    //知识点添加
+    //知识点添加关系
     function addpoint()
     {
     	$data=array();
@@ -1825,14 +1825,24 @@ class PublishsetController extends Controller
     	$data['exercise_id']=$exerciseid;
     	$data['paper_id']=$paperid;
     	$data['point_id']=$pointid;
-    	$data['ctime']=time();
+    	
     	
     	$e=M('exercise_relation_test');
-    	$max=$e->max('orderid');
-        $max=$max+1;
-        $data['orderid']=$max;
     	
-    	$result=$e->add($data);
+    	//校验下是否已重复
+    	$count=$e->where($data)->count();
+    	
+    	$result=0;
+    	
+    	if($count==0) {
+    	
+	    	$data['ctime']=time();
+	    	$max=$e->max('orderid');
+	        $max=$max+1;
+	        $data['orderid']=$max;
+	    	
+	    	$result=$e->add($data);
+    	}
     	echo $result;
     	
     }

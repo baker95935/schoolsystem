@@ -971,4 +971,57 @@ class SystemsetController extends Controller
     	}
     	echo $res;
     }
+    
+    
+    //数据获取分页知识点题库
+    public function php_pointpaper_sql()
+    {
+    	$nowpage=$_POST['nowpage'];
+    	$pagelength=$_POST['pagelength'];
+    	$keywords=$_POST['keywords'];
+ 
+    
+    	$beginnum=($nowpage-1)*$pagelength+1;
+    	$beginpagenum=$beginnum-1;
+    
+    	$model=M('onekeynote');
+    	$paperpoint=M('key_paper_msg_data');
+    
+    	$dataarr=array();
+    	
+    	//查找出版社的名字
+    	$publishinfo=array();
+    	if($keywords) {
+    		$pointlist=$model->where("keynotemsg like '%".$keywords."%'")->field('id')->select();
+    		if(!empty($pointlist)) {
+    			foreach($pointlist as $k=>$v) {
+    				$pointinfo[]=$v['id'];
+    			}
+    		}
+    	
+    		if(!empty($pointinfo)){
+    			$dataarr['keynote_id']=array('in',$pointinfo);
+    		}  
+    	}
+    
+    	$count=$model->where($dataarr)->count();
+    	$data=$model->where($dataarr)->order('orderid desc')->limit($beginpagenum.','.$pagelength)->select();
+    	foreach($data as $k=>&$v) {
+    		$v['num']=$beginnum;
+    		$beginnum=$beginnum+1;
+    		!empty($v['createtime']) && $v['createtime']=date("Y-m-d H:i:s",$v['createtime']);
+    	 	if($v['keynote_id']) {
+    	 		$tmp=$model->find($v['keynote_id']);
+    	 		$v['keynote_name']=$tmp['keynotemsg'];
+    	 	}
+    	}
+    
+    
+    	$data['length']=sizeof($data);
+    	$data['pagelength']=$pagelength;
+    	$data['count']=$count;
+    
+    	$data['pagenum']=ceil($count/$pagelength);
+    	echo json_encode($data);
+    }
 }
