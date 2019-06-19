@@ -1004,16 +1004,24 @@ class SystemsetController extends Controller
     		}  
     	}
     
-    	$count=$model->where($dataarr)->count();
-    	$data=$model->where($dataarr)->order('orderid desc')->limit($beginpagenum.','.$pagelength)->select();
+ 
+ 
+    	$count=$paperpoint->where($dataarr)->count();
+    	$data=$paperpoint->where($dataarr)->order('orderid desc')->limit($beginpagenum.','.$pagelength)->select();
     	foreach($data as $k=>&$v) {
     		$v['num']=$beginnum;
     		$beginnum=$beginnum+1;
-    		!empty($v['createtime']) && $v['createtime']=date("Y-m-d H:i:s",$v['createtime']);
+ 
     	 	if($v['keynote_id']) {
     	 		$tmp=$model->find($v['keynote_id']);
     	 		$v['keynote_name']=$tmp['keynotemsg'];
     	 	}
+ 
+    	 	
+    	 	$v['preid']=$v['nextid']=0;
+    		isset($data[$k-1]['id']) && $v['preid']=$data[$k-1]['id'];
+    		isset($data[$k+1]['id']) && $v['nextid']=$data[$k+1]['id'];
+ 
     	}
     
     
@@ -1024,4 +1032,37 @@ class SystemsetController extends Controller
     	$data['pagenum']=ceil($count/$pagelength);
     	echo json_encode($data);
     }
+ 
+    
+    
+	//删除知识点题库deletepointpaper
+   public function deletepointpaper()
+    {
+    	$id=$_POST['id'];
+    	$model=M('key_paper_msg_data');
+        $msg['id']=$_POST[id];
+        $mm=$model->where($msg)->delete();
+        echo $mm;
+    }
+    
+    //知识点题库排序
+    public function orderpaperpoint()
+    {
+    	$id=$_POST['id'];
+    	$iid=$_POST['iid'];
+    	if($id && $iid) {
+    		$keypaper=M('key_paper_msg_data');
+    		$info=$keypaper->find($id);
+    		$infon=$keypaper->find($iid);
+    		$data=$ndata=array();
+    		$data['orderid']=$infon['orderid'];
+    		$ndata['orderid']=$info['orderid'];
+    		$keypaper->where('id='.$id)->save($data);
+ 
+    		$keypaper->where('id='.$iid)->save($ndata);
+     
+    	}
+    	echo 1;
+    }
+ 
 }
