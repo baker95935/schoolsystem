@@ -8145,7 +8145,7 @@ function email($email,$title,$content)
 	//发件人邮箱密码
 	$emailPassword='fangzheng123456';
 	//发件人姓名
-	$emailFormName='abc';
+	$emailFormName='好助教错题本';
 	//收件人邮箱
 	$toemail=$email;
 	//邮件标题
