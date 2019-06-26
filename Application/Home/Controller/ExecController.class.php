@@ -105,7 +105,7 @@ class ExecController extends Controller
     //下学期期末
     public function next_semester_b()
     {
-    	$title="上学期期末考试复习";
+    	$title="下学期期末考试复习";
     	$content="登录个人账户查看新的系统内容";
     	
     	$weixin=M('weixin_users');

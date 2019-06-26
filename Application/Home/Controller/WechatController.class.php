@@ -46,17 +46,27 @@ class WechatController extends Controller
 			$count=$model->where("openid='".$openid."'")->count();
 			if($count==0) {
 				$result=$model->add($data);
+                $returnresult['id']=$result;
+                $returnresult['email']=0;
+              	$returnresult['testsum']=0;
+              	$returnresult['create_time']=date('Y-m-d', time());
 			} else {
 				$info=$model->where("openid='".$openid."'")->find(); 
 				$result['id']=$info['id'];
-              	$result['st']=$info['st'];
-              	$result['nd']=$info['nd'];
-              	$result['rd']=$info['rd'];
+              //	$result['st']=$info['st'];
+              //	$result['nd']=$info['nd'];
+              //	$result['rd']=$info['rd'];
                 $result['nickName']=$info['nickname'];
+              	$result['email']=$info['email'];
+              	$result['testsum']=$info['testsum'];
+              	$result['create_time']=date('Y-m-d', strtotime($info['create_time']));
+              	$returnresult=$result;
 			}
 		}
       
-		echo json_encode($result);
+      
+      
+		echo json_encode($returnresult);
 	}
 	
 	public function task1()
@@ -206,25 +216,40 @@ class WechatController extends Controller
       	$model_mytest=M('mytest');
 		$model_paper=M('paper_msg_data');
 		$model_exercise=M('book_exercises');
+    
+    
+    //	$userid=15;
+    //	$startnum=0;
+    //	$pagesize=10;
+    //	$keyword='';
+    
     	$Model=M();
     	if($keyword!='')
     	{
-     	  $querymsg="select a.exerciseid,b.name,a.lastreadtime from mytest as a INNER JOIN book_exercises b on a.exerciseid=b.id where (a.userid=".$userid." and a.finishornot=0 and a.deleted=0 and b.name like '%".$keyword."%') group by a.exerciseid  order by a.lastreadtime desc  LIMIT ".$startnum.",".$pagesize;
+     	  $querymsg="select a.exerciseid,b.name,a.lastreadtime from mytest as a INNER JOIN book_exercises b on a.exerciseid=b.id where (a.userid=".$userid." and a.finishornot=0 and a.deleted=0  and a.kind=0 and b.name like '%".$keyword."%') group by a.exerciseid  order by a.lastreadtime desc  LIMIT ".$startnum.",".$pagesize;
           
           $countmsg="select count(a.id) from mytest as a INNER JOIN book_exercises b on a.exerciseid=b.id where (a.userid=".$userid." and a.finishornot=0 and a.deleted=0 and b.name like '%".$keyword."%') group by a.exerciseid";
           $count=$Model->query($countmsg);
         }
     	else
     	{
-     	  $querymsg='select a.exerciseid,b.name,a.lastreadtime from mytest as a INNER JOIN book_exercises b on a.exerciseid=b.id where a.userid='.$userid.' and finishornot=0 and a.deleted=0 group by a.exerciseid  order by a.lastreadtime desc  LIMIT '.$startnum.','.$pagesize; 
+     	  $querymsg='select a.exerciseid,b.name,a.lastreadtime from mytest as a INNER JOIN book_exercises b on a.exerciseid=b.id where a.userid='.$userid.' and a.finishornot=0 and a.deleted=0 and a.kind=0 group by a.exerciseid  order by a.lastreadtime desc  LIMIT '.$startnum.','.$pagesize; 
             
           $countmsg="select count(id) from mytest  where (userid=".$userid." and finishornot=0 and deleted=0) group by exerciseid";
           $count=$Model->query($countmsg);
         }
+    
+    
+    
+    //	print_r($count);
+    
+    	//return;
         $exercise_data=$Model->query($querymsg);
          			
-        $data=$Model->query('select c.id,c.testid,c.exerciseid,c.lastreadtime,c.keyornot,c.kind,m.name from mytest c INNER JOIN  ('.$querymsg.') d ON c.exerciseid=d.exerciseid,book_exercises m where c.exerciseid=m.id');
+        $data=$Model->query('select c.id,c.testid,c.exerciseid,c.lastreadtime,c.keyornot,c.kind,m.name from mytest c INNER JOIN  ('.$querymsg.') d ON c.exerciseid=d.exerciseid,book_exercises m where c.exerciseid=m.id and c.userid='.$userid);
     	
+   // print_r($data);
+    
         $mycount=sizeof($count);
     
         $middata=array_values(array_sort($data,'lastreadtime',1));
@@ -272,6 +297,8 @@ class WechatController extends Controller
      $returndata['itemcount']=sizeof($exercise_data);
      $returndata['count']=$mycount;
      $returndata['list']=$exercise_data;
+    
+   // print_r($returndata);
      echo json_encode($returndata);
 	}
 	
@@ -323,11 +350,15 @@ class WechatController extends Controller
     $model_paper_msg_data=M('paper_msg_data');
     $model_key_paper_msg_data=M('key_paper_msg_data');
     
-   // $codemsg='1903340420194272236';
-   // $userid=15;
     
     $codemsg=$_GET['codemsg'];
     $userid=$_GET['userid'];
+    
+    
+    //$codemsg='3785963220195222249';
+    //$userid=15;
+    
+
     
    // echo $userid;
     
@@ -335,13 +366,12 @@ class WechatController extends Controller
     
     $CodeData=$model_code->where($onecode)->find();
     
-  //  print_r($CodeData);
-    
-  //  return;
-    
     
     $kind=$CodeData['kind'];//种类，0为多次码1对多，1为一对一
     $exercises_id_data=$CodeData['exercises_id'];//练习册id
+    $testsum_data=$CodeData['testsum'];//练习册id
+    $keysum_data=$CodeData['keysum'];//练习册id
+    
     $status=$CodeData['status'];//状态，1可用，0不可用
     $publishid=$CodeData['publishid'];//出版社id
     $creattime=$CodeData['creattime'];//创建时间
@@ -354,16 +384,23 @@ class WechatController extends Controller
     $price=$CodeData['price'];//单价
     $publishdate_data=$CodeData['publishdate'];//发布时间，暂时不用
     $nownum=$CodeData['nownum'];//当前编辑的信息
+    
        
     
     
     if($kind==0)
     {
       $exercises_id_data=explode(",", $exercises_id_data);
+      $testsum_data=explode(",", $testsum_data);
+      $keysum_data=explode(",", $keysum_data);
+      
+      
       $free_test_arr_data=explode("#", $free_test_arr_data);
       $free_key_arr_data=explode("#", $free_key_arr_data);
       $publishdate_data=explode(",", $publishdate_data);
       $exercises_id=$exercises_id_data[$nownum];
+      $testsum=$testsum_data[$nownum];
+      $keysum=$keysum_data[$nownum];
       $free_test_arr=explode(",",$free_test_arr_data[$nownum]);
       $free_key_arr=explode(",",$free_key_arr_data[$nownum]);
       $publishdate=$publishdate_data[$nownum];
@@ -371,10 +408,34 @@ class WechatController extends Controller
     else
     {
       $exercises_id=$exercises_id_data;
+      $testsum=$testsum_data;
+      $keysum=$keysum_data;
       $free_test_arr=explode(",",$free_test_arr_data);
       $free_key_arr=explode(",",$free_key_arr_data);
       $publishdate=$publishdate_data;
     }
+    
+    
+    if($free_test_arr[0]==0)
+    {
+      $freetestsum=0;
+    }
+    else
+    {
+      $freetestsum=sizeof($free_test_arr);
+    }
+    
+    if($free_key_arr[0]==0)
+    {
+      $freekeysum=0;
+    }
+    else
+    {
+       $freekeysum=sizeof($free_test_arr);
+    }
+    
+   // echo $freetestsum.'<hr>'.$freekeysum.'<hr>';
+   //    return;
     
  
     //`codemsg`, `kind`, `exercises_id`, `status`, `publishid`, `creattime`, `endtime`, `codename`, `codenote`, `free_test_arr`, `free_key_arr`, `userednum`,`price`, `publishdate`, `nownum`
@@ -386,8 +447,9 @@ class WechatController extends Controller
     //验证二维码是否还有效，开始用return_num=0,如果有效，就修改return_num>0
     
 
-   // echo $status;
     $return_num=0;
+    
+    
     //状态可用
     if($status==1)
     {
@@ -400,6 +462,9 @@ class WechatController extends Controller
         $data_delmytest['exerciseid']=$exercises_id;
         
         $delete_num=$model_mytest->where($data_delmytest)->count();
+      
+        $data_num=0;
+      
         //判断是否有数据
         if($data_num>=1)
         {
@@ -419,9 +484,12 @@ class WechatController extends Controller
          
         else
         {   
+          //插入习题
           $data_paper_msg_data['exerciseid']=$exercises_id;
           $data_result_paper_msg=$model_paper_msg_data->where($data_paper_msg_data)->select();
           $count=sizeof($data_result_paper_msg);
+          
+         
           for($i=0;$i<$count;$i++)
           {
             $data_add['userid']=$userid;
@@ -439,7 +507,6 @@ class WechatController extends Controller
             
             $free=ctb_in_array($data_add['testid'],$free_test_arr);
             
-          //  echo $price.'<hr>';
             
             if($free>-1 || $price==0)
             {
@@ -453,9 +520,17 @@ class WechatController extends Controller
             $data_add['free']=$free;    
             $model_mytest->add($data_add);
           }
+          
+         
              
-          $data_key_paper_msg_data['exerciseid']=$exercises_id;
-          $data_result_key_paper_msg=$model_key_paper_msg_data->where($data_key_paper_msg_data)->select();
+         // $data_key_paper_msg_data['exerciseid']=$exercises_id;
+         // $data_result_key_paper_msg=$model_key_paper_msg_data->where($data_key_paper_msg_data)->select();
+          //echo $exercises_id;
+          //插入知识点习题
+          $model=M('');
+          $data_result_key_paper_msg=$model->query('select key_paper_msg_data.* from key_paper_msg_data left join exercise_relation_test on exercise_relation_test.paper_id=key_paper_msg_data.id where exercise_relation_test.exercise_id='.$exercises_id.' order by exercise_relation_test.orderid asc');
+          
+
           $count=sizeof($data_result_key_paper_msg);
           for($i=0;$i<$count;$i++)
           {
@@ -463,7 +538,7 @@ class WechatController extends Controller
             $data_key_add['testid']=$data_result_key_paper_msg[$i]['id'];
             $data_key_add['creatime']=$data_add['creatime'];
             $data_key_add['lastreadtime']=$data_key_add['creatime'];
-            $data_key_add['exerciseid']=$data_result_key_paper_msg[$i]['exerciseid'];
+            $data_key_add['exerciseid']=$exercises_id;
             $data_key_add['name']=$name;
             $data_key_add['kind']=0;
             $data_key_add['questionsum']=$data_result_key_paper_msg[$i]['questionsum'];
@@ -471,6 +546,7 @@ class WechatController extends Controller
             $data_key_add['deleted']=0;    
             $data_key_add['orderid']=$data_result_key_paper_msg[$i]['orderid'];
             $data_key_add['keyornot']=1;
+            
                  
             $free=ctb_in_array($data_key_add['testid'],$free_key_arr);
             
@@ -494,8 +570,12 @@ class WechatController extends Controller
            $user_code['creattime']=date("y-m-d",time());
            $user_code['price']=$price;
            $user_code['userid']=$userid;
-           $user_code['exerciseid']=$exerciseid;
-           $Model_user_code->add($user_code);          
+           $user_code['testsum']=$testsum;
+           $user_code['keysum']=$keysum;
+           $user_code['exerciseid']=$exercises_id;
+           $user_code['freetestsum']=$freetestsum;
+           $user_code['freekeysum']=$freekeysum;
+           $Model_user_code->add($user_code);  
         }
     }
     else
@@ -518,7 +598,7 @@ class WechatController extends Controller
     $exerciseid=$_GET['exerciseid'];
     $userid=$_GET['userid'];
     
-  //  $exerciseid=123;
+  //  $exerciseid=12307;
    // $userid=15;
     
     $model_book_exercises=M('book_exercises');
@@ -527,7 +607,16 @@ class WechatController extends Controller
     $model_user_code=M('user_code');
     
     $user_code_data=$model_user_code->where('exerciseid='.$exerciseid.' and userid='.$userid)->find(); 
+    
+    
+   // print_r($user_code_data);
+    
+    
     $price=$user_code_data['price'];
+    $testsum=$user_code_data['testsum'];
+    $keysum=$user_code_data['keysum'];
+    $freetestsum=$user_code_data['freetestsum'];
+    $freekeysum=$user_code_data['freekeysum'];
     
     
 
@@ -539,10 +628,20 @@ class WechatController extends Controller
     $publishname=$data_publish['name'];
     $data_book_exercises['publishname']=$publishname;
     $data_book_exercises['price']=$price;
+    $data_book_exercises['test_sum']=$testsum;
+    $data_book_exercises['keynote_sum']=$keysum;
+    $data_book_exercises['test_free_sum']=$freetestsum;
+    $data_book_exercises['key_free_sum']=$freekeysum;
     
-  //  print_r($data_book_exercises);
+    if($price==0)
+    {
+    $data_book_exercises['test_free_sum']=$testsum;
+    $data_book_exercises['key_free_sum']=$keysum;
+    }
     
-    echo json_encode($data_book_exercises);
+    //print_r($data_book_exercises);
+    
+   echo json_encode($data_book_exercises);
   }
   
   //图书练习册
@@ -559,11 +658,13 @@ class WechatController extends Controller
     $page=$_GET['page'];
     $pagesize=$_GET['pagesize'];
      
-   // $exerciseid=123;
-   // $userid=15;
-   // $keyornot=1;
-   // $page=1;
-   // $pagesize=4;
+  /*   
+    $exerciseid=12307;
+    $userid=15;
+    $keyornot=0;
+    $page=1;
+    $pagesize=5;
+    */
      
     $endnum=$page*$pagesize;
         
@@ -618,10 +719,12 @@ class WechatController extends Controller
            if($data_mytest[$i]['free']==0 && $buyornot==0)
            {
                $data[$i]['lock']='bottom_view_lock';
+               $data[$i]['free']=0;
            }
            else
            {
               $data[$i]['lock']='';
+              $data[$i]['free']=1;
            }
 
            
@@ -648,6 +751,8 @@ class WechatController extends Controller
             $data[$i]['paper_name']=$data_paper['paper_name'];
             $data[$i]['shareornot']=$data_paper['shareornot'];
             $data[$i]['testid']=$data_mytest[$i]['testid'];
+          
+          
           	$keynote_id=$data_paper['keynote_id'];
           	$data_onekeynote=$model_onekeynote->where('id='.$keynote_id)->find();
           	$data[$i]['num']=($i+1).'/'.$all_count;
@@ -655,30 +760,19 @@ class WechatController extends Controller
           	$data[$i]['keynote']='('.$data_onekeynote['keynotemsg'].')';
             $data[$i]['id']=$data_mytest[$i]['id'];
           
-          //  echo $data_paper[$i]['free'].'<hr>';
           
           //修改此处
           
            if($data_mytest[$i]['free']==0 && $buyornot==0)
            {
                $data[$i]['lock']='bottom_view_lock';
+               $data[$i]['free']=0;
            }
            else
            {
               $data[$i]['lock']='';
+              $data[$i]['free']=1;
            }
-          /*
-            if($data[$i]['shareornot']==0  && $buyornot==0)
-             {
-               $data[$i]['lock']='bottom_view_lock';
-             }
-           else
-           {
-              $data[$i]['lock']='';
-           }
-           */
-          
-          // $data[$i]['lock']='bottom_view_lock';
           
           $bgnum=$i%3;
            if($bgnum==0)
@@ -702,15 +796,10 @@ class WechatController extends Controller
      $result_data['maxpage']=$maxpage;
      $result_data['all_count']=$all_count;
      $result_data['buymsg']=$buymsg;
-       // echo $maxpage;
-    // print_r($result_data);
+     
      echo json_encode($result_data);
     
     
-    //print_r($data);
-   // print_r($data_mytest);
-    
-   // echo $publishname;
    
     
   }
@@ -811,6 +900,13 @@ class WechatController extends Controller
     $testid=$_GET['testid'];
     $testkind=$_GET['testkind'];
     
+     //1,test,1
+     
+   //  $ctbid=1;
+     
+   //  $testkind='test';
+     
+   //  $testid=1;
 
     $Model = M();
      
@@ -818,6 +914,10 @@ class WechatController extends Controller
     {
    	$data=$Model->query('SELECT a.paper_name,a.testimage,a.answerimage,a.font_size,a.filesernum,b.id as test_id,b.srcid,b.pic1,b.pic2,b.pic3,b.pic4,b.ctbname,b.inputval,b.typeid,c.src as test_src,d.id as answer_id,d.src as answer_src FROM ((paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum) INNER JOIN img_cuted_data c on b.srcid=c.id)  INNER JOIN img_cuted_data d ON c.answerid=d.id where a.id='.$testid.' order by in_ser asc');   
     }
+     
+   //  print_r($data);
+     
+   //  return;
     if($testkind=='key')
     {
    	$data=$Model->query('SELECT a.paper_name,a.testimage,a.answerimage,a.font_size,a.filesernum,b.id as test_id,b.srcid,b.pic1,b.pic2,b.pic3,b.pic4,b.ctbname,b.inputval,b.typeid,c.src as test_src,d.id as answer_id,d.src as answer_src FROM ((key_paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum) INNER JOIN img_cuted_data c on b.srcid=c.id)  INNER JOIN img_cuted_data d ON c.answerid=d.id where a.id='.$testid.' order by in_ser asc');   
@@ -1248,7 +1348,12 @@ class WechatController extends Controller
   {
     $testid=$_GET['testid'];
     $testkind=$_GET['testkind'];
-    //$testid=1555;
+    
+    
+    $testid=2;
+    $testkind='key';
+    
+    
     $model_paper_msg_data=M('paper_msg_data');
     $model_test_public_data=M('test_public_data');
     $model_img_cuted_data=M('img_cuted_data');//表B
@@ -1257,10 +1362,17 @@ class WechatController extends Controller
     {
       	$data=$Model->query('SELECT b.id as test_id,b.ctbname,b.inputval,b.typeid,c.typesmsg FROM (paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum) INNER JOIN questiontypes c on b.typeid=c.id where a.id='.$testid.' order by in_ser asc');   
     }
+    
     if($testkind=='key')
     {
       	$data=$Model->query('SELECT b.id as test_id,b.ctbname,b.inputval,b.typeid,c.typesmsg FROM (key_paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum) INNER JOIN questiontypes c on b.typeid=c.id where a.id='.$testid.' order by in_ser asc');   
+   
+    	//$data=$Model->query('SELECT b.id as test_id,b.ctbname,b.inputval,b.typeid FROM key_paper_msg_data a INNER JOIN test_public_data b on a.filesernum=b.filesernum  where a.id='.$testid);   
+   
     }
+    
+   // print_r($data);
+    
     $newdata=mid_wechat_choose_arr($data);  
     echo json_encode($newdata);
   }
@@ -1288,10 +1400,44 @@ class WechatController extends Controller
     $newdata['kind']=1;
     $newdata['nowtestnum']=1;
     
-    //1556 179 15
+    //16，499,test
     
-   // $ctbid=179;
+   // $ctbid=777;
    // $userid=15;
+   // $testkind='test';
+   // $timeset=0;
+    
+    if($testkind=='testctb')
+    {
+      $keyornot=0;
+      $model_paper=M('paper_msg_data');
+    }
+    else
+    {
+      $keyornot=1;
+      $model_paper=M('key_paper_msg_data');
+    }
+    
+    $nextdata=$model_mytest->field('id,testid,keyornot,free')->where("id >".$ctbid." and userid=".$userid." and keyornot=".$keyornot.' and deleted=0 and finishornot=0')->order("id", "asc")->find();
+    
+
+    
+    if($nextdata['id']>0)
+    {
+      $nexttestid=$nextdata['testid'];
+   	  $paper_data=$model_paper->field('paper_name,shareornot')->where("id=".$nexttestid)->find();
+    }
+
+    
+    $nextdata['paper_name']=$paper_data['paper_name'];
+    $nextdata['shareornot']=$paper_data['shareornot'];
+    
+
+    
+    //print_r($nextdata);
+    //print_r($paper_data);
+    
+    //return;
     
     $count=$model_mytest->where('id='.$ctbid.' and kind=1')->count();
     
@@ -1300,6 +1446,9 @@ class WechatController extends Controller
     {
     $newdata['nowtesttime']=date('Y-m-d', strtotime ($st, strtotime(date("y-m-d",time()))));
     $msg=$model_mytest->where('id='.$ctbid)->save($newdata);
+      
+    $model_weixin_users=M('weixin_users');
+	$model_weixin_users->where('id='.$userid)->setInc('testsum');
       
       
     $tnewdata['testid']=$ctbid;
@@ -1311,7 +1460,7 @@ class WechatController extends Controller
    			 $tnewdata['testtime']=date("y-m-d",time());
    			 $tnewdata['lastreadtime']=date("ymd",time());
   			 $tnewdata['testtime']=date('Y-m-d', strtotime ($st, strtotime($tnewdata['testtime'])));     
- 			 echo $model_testtime->add($tnewdata);
+ 			 $model_testtime->add($tnewdata);
     }
       
     if($timeset==2)
@@ -1326,7 +1475,7 @@ class WechatController extends Controller
             $tnewdata['nowstatus']=0; 
    			$tnewdata['status']=2;
     		$tnewdata['testtime']=date('Y-m-d', strtotime ($nd, strtotime($tnewdata['testtime'])));
-    		echo $model_testtime->add($tnewdata);   
+    		 $model_testtime->add($tnewdata);   
     }
       
           if($timeset==3)
@@ -1346,10 +1495,10 @@ class WechatController extends Controller
             $tnewdata['nowstatus']=0; 
     		$tnewdata['status']=3;
     		$tnewdata['testtime']=date('Y-m-d', strtotime ($rd, strtotime($tnewdata['testtime'])));
-    		echo $model_testtime->add($tnewdata);
+    		$model_testtime->add($tnewdata);
     }
       
-      echo 12;
+      echo json_encode($nextdata);
 
 
     }
@@ -1368,13 +1517,13 @@ class WechatController extends Controller
     $testkind='all';
     $userid=$_GET['userid'];
     
-    //$userid=15;
+  // $userid=15;
     
     $startnum=$_GET['startnum'];
     $endnum=$_GET['endnum'];
     
-    //$startnum=0;
-    //$endnum=4;  
+  //  $startnum=0;
+  //  $endnum=4;  
       
       
     $arr['userid']=$userid;
@@ -1416,7 +1565,7 @@ class WechatController extends Controller
     } 
     
     
-    $data=$Model->query('Select id,testid,lastreadtime,keyornot,nowtesttime,nowtestnum, case keyornot  when 0 then (select paper_name from paper_msg_data where id=a.testid) when 1 then (select paper_name from key_paper_msg_data where id=a.testid) end as paper_name,1 testkindnum  From  mytest as a  where userid='.$userid.' and finishornot=0 and kind=1 union all select id,id as testid,lastreadtime,keyornot,nowtesttime,nowtestnum,paper_name,2 testkindnum from stumytest  where userid='.$userid.' and finishornot=0 and kind=1 order by nowtesttime asc LIMIT '.$startnum.','.$endnum);
+    $data=$Model->query('Select id,testid,lastreadtime,keyornot,nowtesttime,nowtestnum, case keyornot  when 0 then (select paper_name from paper_msg_data where id=a.testid) when 1 then (select paper_name from key_paper_msg_data where id=a.testid) end as paper_name,1 testkindnum  From  mytest as a  where userid='.$userid.' and finishornot=0 and kind=1 and deleted=0 union all select id,id as testid,lastreadtime,keyornot,nowtesttime,nowtestnum,paper_name,2 testkindnum from stumytest  where userid='.$userid.' and finishornot=0 and kind=1 and deleted=0  order by lastreadtime desc LIMIT '.$startnum.','.$endnum);
     
     
     $count=sizeof($data);
@@ -1490,6 +1639,8 @@ class WechatController extends Controller
         {
           $newdata[$i]['ser']='3rd';
         }
+      
+      $newdata[$i]['lastreadtime']=date("Y-m-d",strtotime($newdata[$i]['lastreadtime']));
       $j=$j+1;
     }
 
@@ -1514,13 +1665,31 @@ class WechatController extends Controller
     $startnum=$_GET['startnum'];
     $lengthnum=$_GET['lengthnum'];
     
- //   $testkind='testctb';
-   // $userid=15;
-   // $startnum=0;
-   // $lengthnum=14;
+    $papermsg=$_GET['papermsg'];
+    $exercisemsg=$_GET['exercisemsg'];
+    $keynotemsg=$_GET['keynotemsg'];
+    $subjectmsg=$_GET['subjectmsg'];
+    $subjectid=$_GET['subjectid'];
+    $startmsg=$_GET['startmsg'];
+    $endmsg=$_GET['endmsg'];
+    
+    
+    
+    
+	$papermsg='初中';
+    $testkind='testctb';
+    $userid=15;
+    $startnum=0;
+    $lengthnum=14;
+  //  $startmsg='2019-1-1';
+   // $endmsg='2021-1-1';
+
+
+
     
     $testdata['userid']=$userid;
     $testdata['kind']=1;
+    $testdata['deleted']=0;
 
     $Model=M();
     if($testkind=='testctb')
@@ -1529,11 +1698,39 @@ class WechatController extends Controller
        $testdata['keyornot']=$keyornot;
        $Model_mytest=M('mytest');
        $allcount=$Model_mytest->where($testdata)->count(); 
-
       
-       $data=$Model->query('select a.id as ctbid,b.paper_name as paper_name,b.id as testid,a.ctbtestid as ctbquestionid,a.typeidarr,a.nowtestnum,a.nowtesttime from mytest as a INNER JOIN paper_msg_data b on a.testid=b.id where a.userid='.$userid.' and a.keyornot='.$keyornot.' and a.kind=1 and a.deleted=0 order by a.nowtestnum asc limit '.$startnum.','.$lengthnum);   
+      if($papermsg!='')
+      {
+        $search_sql="b.paper_name like '%".$papermsg."%'";
+      }
+      
+      if($exercisemsg!='')
+      {
+         $search_sql=$search_sql." and c.name like '%".$exercisemsg."%'";
+      }
+      
+       if($startmsg!='' && $endmsg!='')
+      {
+         $search_sql=$search_sql.' and (a.lastreadtime between'.$startmsg.' and '.$endmsg.')';
+      }
+      
+      if($search_sql!='')
+      {
+        $search_sql=' and '.$search_sql;
+      }
+      
+      echo $search_sql;
+      
+ 
+   //   $data=$Model->query('select a.id as ctbid,b.paper_name as paper_name,b.id as testid,a.ctbtestid as ctbquestionid,a.typeidarr,a.nowtestnum,a.nowtesttime,a.lastreadtime,c.name,c.classify,d.subjectmsg from ((mytest as a INNER JOIN paper_msg_data b on a.testid=b.id) INNER JOIN book_exercises as c on a.exerciseid=c.id) INNER JOIN subject_data as d on c.classify=d.id where a.userid='.$userid.' and a.keyornot='.$keyornot.' and a.kind=1 and a.deleted=0 order by a.lastreadtime desc limit '.$startnum.','.$lengthnum);   
+      $data=$Model->query('select a.id as ctbid,b.paper_name as paper_name,b.id as testid,a.ctbtestid as ctbquestionid,a.typeidarr,a.nowtestnum,a.nowtesttime,a.lastreadtime,c.name,c.classify,d.subjectmsg from ((mytest as a INNER JOIN paper_msg_data b on a.testid=b.id) INNER JOIN book_exercises as c on a.exerciseid=c.id) INNER JOIN subject_data as d on c.classify=d.id where a.userid='.$userid.' and a.keyornot='.$keyornot.' and a.kind=1 and a.deleted=0 '.$search_sql.' order by a.lastreadtime desc limit '.$startnum.','.$lengthnum);   
     
     }
+    
+
+    print_r($data);
+    return;
+
     
     if($testkind=='keyctb')
     {
@@ -1541,8 +1738,8 @@ class WechatController extends Controller
        $testdata['keyornot']=$keyornot;
        $Model_mytest=M('mytest');
        $allcount=$Model_mytest->where($testdata)->count();
-      
-       $data=$Model->query('select a.id as ctbid,b.paper_name as paper_name,b.id as testid,a.ctbtestid as ctbquestionid,a.typeidarr,a.nowtestnum,a.nowtesttime from mytest as a INNER JOIN key_paper_msg_data b on a.testid=b.id where a.userid='.$userid.' and a.keyornot='.$keyornot.' and a.kind=1 and a.deleted=0  order by a.nowtestnum asc limit '.$startnum.','.$lengthnum);  
+       $data=$Model->query('select a.id as ctbid,b.paper_name as paper_name,b.keynote_id,c.keynotemsg as name,b.id as testid,a.ctbtestid as ctbquestionid,a.typeidarr,a.nowtestnum,a.nowtesttime,a.lastreadtime,c.subjectid,d.subjectmsg from ((mytest as a INNER JOIN key_paper_msg_data b on a.testid=b.id) INNER JOIN onekeynote as c on b.keynote_id=c.id) INNER JOIN subject_data as d on c.subjectid=d.id where a.userid='.$userid.' and a.keyornot='.$keyornot.' and a.kind=1 and a.deleted=0  order by a.lastreadtime desc limit '.$startnum.','.$lengthnum);  
+   
     }
     
     if($testkind=='sectestctb')
@@ -1552,8 +1749,14 @@ class WechatController extends Controller
        $Model_stumytest=M('stumytest');
        $allcount=$Model_stumytest->where($testdata)->count();
       
-       $data=$Model->query('select id as ctbid,paper_name,ctbquestionid,typeidarr,nowtestnum,nowtesttime from stumytest as a  where userid='.$userid.' and keyornot='.$keyornot.' and kind=1  and deleted=0 order by lastreadtime asc limit '.$startnum.','.$lengthnum);  
+    //   $data=$Model->query('select id as ctbid,paper_name,paper_name_arr as name,ctbquestionid,typeidarr,nowtestnum,nowtesttime,lastreadtime,b.subjectmsg from stumytest as a INNER JOIN subject_data as b on a.subjectid=b.id    where userid='.$userid.' and keyornot='.$keyornot.' and kind=1  and deleted=0 order by lastreadtime desc limit '.$startnum.','.$lengthnum);  
+   
+      $data=$Model->query('select a.id as ctbid,paper_name,paper_name_arr as name,ctbquestionid,typeidarr,nowtestnum,nowtesttime,lastreadtime,a.subjectid,b.subjectmsg from stumytest as a  INNER JOIN subject_data as b on a.subjectid=b.id   where userid='.$userid.' and keyornot='.$keyornot.' and kind=1  and deleted=0 order by lastreadtime desc limit '.$startnum.','.$lengthnum);  
+   
+    
     }
+    
+
     
     if($testkind=='seckeyctb')
     {
@@ -1563,8 +1766,12 @@ class WechatController extends Controller
        $Model_stumytest=M('stumytest');
        $allcount=$Model_stumytest->where($testdata)->count();
       
-       $data=$Model->query('select id as ctbid,paper_name,ctbquestionid,typeidarr,nowtestnum,nowtesttime from stumytest as a  where userid='.$userid.' and keyornot='.$keyornot.' and kind=1  and deleted=0 order by lastreadtime asc  limit '.$startnum.','.$lengthnum);    
+       $data=$Model->query('select a.id as ctbid,paper_name,ctbquestionid,typeidarr,nowtestnum,nowtesttime,lastreadtime,a.subjectid,b.subjectmsg,a.keynote_arr as name from stumytest as a  INNER JOIN subject_data as b on a.subjectid=b.id    where userid='.$userid.' and keyornot='.$keyornot.' and kind=1  and deleted=0 order by lastreadtime desc  limit '.$startnum.','.$lengthnum);    
     }
+    
+   //print_r($data);
+    
+   //return;
   
     $ctbquestionid_s='';
     $typeidarr_s='';
@@ -1645,7 +1852,7 @@ class WechatController extends Controller
          }
          
          $j=$j+1;
-       		
+       	$data[$i]['lastreadtime']=date("Y-m-d",strtotime($data[$i]['lastreadtime']));
        }
     
     //   echo '<hr>'.$typeidarr_s;
@@ -1722,6 +1929,14 @@ class WechatController extends Controller
      $question_arr=$_GET['question_arr'];
      $type_arr=$_GET['type_arr'];
      $paper_name=$_GET['paper_name'];
+     $paper_name_arr=$_GET['paper_name_arr'];
+     $subjectid=$_GET['subjectid'];
+     $keynote_msg=$_GET['keynote_msg'];
+    
+     $keynote_msg=implode(',',uniquearr (explode(',', $keynote_msg)));
+
+    
+    //16,499
     
     
      $st='+'.$_GET['st'].' day';
@@ -1787,6 +2002,12 @@ class WechatController extends Controller
     $stumytest_data['questionsum']=$question_sum;
     $stumytest_data['testkind']=$testkind;
     $stumytest_data['userid']=$userid;
+    $stumytest_data['subjectid']=$subjectid;
+    $stumytest_data['paper_name_arr']=$paper_name_arr;
+    $stumytest_data['keynote_arr']=$keynote_msg;
+    
+    
+   
       
     
     $stumytest_data['nowtesttime']=date('Y-m-d', strtotime ($st, strtotime(date("y-m-d",time()))));
@@ -2378,26 +2599,160 @@ class WechatController extends Controller
     echo 1;
   }
   
-  public function del_ctbdata_one(){
+  public function my_mailbox()
+  {
+     $userid=$_GET['userid'];
+     $email=$_GET['email'];
+     $model=M('weixin_users');
+    
+    $data['email']=$email;
+    $msg=$model->where('id='.$userid)->save($data);
+    
+    echo $msg;
+  }
+  
+  public function sendemail()
+ {
+ 	
+ 	$email=$_GET['email'];
+    $paper_name=$_GET['paper_name'];
+    $userid=$_GET['userid'];
+    $testkind=$_GET['testkind'];
+    $testid=$_GET['testid'];
+    $ctbid=$_GET['ctbid'];
+ 	$title=$paper_name;
+    /*
+    $email='151201050@qq.com';
+    $paper_name='河西区2017-2018学年度第二学期八年级期末质量调研物理试卷(26)';
+    $userid=15;
+    $testkind='test';
+    $testid='72';
+    $ctbid='779';
+    $title=$paper_name;
+    */
+    
+    if($testkind=='test' || $testkind=='key')
+    {
+      $paperkind='init';
+      $testkind=$testkind.'ctb';
+    }
+    else
+    {
+      $paperkind='ctb'; 
+    }
+    $testurl='http://file.hzjoo.com/index.php/home/Download/phpmanagepaperdetailpdf/';
+    $testpdf=$testurl.'testid/'.$ctbid.'/inittestid/'.$testid.'/outkind/D/paper_name/'.$paper_name.'/testkind/'.$testkind.'/paperkind/'.$paperkind;
+    
+    //php_managepaperanswerpdf
+    $answerurl='http://file.hzjoo.com/index.php/home/Download/php_managepaperanswerpdf/';
+    $answerpdf=$answerurl.'testid/'.$ctbid.'/inittestid/'.$testid.'/outkind/D/paper_name/'.$paper_name.'/testkind/'.$testkind.'/paperkind/'.$paperkind;
+ 	$content='<div><span>Hi,同学</span><br><span>&nbsp;&nbsp;&nbsp;&nbsp;整理好你的错题，你就离胜利近了一步。加油！加油！</span><br><hr><span>'.$paper_name.'</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><a href="'.$testpdf.'">习题pdf</a><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><a href="'.$answerpdf.'">答案pdf</a><hr></div>';
+    
+   // echo $testpdf;
+    
+ 	email($email,$title,$content);
+    
+    echo 1;
+ }
+  
+  public function updata_remind()
+  {
+    $userid=$_GET['userid'];
+    $semester_num=$_GET['semester_num'];
+    $input_day=$_GET['input_day'];
+    $last_semester=$_GET['last_semester'];
+    $next_semester=$_GET['next_semester'];
+    
+   // $userid=15;
+   // $semester_num=1;
+   // $input_day=13;
+   // $last_semester=17;
+   // $next_semester=12;
+    
+    if($semester_num==0)
+    {
+      $data['input_day']=$input_day;
+      $data['last_semester_a']=$last_semester;
+      $data['next_semester_a']=$next_semester;
+    }
+    else
+    {
+      $data['input_day']=$input_day;
+      $data['last_semester_b']=$last_semester;
+      $data['next_semester_b']=$next_semester;
+    }
+    
+    
+    $model=M('weixin_users');
+    
+    echo $model->where('id='.$userid)->save($data);
+    
+    
+    
+  }
+  
+  
+  public function oper_ctbdata_one()
+  {
     $testkind=$_GET['testkind'];
     $ctbid=$_GET['ctbid'];
+    $operkind=$_GET['operkind'];
     
     if($testkind=='testctb' || $testkind=='keyctb')
     {
-      $Model=M('mytest');
+      $model=M('mytest');
     }
-    
-   if($testkind=='sectestctb' || $testkind=='seckeyctb')
+    if($testkind=='sectestctb' || $testkind=='seckeyctb')
     {
-      $Model=M('stumytest');
+      $model=M('stumytest');
     }
     
-   $data['deleted']=1;
-   $Model->where('id='.$ctbid)->save($data);  
+    if($operkind=='back')
+    {
+      $data['kind']=0; 
+    }
+    if($operkind=='finish')
+    {
+      $data['finishornot']=1;
+    }
+    if($operkind=='del')
+    {
+      $data['deleted']=1; 
+    }
     
-    echo 1;
+    echo $model->where('id='.$ctbid.' and kind=1')->save($data);
+   
+  }
+  
+  public function subjectmsg()
+  {
+    $model=M('subject_data');
+    $data=$model->select();
+    $middata[0]['id']=0;
+    $middata[0]['subjectmsg']='全部';
+    
+    for($i=0;$i<sizeof($data);$i++)
+    {
+      $j=$i+1;
+      $middata[$j]['id']=$data[$i]['id'];
+      $middata[$j]['subjectmsg']=$data[$i]['subjectmsg'];
+    }
+    
+    for($i=0;$i<sizeof($middata);$i++)
+    {
+      $subjectid[$i]=$middata[$i]['id'];
+      $subjectmsg[$i]=$middata[$i]['subjectmsg'];
+    }
+    
+    
+    $newdata['id']=$subjectid;
+    $newdata['subjectmsg']=$subjectmsg;
+    
+    echo json_encode($newdata);
     
   }
+  
+  
  
  
 }
